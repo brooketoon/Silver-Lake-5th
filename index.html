@@ -582,9 +582,9 @@ const PERIODS={
 };
 
 const waterRoutes=[
-  {id:"wooded-stream",name:"Wooded Feeder Stream",destination:"West Shore",dryNutrient:0.4,afterRainNutrient:0.6,landUse:"Forested land with limited development",animation:"assets/images/route-wooded-stream.gif"},
-  {id:"wetland-outlet",name:"South Wetland Outlet",destination:"South Wetland",dryNutrient:0.5,afterRainNutrient:0.7,landUse:"Water passes through a broad vegetated wetland",animation:"assets/images/route-wetland-outlet.gif"},
-  {id:"stormwater-channel",name:"Maple Park Stormwater Channel",destination:"North Cove",dryNutrient:0.8,afterRainNutrient:3.6,landUse:"Drains nearby neighborhoods and Silver Lake Community Park",animation:"assets/images/route-stormwater-channel.gif"}
+  {id:"wooded-stream",name:"Wooded Feeder Stream",destination:"West Shore",dryNutrient:0.4,afterRainNutrient:0.6,landUse:"Forested land with limited development",animation:"images/route-wooded-stream.gif"},
+  {id:"wetland-outlet",name:"South Wetland Outlet",destination:"South Wetland",dryNutrient:0.5,afterRainNutrient:0.7,landUse:"Water passes through a broad vegetated wetland",animation:"images/route-wetland-outlet.gif"},
+  {id:"stormwater-channel",name:"Maple Park Stormwater Channel",destination:"North Cove",dryNutrient:0.8,afterRainNutrient:3.6,landUse:"Drains nearby neighborhoods and Silver Lake Community Park",animation:"images/route-stormwater-channel.gif"}
 ];
 
 const baselineModel={features:[],runoffPercent:92,nutrientIndex:100,algaeResponse:"High"};
@@ -612,24 +612,24 @@ function comboResult(ids){
 
 /* ---------------- Image manifest / alt text ---------------- */
 const IMG_ALT={
-  "assets/images/silver-lake-hero.jpg":"Wide view of Silver Lake with wooded shoreline, a sheltered cove, and a small field station.",
-  "assets/images/dr-marcus-reed.png":"Aquatic ecologist Dr. Marcus Reed wearing practical field-station clothing and holding a tablet.",
-  "assets/images/fishing-derby-current.jpg":"Current-year fishing derby participants displaying several juvenile bluegill that appear smaller than earlier catches.",
-  "assets/images/fishing-derby-past.jpg":"Previous fishing derby photo showing fuller-bodied juvenile bluegill.",
-  "assets/images/bluegill-north-cove-current.png":"Side-view educational illustration of a smaller, less robust juvenile bluegill from North Cove.",
-  "assets/images/bluegill-comparison-zone.png":"Side-view educational illustration of a same-age juvenile bluegill from a comparison zone.",
-  "assets/images/silver-lake-field-station.jpg":"Interior of the Silver Lake Fisheries Field Station and Hatchery with tanks, maps, and a briefing table.",
-  "assets/images/silver-lake-zone-map.png":"Map of Silver Lake showing North Cove, West Shore, South Wetland, and Central Lake zones.",
-  "assets/images/waterway-map-base.png":"Illustrated town map showing Silver Lake, surrounding land, and connected waterways.",
-  "assets/images/route-wooded-stream.gif":"Animation of water moving along the wooded feeder stream toward West Shore.",
-  "assets/images/route-wetland-outlet.gif":"Animation of water moving through the south wetland outlet.",
-  "assets/images/route-stormwater-channel.gif":"Animation of water moving through the Maple Park stormwater channel toward North Cove.",
-  "assets/images/sports-complex-site-map.png":"Proposed sports-complex site map with fields, parking, drains, slope, and East Creek.",
-  "assets/images/sports-complex-baseline.gif":"Model animation of runoff from the sports complex with no added protection.",
-  "assets/images/sports-complex-source-control.gif":"Model animation showing a weather-smart fertilizer plan.",
-  "assets/images/sports-complex-rain-garden.gif":"Model animation showing a rain garden capturing runoff.",
-  "assets/images/sports-complex-buffer.gif":"Model animation showing a vegetated creek buffer.",
-  "assets/images/silver-lake-brief-header.png":"Decorative header banner for the Silver Lake Environmental Action Brief."
+  "images/silver-lake-hero.jpg":"Wide view of Silver Lake with wooded shoreline, a sheltered cove, and a small field station.",
+  "images/dr-marcus-reed.png":"Aquatic ecologist Dr. Marcus Reed wearing practical field-station clothing and holding a tablet.",
+  "images/fishing-derby-current.jpg":"Current-year fishing derby participants displaying several juvenile bluegill that appear smaller than earlier catches.",
+  "images/fishing-derby-past.jpg":"Previous fishing derby photo showing fuller-bodied juvenile bluegill.",
+  "images/bluegill-north-cove-current.png":"Side-view educational illustration of a smaller, less robust juvenile bluegill from North Cove.",
+  "images/bluegill-comparison-zone.png":"Side-view educational illustration of a same-age juvenile bluegill from a comparison zone.",
+  "images/silver-lake-field-station.jpg":"Interior of the Silver Lake Fisheries Field Station and Hatchery with tanks, maps, and a briefing table.",
+  "images/silver-lake-zone-map.png":"Map of Silver Lake showing North Cove, West Shore, South Wetland, and Central Lake zones.",
+  "images/waterway-map-base.png":"Illustrated town map showing Silver Lake, surrounding land, and connected waterways.",
+  "images/route-wooded-stream.gif":"Animation of water moving along the wooded feeder stream toward West Shore.",
+  "images/route-wetland-outlet.gif":"Animation of water moving through the south wetland outlet.",
+  "images/route-stormwater-channel.gif":"Animation of water moving through the Maple Park stormwater channel toward North Cove.",
+  "images/sports-complex-site-map.png":"Proposed sports-complex site map with fields, parking, drains, slope, and East Creek.",
+  "images/sports-complex-baseline.gif":"Model animation of runoff from the sports complex with no added protection.",
+  "images/sports-complex-source-control.gif":"Model animation showing a weather-smart fertilizer plan.",
+  "images/sports-complex-rain-garden.gif":"Model animation showing a rain garden capturing runoff.",
+  "images/sports-complex-buffer.gif":"Model animation showing a vegetated creek buffer.",
+  "images/silver-lake-brief-header.png":"Decorative header banner for the Silver Lake Environmental Action Brief."
 };
 function imageBlock(src,extraClass=""){
   const alt=IMG_ALT[src]||"Lesson image.";
@@ -1000,7 +1000,7 @@ function evidenceIconRefresh(root){
 /* prompt helper */
 function promptBox(q){return `<div class="prompt-box"><span class="q">${esc(q)}</span></div>`;}
 /* ---------- Narrative helpers ---------- */
-const REED_IMG="assets/images/dr-marcus-reed.png";
+const REED_IMG="images/dr-marcus-reed.png";
 function _attrLine(line,name,verb){
   line=String(line).trim();
   const last=line.slice(-1);
@@ -1078,7 +1078,7 @@ registerScreen(1,{title:"Launch",hideNav:true,hideAppHeader:true,
       </div>
 
       <div class="scene-hero">
-        <img class="scene-media" src="assets/images/silver-lake-hero.jpg" alt="A wide view of Silver Lake: calm water, a wooded shoreline, a distant fishing pier, a sheltered cove, and a field station in the distance." onerror="this.style.display='none';">
+        <img class="scene-media" src="images/silver-lake-hero.jpg" alt="A wide view of Silver Lake: calm water, a wooded shoreline, a distant fishing pier, a sheltered cove, and a field station in the distance." onerror="this.style.display='none';">
         <div class="scene-body">
           <span class="location-stamp">Pinecrest &middot; Silver Lake</span>
           <h2>Trouble at Silver Lake</h2>
@@ -1132,7 +1132,7 @@ registerScreen(1,{title:"Launch",hideNav:true,hideAppHeader:true,
 registerScreen(2,{title:"Summer in Pinecrest",hint:"",
   render(){
     return `<div class="screen">
-      ${sceneHero({stamp:"Pinecrest, Arizona",time:"Late summer",title:"Summer in Pinecrest",sub:"The whole town knows this water.",img:"assets/images/silver-lake-hero.jpg",alt:"Silver Lake high in the pines: cold clear water, a wooded shoreline, and a distant fishing pier."})}
+      ${sceneHero({stamp:"Pinecrest, Arizona",time:"Late summer",title:"Summer in Pinecrest",sub:"The whole town knows this water.",img:"images/silver-lake-hero.jpg",alt:"Silver Lake high in the pines: cold clear water, a wooded shoreline, and a distant fishing pier."})}
       ${story(
         `<p><span class="drop">S</span>ilver Lake sits high in the pines above <strong>Pinecrest</strong>, a small Arizona mountain town where nearly everyone knows the water. The lake is cold and clear, ringed by ponderosa and granite, and in summer it is the center of just about everything.</p>`,
         `<p>People here have fished Silver Lake for as long as anyone can remember &mdash; grandparents teaching grandkids the same quiet coves. The biggest day of the year is the <strong>summer fishing derby</strong>, when the whole town gathers at the shore to weigh their catch and swap stories.</p>`,
@@ -1148,7 +1148,7 @@ registerScreen(2,{title:"Summer in Pinecrest",hint:"",
       ${caseFile("Saved from the derby",`
         <p style="margin:0 0 8px">The town saved what people brought to the weigh-in table:</p>
         <p style="margin:0 0 10px"><span class="pill">Photographs</span><span class="pill">Catch notes</span><span class="pill">Location reports</span></p>
-        <div class="two-col">${imageBlock("assets/images/fishing-derby-current.jpg")}${imageBlock("assets/images/fishing-derby-past.jpg")}</div>
+        <div class="two-col">${imageBlock("images/fishing-derby-current.jpg")}${imageBlock("images/fishing-derby-past.jpg")}</div>
         <p class="small muted" style="margin-top:8px">Left: this summer's tray. Right: an earlier summer, shown with a similar tray for reference. No one measured the fish at the derby.</p>
       `)}
       <div class="card panel-journal">
@@ -1166,7 +1166,7 @@ registerScreen(2,{title:"Summer in Pinecrest",hint:"",
 registerScreen(3,{title:"Meet Dr. Reed",hint:"",
   render(){
     return `<div class="screen">
-      ${sceneHero({stamp:"Pinecrest · Silver Lake Field Station",title:"Meet Dr. Reed",sub:"Your summer volunteer team has its first assignment.",img:"assets/images/silver-lake-field-station.jpg",alt:"The Silver Lake field station near the shore, with tanks and equipment for studying the lake."})}
+      ${sceneHero({stamp:"Pinecrest · Silver Lake Field Station",title:"Meet Dr. Reed",sub:"Your summer volunteer team has its first assignment.",img:"images/silver-lake-field-station.jpg",alt:"The Silver Lake field station near the shore, with tanks and equipment for studying the lake."})}
       ${sysMsg("Community science · Pinecrest",[
         `Thanks for volunteering this summer. You've been added to Pinecrest's <span class="k">Silver Lake community-science team</span>.`,
         `Your coordinator is <span class="k">Dr. Marcus Reed, aquatic ecologist</span> — he's here to meet you.`
@@ -1255,7 +1255,7 @@ const CJ_EVIDENCE=[
 ];
 function cjPanel(key){
   if(key==="photos")return `
-    <div class="two-col">${imageBlock("assets/images/fishing-derby-current.jpg")}${imageBlock("assets/images/fishing-derby-past.jpg")}</div>
+    <div class="two-col">${imageBlock("images/fishing-derby-current.jpg")}${imageBlock("images/fishing-derby-past.jpg")}</div>
     <p class="small muted">Left: this summer near North Cove. Right: an earlier North Cove summer, shown with a similar fish tray for reference.</p>
     ${thought("The difference is worth noticing, but the photographs do not confirm exact age or measurements.")}
     ${promptBox("What similarities or differences do you notice?")}
@@ -1267,7 +1267,7 @@ function cjPanel(key){
     ${promptBox("What pattern appears across the community observations?")}
     ${textField("cj_angler","Your note","firstInvestigation.communityJournal.anglerNote")}`;
   if(key==="locations")return `
-    ${imageBlock("assets/images/silver-lake-zone-map.png")}
+    ${imageBlock("images/silver-lake-zone-map.png")}
     <ul>
       <li><strong>North Cove:</strong> two reports of smaller young bluegill.</li>
       <li><strong>West Shore:</strong> one report of typical-sized fish.</li>
@@ -1276,7 +1276,7 @@ function cjPanel(key){
     ${promptBox("What do the locations add to the pattern?")}
     ${textField("cj_loc","Your note","firstInvestigation.communityJournal.locationNote")}`;
   return `
-    <div class="two-col">${imageBlock("assets/images/bluegill-north-cove-current.png")}${imageBlock("assets/images/bluegill-comparison-zone.png")}</div>
+    <div class="two-col">${imageBlock("images/bluegill-north-cove-current.png")}${imageBlock("images/bluegill-comparison-zone.png")}</div>
     <p class="small muted">Standardized side-view illustrations of same-age juvenile bluegill. No measurements are provided here.</p>
     ${thought("The body shapes look different. Measurements would help determine whether the pattern is real.")}
     ${promptBox("What do you notice about body length and overall body shape?")}
@@ -1487,7 +1487,7 @@ registerScreen(7,{title:"Briefing at the Field Station",hint:"Open the shared ev
         <li>A comparison zone stays relatively stable.</li>
         <li>Same species, age group, season, and method were used.</li></ul>`;
     return `<div class="screen">
-      ${sceneHero({stamp:"Silver Lake Fisheries Field Station & Hatchery",title:"Briefing at the Field Station",sub:"The doors slide open. Both teams' records are already loading onto the shared display.",img:"assets/images/silver-lake-field-station.jpg",alt:"Field station interior with juvenile-fish tanks, a briefing table, and a shared display."})}
+      ${sceneHero({stamp:"Silver Lake Fisheries Field Station & Hatchery",title:"Briefing at the Field Station",sub:"The doors slide open. Both teams' records are already loading onto the shared display.",img:"images/silver-lake-field-station.jpg",alt:"Field station interior with juvenile-fish tanks, a briefing table, and a shared display."})}
       ${dialogue(reed(["Let's bring both views together.","Your team investigated one part of the evidence. The other team looked at the same concern from a different angle — both records are already on the board."]))}
       ${dialogue(youCommunity
         ? say("the Community Journal Team","CJ",["The full case journal is open on the left — photographs, angler reports, catch locations, and the fish-condition images, in the order you reviewed them."],"reports")
@@ -1822,9 +1822,9 @@ registerScreen(11,{title:"Evidence Chain",hint:"Arrange the chain, then continue
     const c2=state.secondInvestigation.convergenceTwo;
     const youWater=state.navigation.secondPath==="water";
     const waterItem=promptBox("Representative reading: North Cove dissolved oxygen fell to 2.4 mg/L before dawn three days after heavy rain.");
-    const wayItem=imageBlock("assets/images/route-stormwater-channel.gif");
+    const wayItem=imageBlock("images/route-stormwater-channel.gif");
     return `<div class="screen">
-      ${sceneHero({stamp:"Field Station · Evidence Wall",title:"The Silver Lake Evidence Wall",sub:"Sensor records cover one side of the wall; the town waterway map fills the other. Both teams' findings are already posted.",img:"assets/images/silver-lake-field-station.jpg",alt:"A field-station evidence wall showing water-sensor records and a town waterway map."})}
+      ${sceneHero({stamp:"Field Station · Evidence Wall",title:"The Silver Lake Evidence Wall",sub:"Sensor records cover one side of the wall; the town waterway map fills the other. Both teams' findings are already posted.",img:"images/silver-lake-field-station.jpg",alt:"A field-station evidence wall showing water-sensor records and a town waterway map."})}
       ${dialogue(say("the Water-Monitoring Team","WM",["North Cove's oxygen changed throughout every day we examined.","The lowest measurements occurred before dawn, and the decline became more severe after rain.","Higher algae indicators appeared during the periods with the strongest oxygen decline."],"reports"))}
       <div class="card"><p class="small muted" style="margin:0 0 8px">Representative sensor record:</p>${waterItem}</div>
       ${dialogue(say("the Town Waterway Team","TW",["Only one route combined all three clues: it enters North Cove, drains neighborhoods and park land, and shows a sharp nutrient increase after rain.","The other routes — the wooded feeder stream and the wetland outlet — don't share that combination."],"reports"))}
@@ -1927,7 +1927,7 @@ registerScreen(12,{title:"Parks Department Request",hint:"Run the current design
       ${thought("I can use the Silver Lake cause-and-effect chain to predict what could happen in a new location.")}
       <div class="card">
         <div class="callout"><strong>The question:</strong> Could runoff from the proposed sports complex create conditions similar to those in North Cove?</div>
-        ${imageBlock("assets/images/sports-complex-site-map.png")}
+        ${imageBlock("images/sports-complex-site-map.png")}
         <p class="small muted">The site includes sports fields, a parking area, drains, a slope, and a route into East Creek.</p>
       </div>
       <div class="card panel-journal">
@@ -2328,7 +2328,7 @@ function quizChoiceFeedback(item,key){const c=item.choices.find(c=>c.key===key);
 registerScreen(16,{title:"Case Complete",hideContinue:true,
   render(){
     return `<div class="screen">
-      ${sceneHero({stamp:"Silver Lake",title:"Case Complete",sub:"The water is calm again. The team's work is on its way to the people who asked for it.",img:"assets/images/silver-lake-hero.jpg",alt:"A calm view of Silver Lake at the close of the investigation."})}
+      ${sceneHero({stamp:"Silver Lake",title:"Case Complete",sub:"The water is calm again. The team's work is on its way to the people who asked for it.",img:"images/silver-lake-hero.jpg",alt:"A calm view of Silver Lake at the close of the investigation."})}
       ${sysMsg("Delivery confirmed",[`<span class="ok">✓</span> Environmental Action Brief delivered to the Silver Lake Town Council and Parks Department.`])}
       ${dialogue(
         reed("Nice work. Take a second to appreciate what just happened."),
