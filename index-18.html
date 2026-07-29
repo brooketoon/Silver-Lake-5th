@@ -1,0 +1,2627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trouble at Silver Lake: An Aquatic Investigation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --lake-navy:#123B4A;
+  --water-teal:#168C8C;
+  --marsh-green:#6F9148;
+  --field-gold:#E3A83B;
+  --rust-coral:#C85D4B;
+  --mist-blue:#EAF5F4;
+  --warm-sand:#F7F1E3;
+  --charcoal:#243238;
+  --white:#FFFFFF;
+  --font-title:"Fredoka","Baloo 2",system-ui,Arial,sans-serif;
+  --font-interface:"Nunito",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  --font-body:"Nunito",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  --shadow-sm:0 1px 3px rgba(18,59,74,.14);
+  --shadow-md:0 4px 14px rgba(18,59,74,.16);
+  --shadow-lg:0 10px 30px rgba(18,59,74,.22);
+  --radius:14px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:var(--font-body);
+  color:var(--charcoal);
+  background:var(--mist-blue);
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:var(--font-interface);color:var(--lake-navy);line-height:1.2;}
+button{font-family:var(--font-interface);cursor:pointer;}
+:focus-visible{outline:3px solid var(--field-gold);outline-offset:2px;border-radius:4px;}
+
+/* ---------- App header ---------- */
+.app-header{
+  position:sticky;top:0;z-index:40;
+  background:var(--lake-navy);
+  color:var(--white);
+  border-bottom:3px solid var(--water-teal);
+  box-shadow:var(--shadow-md);
+}
+.app-header-inner{
+  max-width:1100px;margin:0 auto;padding:8px 16px;
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+}
+.brand{display:flex;flex-direction:column;line-height:1.1;}
+.brand .sis{font-family:var(--font-title);font-size:1.05rem;letter-spacing:.3px;}
+.brand .grade{font-family:var(--font-interface);font-size:.72rem;opacity:.85;text-transform:uppercase;letter-spacing:1px;}
+.header-title{flex:1 1 180px;min-width:120px;font-family:var(--font-interface);font-weight:700;font-size:.95rem;color:var(--mist-blue);}
+.header-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;}
+.hbtn{
+  background:rgba(255,255,255,.12);color:var(--white);border:1px solid rgba(255,255,255,.25);
+  border-radius:20px;padding:8px 14px;font-size:.82rem;font-weight:600;min-height:40px;
+}
+.hbtn:hover{background:rgba(255,255,255,.24);}
+.autosave-chip{
+  display:inline-flex;align-items:center;gap:6px;font-size:.75rem;font-family:var(--font-interface);
+  color:var(--mist-blue);background:rgba(0,0,0,.18);padding:6px 10px;border-radius:16px;min-height:32px;
+}
+.autosave-dot{width:9px;height:9px;border-radius:50%;background:var(--field-gold);transition:background .3s;}
+.autosave-chip.saved .autosave-dot{background:var(--marsh-green);}
+
+/* ---------- Layout ---------- */
+.stage{max-width:1000px;margin:0 auto;padding:20px 16px 120px;}
+.screen{animation:fade .35s ease;}
+@keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+.card{
+  background:var(--white);border-radius:var(--radius);box-shadow:var(--shadow-md);
+  padding:22px;margin-bottom:18px;border:1px solid rgba(18,59,74,.06);
+}
+.eyebrow{font-family:var(--font-interface);text-transform:uppercase;letter-spacing:1.5px;font-size:.72rem;
+  font-weight:800;color:var(--water-teal);margin:0 0 6px;}
+.screen h1.title{font-family:var(--font-title);font-size:2rem;margin:0 0 6px;color:var(--lake-navy);}
+.screen h2{font-size:1.4rem;margin:0 0 10px;}
+.lead{font-size:1.05rem;color:var(--charcoal);}
+.muted{color:#4c5c63;}
+.small{font-size:.85rem;}
+
+/* contour motif */
+.contour-band{
+  background:
+    radial-gradient(120% 60% at 10% 0%,rgba(22,140,140,.10),transparent 60%),
+    repeating-radial-gradient(circle at 15% 120%,transparent 0 26px,rgba(18,59,74,.05) 26px 27px);
+}
+
+/* ---------- Buttons / nav ---------- */
+.btn{
+  border:none;border-radius:24px;padding:13px 22px;font-weight:700;font-size:.95rem;
+  min-height:48px;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-gold{background:var(--field-gold);color:var(--charcoal);box-shadow:var(--shadow-sm);}
+.btn-gold:hover{filter:brightness(1.05);}
+.btn-teal{background:var(--water-teal);color:var(--white);}
+.btn-teal:hover{filter:brightness(1.07);}
+.btn-navy{background:var(--lake-navy);color:var(--white);}
+.btn-outline{background:transparent;border:2px solid var(--water-teal);color:var(--water-teal);}
+.btn-ghost{background:var(--mist-blue);color:var(--lake-navy);border:1px solid rgba(18,59,74,.15);}
+.btn:disabled{opacity:.42;cursor:not-allowed;filter:none;}
+.navbar{
+  position:fixed;left:0;right:0;bottom:0;z-index:35;background:var(--white);
+  border-top:1px solid rgba(18,59,74,.12);box-shadow:0 -4px 16px rgba(18,59,74,.10);
+}
+.navbar-inner{max-width:1000px;margin:0 auto;padding:10px 16px;display:flex;justify-content:space-between;gap:10px;align-items:center;}
+.nav-hint{font-size:.75rem;color:#5a6a70;font-family:var(--font-interface);text-align:center;flex:1;min-width:0;}
+
+/* ---------- Forms ---------- */
+label.field-label{display:block;font-family:var(--font-interface);font-weight:700;color:var(--lake-navy);margin:14px 0 6px;font-size:.95rem;}
+textarea,input[type=text]{
+  width:100%;font-family:var(--font-body);font-size:1rem;color:var(--charcoal);
+  border:2px solid rgba(18,59,74,.18);border-radius:10px;padding:11px 12px;background:var(--white);resize:vertical;
+}
+textarea{min-height:92px;}
+textarea:focus,input[type=text]:focus{border-color:var(--water-teal);}
+.prompt-box{
+  background:var(--warm-sand);border-left:5px solid var(--field-gold);border-radius:8px;
+  padding:12px 14px;margin:8px 0;font-family:var(--font-body);
+}
+.prompt-box .q{font-family:var(--font-interface);font-weight:700;color:var(--lake-navy);}
+
+/* journal / science panels */
+.panel-journal{background:var(--warm-sand);border:1px solid #e6dcc2;}
+.panel-science{background:var(--mist-blue);border:1px solid #cfe6e4;}
+
+/* ---------- Dialogue / mentor ---------- */
+.mentor{display:flex;gap:14px;align-items:flex-start;background:var(--mist-blue);border-radius:var(--radius);padding:16px;border:1px solid #cfe6e4;}
+.mentor .avatar{width:64px;height:64px;border-radius:50%;flex:0 0 auto;overflow:hidden;background:var(--water-teal);
+  display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-family:var(--font-interface);}
+.mentor .avatar img{width:100%;height:100%;object-fit:cover;}
+.mentor .who{font-family:var(--font-interface);font-weight:800;color:var(--lake-navy);}
+.mentor .role{font-size:.8rem;color:var(--water-teal);font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
+.speech{margin-top:6px;font-style:normal;}
+
+/* career spotlight */
+.spotlight{border:2px dashed var(--marsh-green);border-radius:12px;padding:14px;background:#f3f7ec;}
+.spotlight h4{color:var(--marsh-green);margin:0 0 4px;}
+
+/* ---------- Path cards ---------- */
+.path-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.path-card{
+  border:2px solid rgba(18,59,74,.14);border-radius:var(--radius);padding:18px;background:var(--white);
+  display:flex;flex-direction:column;gap:8px;transition:transform .15s,box-shadow .15s,border-color .15s;
+  text-align:left;
+}
+.path-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--water-teal);}
+.path-card .tag{font-family:var(--font-interface);font-weight:800;text-transform:uppercase;font-size:.7rem;letter-spacing:1px;color:var(--field-gold);}
+.path-card h3{margin:0;font-size:1.15rem;}
+.path-card ul{margin:6px 0 0;padding-left:18px;color:#40525a;font-size:.92rem;}
+.path-card .choose{margin-top:auto;}
+
+/* image with placeholder */
+.img-frame{border-radius:12px;overflow:hidden;border:1px solid rgba(18,59,74,.12);background:var(--warm-sand);}
+.img-ph{
+  display:flex;flex-direction:column;gap:6px;align-items:center;justify-content:center;text-align:center;
+  min-height:150px;padding:16px;color:#7a6f57;background:
+    repeating-linear-gradient(45deg,#f4edda,#f4edda 12px,#efe6cd 12px,#efe6cd 24px);
+  font-family:var(--font-interface);
+}
+.img-ph .fn{font-size:.72rem;color:#9b8f73;word-break:break-all;}
+.img-ph .ic{font-size:1.6rem;}
+img.lesson-img{display:block;width:100%;height:auto;}
+
+/* ---------- Tabs ---------- */
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+.tab-btn{
+  border:2px solid rgba(18,59,74,.18);background:var(--white);color:var(--lake-navy);
+  border-radius:10px 10px 0 0;padding:10px 14px;font-weight:700;font-size:.85rem;min-height:44px;position:relative;
+}
+.tab-btn[aria-selected=true]{background:var(--water-teal);color:#fff;border-color:var(--water-teal);}
+.tab-btn .seen{position:absolute;top:4px;right:6px;font-size:.7rem;color:var(--marsh-green);}
+.tab-btn[aria-selected=true] .seen{color:#dff3b8;}
+.tab-panel{border:2px solid rgba(18,59,74,.14);border-radius:0 12px 12px 12px;padding:16px;background:var(--white);}
+
+/* evidence stars/checks */
+.evi-list{display:grid;gap:10px;}
+.evi-item{display:flex;gap:10px;align-items:flex-start;border:1px solid rgba(18,59,74,.14);border-radius:10px;padding:10px 12px;background:var(--white);}
+.evi-item.sel{border-color:var(--field-gold);background:#fff9ec;box-shadow:inset 0 0 0 1px var(--field-gold);}
+.evi-toggle{min-width:44px;min-height:44px;border-radius:10px;border:2px solid var(--field-gold);background:#fff;font-size:1.1rem;color:var(--field-gold);}
+.evi-item.sel .evi-toggle{background:var(--field-gold);color:#fff;}
+.evi-body{flex:1;}
+
+/* ---------- Graph ---------- */
+.graph-controls{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:12px;}
+.control-group{border:1px solid rgba(18,59,74,.14);border-radius:10px;padding:10px 12px;background:var(--mist-blue);}
+.control-group legend{font-family:var(--font-interface);font-weight:800;font-size:.78rem;color:var(--lake-navy);padding:0 4px;text-transform:uppercase;letter-spacing:.5px;}
+.chip-row{display:flex;flex-wrap:wrap;gap:6px;}
+.chip{border:2px solid rgba(18,59,74,.2);background:#fff;border-radius:18px;padding:8px 13px;font-weight:700;font-size:.82rem;color:var(--lake-navy);min-height:40px;}
+.chip[aria-pressed=true],.chip.active{background:var(--water-teal);color:#fff;border-color:var(--water-teal);}
+.chip.locked{background:var(--lake-navy);color:#fff;border-color:var(--lake-navy);opacity:1;cursor:default;}
+.graph-wrap{background:var(--white);border:1px solid rgba(18,59,74,.14);border-radius:12px;padding:8px;overflow-x:auto;}
+svg .grid-line{stroke:rgba(18,59,74,.10);stroke-width:1;}
+svg .axis-line{stroke:var(--charcoal);stroke-width:1.5;}
+svg text{font-family:var(--font-body);fill:var(--charcoal);}
+.data-table-toggle{margin-top:8px;}
+table.data-table{border-collapse:collapse;width:100%;font-size:.85rem;margin-top:8px;}
+table.data-table th,table.data-table td{border:1px solid rgba(18,59,74,.18);padding:6px 8px;text-align:center;}
+table.data-table th{background:var(--mist-blue);font-family:var(--font-interface);}
+.sr-summary{background:#f3f7ec;border-left:4px solid var(--marsh-green);padding:8px 12px;border-radius:6px;font-size:.9rem;margin-top:8px;}
+
+/* reveal blocks */
+.reveal{border-top:2px dashed rgba(18,59,74,.18);margin-top:16px;padding-top:14px;}
+.hidden{display:none !important;}
+
+/* timeline */
+.period-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+.oxy-legend{display:flex;flex-wrap:wrap;gap:10px;font-size:.8rem;margin:8px 0;}
+.oxy-legend span{display:inline-flex;align-items:center;gap:5px;}
+.swatch{width:14px;height:14px;border-radius:3px;display:inline-block;}
+.algae-toggle{display:inline-flex;align-items:center;gap:8px;margin:8px 0;font-family:var(--font-interface);font-weight:700;}
+
+/* map */
+.map-wrap{position:relative;border:1px solid rgba(18,59,74,.16);border-radius:12px;overflow:hidden;background:#dceef0;}
+.route-list{display:grid;gap:10px;margin-top:12px;}
+.route-btn{
+  display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left;width:100%;
+  border:2px solid rgba(18,59,74,.16);background:#fff;border-radius:12px;padding:12px 14px;min-height:56px;
+}
+.route-btn:hover{border-color:var(--water-teal);}
+.route-btn.viewed{border-color:var(--marsh-green);background:#f4f8ee;}
+.route-btn .rname{font-family:var(--font-interface);font-weight:800;color:var(--lake-navy);}
+.route-btn .rmeta{font-size:.78rem;color:#5a6a70;}
+.route-btn .badge{background:var(--marsh-green);color:#fff;border-radius:12px;padding:3px 8px;font-size:.7rem;font-weight:700;}
+
+/* ranking */
+.rank-list{list-style:none;padding:0;margin:8px 0;display:grid;gap:8px;}
+.rank-item{display:flex;align-items:center;gap:10px;border:1px solid rgba(18,59,74,.16);border-radius:10px;padding:8px 10px;background:#fff;}
+.rank-num{font-family:var(--font-interface);font-weight:800;background:var(--lake-navy);color:#fff;border-radius:8px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
+.rank-move{display:flex;gap:4px;margin-left:auto;}
+.rank-move button{min-width:40px;min-height:40px;border-radius:8px;border:1px solid rgba(18,59,74,.2);background:var(--mist-blue);font-weight:800;}
+
+/* chain */
+.chain-list{list-style:none;padding:0;margin:0;display:grid;gap:10px;}
+.chain-card{border:2px solid rgba(18,59,74,.16);border-radius:12px;padding:12px 14px;background:#fff;display:flex;gap:12px;align-items:flex-start;}
+.chain-card.dragging{opacity:.5;}
+.chain-card.over{border-color:var(--field-gold);}
+.chain-handle{cursor:grab;font-size:1.2rem;color:#8a979d;user-select:none;padding-top:2px;}
+.chain-order{font-family:var(--font-interface);font-weight:800;background:var(--water-teal);color:#fff;border-radius:8px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
+.chain-text{flex:1;}
+.chain-controls{display:flex;gap:4px;flex-direction:column;}
+.chain-controls button{min-width:40px;min-height:36px;border-radius:8px;border:1px solid rgba(18,59,74,.2);background:var(--mist-blue);font-weight:800;}
+.confidence-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+.conf-btn{border:2px solid rgba(18,59,74,.2);background:#fff;border-radius:16px;padding:6px 10px;font-size:.75rem;font-weight:700;min-height:38px;}
+.conf-btn.active{background:var(--marsh-green);color:#fff;border-color:var(--marsh-green);}
+
+/* model runs */
+.run-result{border:1px solid rgba(18,59,74,.16);border-radius:12px;padding:14px;background:var(--mist-blue);margin-top:10px;}
+.metric-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:8px 0;}
+.metric{background:#fff;border-radius:10px;padding:10px;text-align:center;border:1px solid rgba(18,59,74,.12);}
+.metric .val{font-family:var(--font-interface);font-weight:800;font-size:1.35rem;color:var(--lake-navy);}
+.metric .lab{font-size:.72rem;text-transform:uppercase;letter-spacing:.5px;color:#5a6a70;}
+.algae-High{color:var(--rust-coral);}
+.algae-Moderate{color:var(--field-gold);}
+.algae-Low{color:var(--marsh-green);}
+.delta{font-size:.8rem;font-weight:700;}
+.delta.down{color:var(--marsh-green);}
+.delta.up{color:var(--rust-coral);}
+.run-log{margin-top:10px;display:grid;gap:6px;}
+.run-log-item{font-size:.82rem;background:#fff;border:1px solid rgba(18,59,74,.12);border-radius:8px;padding:6px 10px;}
+
+/* idea cards */
+.idea-grid{display:grid;gap:10px;}
+.idea-card{border:2px solid rgba(18,59,74,.14);border-radius:12px;padding:12px 14px;background:#fff;}
+.idea-card h4{margin:0 0 4px;}
+.role-select{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+.role-select button{border:2px solid rgba(18,59,74,.2);background:#fff;border-radius:14px;padding:6px 10px;font-size:.75rem;font-weight:700;min-height:36px;}
+.role-select button.active{background:var(--field-gold);color:var(--charcoal);border-color:var(--field-gold);}
+
+/* generated brief */
+.brief-doc{background:#fff;border:1px solid rgba(18,59,74,.16);border-radius:14px;overflow:hidden;box-shadow:var(--shadow-md);}
+.brief-banner{background:linear-gradient(120deg,var(--lake-navy),var(--water-teal));color:#fff;padding:20px 22px;}
+.brief-banner h2{color:#fff;margin:0 0 4px;font-family:var(--font-title);font-size:1.6rem;}
+.brief-banner .sub{font-family:var(--font-interface);opacity:.9;font-size:.9rem;}
+.brief-body{padding:20px 22px;display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.brief-section h3{border-bottom:2px solid var(--field-gold);padding-bottom:4px;font-size:1.05rem;}
+.brief-section.full{grid-column:1/-1;}
+.brief-chain{list-style:none;padding:0;margin:0;counter-reset:bc;}
+.brief-chain li{position:relative;padding:6px 6px 6px 34px;margin-bottom:4px;background:var(--mist-blue);border-radius:8px;counter-increment:bc;}
+.brief-chain li::before{content:counter(bc);position:absolute;left:6px;top:6px;background:var(--water-teal);color:#fff;width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:var(--font-interface);font-weight:800;font-size:.8rem;}
+.callout{background:var(--warm-sand);border-left:4px solid var(--field-gold);padding:8px 12px;border-radius:6px;margin:6px 0;}
+.blank-note{color:#a06a4b;font-style:italic;}
+
+/* quiz */
+.seg{display:inline-flex;border:2px solid var(--water-teal);border-radius:24px;overflow:hidden;}
+.seg button{border:none;background:#fff;color:var(--water-teal);padding:11px 18px;font-weight:800;min-height:48px;}
+.seg button.active{background:var(--water-teal);color:#fff;}
+.quiz-item{border:1px solid rgba(18,59,74,.16);border-radius:12px;padding:16px;margin-bottom:12px;background:#fff;}
+.quiz-q{font-family:var(--font-interface);font-weight:800;color:var(--lake-navy);margin-bottom:10px;}
+.choice{display:flex;gap:10px;align-items:flex-start;border:2px solid rgba(18,59,74,.16);border-radius:10px;padding:11px 12px;margin-bottom:8px;background:#fff;cursor:pointer;}
+.choice:hover{border-color:var(--water-teal);}
+.choice input{margin-top:3px;min-width:20px;min-height:20px;}
+.choice.correct{border-color:var(--marsh-green);background:#f1f8ea;}
+.choice.incorrect{border-color:var(--rust-coral);background:#fbeeea;}
+.fb{margin-top:8px;border-radius:8px;padding:10px 12px;font-size:.9rem;}
+.fb.ok{background:#f1f8ea;border-left:4px solid var(--marsh-green);}
+.fb.no{background:#fbeeea;border-left:4px solid var(--rust-coral);}
+.fb.none{background:#f4f2ea;border-left:4px solid var(--field-gold);}
+.result-banner{background:var(--lake-navy);color:#fff;border-radius:12px;padding:16px;margin-bottom:14px;}
+.result-banner .score{font-family:var(--font-interface);font-weight:800;font-size:1.6rem;}
+
+/* modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(18,59,74,.55);z-index:60;display:flex;align-items:center;justify-content:center;padding:16px;}
+.modal{background:#fff;border-radius:16px;max-width:520px;width:100%;max-height:88vh;overflow:auto;box-shadow:var(--shadow-lg);}
+.modal-head{padding:16px 18px;border-bottom:1px solid rgba(18,59,74,.12);display:flex;justify-content:space-between;align-items:center;}
+.modal-head h3{margin:0;}
+.modal-body{padding:16px 18px;}
+.modal-foot{padding:14px 18px;border-top:1px solid rgba(18,59,74,.12);display:flex;justify-content:flex-end;gap:10px;}
+.close-x{background:none;border:none;font-size:1.4rem;color:var(--lake-navy);min-width:44px;min-height:44px;}
+
+/* glossary */
+.gloss-search{width:100%;margin-bottom:10px;}
+.gloss-term{border-bottom:1px solid rgba(18,59,74,.1);padding:8px 0;}
+.gloss-term dt{font-family:var(--font-interface);font-weight:800;color:var(--water-teal);}
+.gloss-term dd{margin:2px 0 0;}
+
+/* launch */
+.launch-hero{position:relative;border-radius:18px;overflow:hidden;margin-bottom:18px;}
+.launch-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px;}
+.save-note{font-size:.82rem;color:#5a6a70;margin-top:10px;display:inline-flex;gap:6px;align-items:center;}
+
+.pill{display:inline-block;background:var(--mist-blue);border:1px solid #cfe6e4;border-radius:14px;padding:3px 10px;font-size:.75rem;font-weight:700;color:var(--lake-navy);font-family:var(--font-interface);margin:2px 4px 2px 0;}
+
+.report-box{background:#fff;border:1px solid rgba(18,59,74,.14);border-radius:12px;padding:14px;}
+.report-box h4{margin:0 0 6px;color:var(--water-teal);}
+.report-box ul{margin:0;padding-left:18px;}
+
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+
+/* responsive */
+@media(max-width:720px){
+  .path-grid,.two-col,.brief-body{grid-template-columns:1fr;}
+  .metric-grid{grid-template-columns:1fr;}
+  .screen h1.title{font-size:1.6rem;}
+  .stage{padding:16px 12px 130px;}
+  .header-title{flex-basis:100%;order:5;}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none !important;transition:none !important;}
+}
+@media print{
+  .app-header,.navbar,.no-print{display:none !important;}
+}
+
+/* ===== Landing (Screen 1) ===== */
+.landing{max-width:1000px;margin:0 auto;}
+.landing-head{background:var(--white);border-radius:16px;padding:16px 18px;box-shadow:var(--shadow-sm);margin-bottom:16px;}
+.landing-head .toprow{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap;}
+.sis-badge{display:inline-flex;align-items:center;background:var(--marsh-green);color:#fff;font-family:var(--font-title);font-size:.95rem;letter-spacing:.3px;padding:9px 16px;border-radius:22px;box-shadow:var(--shadow-sm);}
+.landing-titles{flex:1 1 240px;}
+.landing-titles .eyebrow{margin:0 0 3px;color:#7a8a90;}
+.landing-titles h1{font-family:var(--font-title);font-size:1.5rem;color:var(--water-teal);margin:0;line-height:1.15;}
+.action-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:14px;padding-top:13px;border-top:1px solid #eef2f1;}
+.code-chip{font-family:var(--font-interface);font-size:.82rem;color:var(--charcoal);background:var(--mist-blue);border:1px solid #cfe6e4;border-radius:10px;padding:8px 12px;font-weight:600;}
+.code-chip b{color:var(--lake-navy);letter-spacing:.5px;}
+.lbtn{background:var(--white);border:1px solid #d5dcdc;color:var(--lake-navy);border-radius:10px;padding:9px 14px;font-family:var(--font-interface);font-weight:700;font-size:.85rem;min-height:40px;display:inline-flex;align-items:center;gap:6px;}
+.lbtn:hover{background:#f3f7f6;}
+.lbtn.danger{color:var(--rust-coral);border-color:var(--rust-coral);}
+.lbtn.danger:hover{background:#fbf0ed;}
+.name-setup{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:13px;}
+.utility-row{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin-top:18px;padding-top:14px;border-top:1px solid #eef2f1;font-family:var(--font-interface);font-size:.8rem;color:#8a979d;}
+.utility-row .u-sep{color:#c8d1d0;}
+.utility-row button,.utility-row .u-code{background:none;border:none;padding:0;margin:0;color:#8a979d;font-family:var(--font-interface);font-size:.8rem;font-weight:600;cursor:pointer;min-height:auto;}
+.utility-row button:hover{color:var(--water-teal);text-decoration:underline;}
+.utility-row button.u-danger:hover{color:var(--rust-coral);}
+.name-setup label{font-family:var(--font-interface);font-weight:700;color:var(--lake-navy);font-size:.85rem;}
+.name-setup .opt{color:#8a979d;font-weight:500;}
+.name-setup input{border:1px solid #d5dcdc;border-radius:8px;padding:9px 11px;font-size:.9rem;min-height:40px;flex:0 1 260px;min-width:190px;}
+
+.mission-path-title{font-family:var(--font-interface);font-weight:800;color:var(--marsh-green);font-size:.95rem;margin:4px 0 10px;display:flex;align-items:center;gap:7px;}
+.stepper{display:flex;align-items:stretch;gap:6px;background:var(--white);border-radius:16px;padding:15px 16px;box-shadow:var(--shadow-sm);margin-bottom:16px;flex-wrap:wrap;}
+.step{flex:1 1 190px;display:flex;gap:11px;align-items:flex-start;min-width:160px;}
+.step-num{flex:none;width:30px;height:30px;border-radius:50%;background:var(--mist-blue);color:var(--lake-navy);font-family:var(--font-interface);font-weight:800;display:flex;align-items:center;justify-content:center;font-size:.9rem;}
+.step.done .step-num{background:var(--marsh-green);color:#fff;}
+.step-label{font-family:var(--font-interface);font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:#7a8a90;font-weight:800;}
+.step-state{font-family:var(--font-interface);font-size:.9rem;color:var(--charcoal);}
+.step-arrow{align-self:center;color:#b6c2c2;font-size:1.15rem;flex:none;}
+
+.hero-banner{background:linear-gradient(135deg,var(--lake-navy),var(--water-teal));color:#fff;border-radius:20px;padding:42px 32px;text-align:center;margin-bottom:16px;box-shadow:var(--shadow-md);}
+.hero-banner h2{font-family:var(--font-title);font-size:2.4rem;margin:0 0 16px;line-height:1.05;}
+.hero-lead{font-size:1.05rem;max-width:660px;margin:0 auto 24px;line-height:1.5;}
+.hero-lead strong{font-weight:800;}
+.hero-banner .btn-gold{font-size:1.05rem;padding:14px 34px;}
+
+.collapse{background:var(--white);border-radius:16px;box-shadow:var(--shadow-sm);margin-bottom:16px;overflow:hidden;}
+.collapse-head{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f3f7f6;padding:16px 18px;font-family:var(--font-interface);font-weight:800;color:var(--lake-navy);font-size:1rem;}
+.collapse-head::-webkit-details-marker{display:none;}
+.collapse-head .caret{transition:transform .2s;color:#7a8a90;}
+.collapse[open] .collapse-head .caret{transform:rotate(180deg);}
+.collapse-body{padding:18px;}
+.collapse-body .intro{color:var(--charcoal);line-height:1.55;margin:0 0 20px;}
+.sect-label{font-family:var(--font-interface);font-size:.75rem;font-weight:800;text-transform:uppercase;letter-spacing:1.2px;color:var(--marsh-green);margin:0 0 11px;}
+.obj-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:22px;}
+.obj-card{background:var(--mist-blue);border:1px solid #d6e8e6;border-radius:12px;padding:14px;}
+.obj-num{width:26px;height:26px;border-radius:50%;background:var(--marsh-green);color:#fff;font-family:var(--font-interface);font-weight:800;display:flex;align-items:center;justify-content:center;font-size:.85rem;margin-bottom:9px;}
+.obj-card p{margin:0;color:var(--charcoal);font-size:.92rem;line-height:1.45;}
+.align-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px;}
+.align-col{border:1px solid #e4eae9;border-radius:12px;padding:14px;}
+.align-col h4{font-family:var(--font-interface);font-size:.72rem;text-transform:uppercase;letter-spacing:1px;color:var(--water-teal);margin:0 0 8px;}
+.align-col p{margin:0;font-size:.9rem;color:var(--charcoal);line-height:1.5;}
+.align-col .std-code{font-weight:800;color:var(--lake-navy);}
+.framework-callout{background:#fdf6e6;border-left:4px solid var(--field-gold);border-radius:8px;padding:14px 16px;}
+.framework-callout h4{font-family:var(--font-interface);font-size:.75rem;text-transform:uppercase;letter-spacing:1px;color:#b5852a;margin:0 0 8px;}
+.framework-callout p{margin:0;font-size:.92rem;color:var(--charcoal);line-height:1.55;}
+.landing-footer{text-align:center;color:#8a979d;font-size:.78rem;line-height:1.5;padding:18px 10px 6px;max-width:720px;margin:0 auto;}
+
+@media(max-width:720px){
+  .obj-grid,.align-grid{grid-template-columns:1fr;}
+  .hero-banner h2{font-size:1.8rem;}
+  .hero-banner{padding:32px 20px;}
+  .step-arrow{display:none;}
+  .step{flex-basis:100%;}
+}
+/* ================= NARRATIVE / SCENE SYSTEM ================= */
+.scene-hero{position:relative;border-radius:20px;overflow:hidden;margin-bottom:18px;background:linear-gradient(135deg,var(--lake-navy),var(--water-teal));color:#fff;box-shadow:var(--shadow-md);}
+.scene-hero .scene-media{width:100%;display:block;height:210px;object-fit:cover;opacity:.92;}
+.scene-hero .scene-body{padding:22px 24px;}
+.scene-hero.with-media .scene-body{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(transparent,rgba(11,40,50,.32),rgba(11,40,50,.9));}
+.scene-hero h1,.scene-hero h1.title,.scene-hero h2{color:#fff;font-family:var(--font-title);margin:8px 0 4px;line-height:1.08;font-size:1.9rem;}
+.scene-sub{color:var(--mist-blue);font-size:1.02rem;margin:6px 0 0;max-width:60ch;}
+.location-stamp{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-interface);font-size:.7rem;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:#fff;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);padding:5px 12px;border-radius:20px;}
+.case-status{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #d7e3e2;border-left:5px solid var(--field-gold);border-radius:12px;padding:12px 16px;margin:0 0 18px;box-shadow:var(--shadow-sm);}
+.case-status .cs-dot{width:10px;height:10px;border-radius:50%;background:var(--field-gold);flex:none;box-shadow:0 0 0 3px rgba(227,168,59,.22);}
+.case-status .cs-label{font-family:var(--font-interface);font-size:.68rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#8a979d;}
+.case-status .cs-text{font-family:var(--font-interface);font-weight:800;color:var(--lake-navy);font-size:.94rem;}
+.time-stamp{font-family:var(--font-interface);font-size:.74rem;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--field-gold);margin:10px 0 0;}
+.dialogue-block{background:#fff;border:1px solid #dbe6e6;border-left:4px solid var(--water-teal);border-radius:14px;padding:15px 18px;box-shadow:var(--shadow-sm);margin:0 0 18px;}
+.dialogue-block .lead-in{color:#5a6b72;font-size:1rem;line-height:1.55;margin:0 0 12px;}
+.dialogue{font-size:1.05rem;line-height:1.62;color:var(--charcoal);margin:0 0 12px;}
+.dialogue:last-child{margin-bottom:0;}
+.dialogue .sp{color:var(--water-teal);font-weight:800;font-style:normal;}
+.think{font-style:italic;color:#4a5a61;font-size:1.04rem;line-height:1.58;margin:0 0 18px;padding:13px 16px;background:#faf6ea;border:1px solid #ece0c4;border-left:3px solid var(--field-gold);border-radius:12px;}
+.beat{display:flex;gap:12px;align-items:flex-start;}
+.beat .portrait{width:52px;height:52px;border-radius:50%;flex:0 0 auto;overflow:hidden;background:var(--water-teal);color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--font-interface);font-weight:800;font-size:1rem;box-shadow:var(--shadow-sm);}
+.beat .portrait img{width:100%;height:100%;object-fit:cover;}
+.beat .bubble{background:#fff;border:1px solid #dbe6e6;border-radius:5px 16px 16px 16px;padding:12px 15px;box-shadow:var(--shadow-sm);flex:1;min-width:0;}
+.beat .speaker-name{font-family:var(--font-interface);font-weight:800;color:var(--lake-navy);font-size:.92rem;}
+.beat .speaker-role{font-size:.7rem;color:var(--water-teal);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;}
+.beat p{margin:3px 0 0;color:var(--charcoal);}
+.beat.community .portrait{background:var(--marsh-green);}
+.beat.system .portrait{background:var(--lake-navy);border-radius:13px;font-size:1.2rem;}
+.thought{background:var(--warm-sand);border:1px dashed var(--field-gold);border-radius:14px;padding:12px 16px;margin:0 0 18px;color:var(--charcoal);}
+.thought b{color:#b5852a;font-family:var(--font-interface);letter-spacing:.6px;text-transform:uppercase;font-size:.7rem;display:block;margin-bottom:3px;font-style:normal;}
+.thought span.t{font-style:italic;}
+.msg-screen{background:var(--lake-navy);color:var(--mist-blue);border-radius:16px;padding:18px 20px;margin:0 0 18px;box-shadow:var(--shadow-md);border:1px solid #0d2c37;}
+.msg-screen .msg-head{display:flex;align-items:center;gap:8px;font-family:var(--font-interface);font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:1.1px;font-size:.74rem;margin-bottom:10px;}
+.msg-screen .msg-head .dot{width:9px;height:9px;border-radius:50%;background:var(--field-gold);box-shadow:0 0 0 3px rgba(227,168,59,.25);}
+.msg-line{margin:7px 0;font-size:.95rem;}
+.msg-line .k{color:#8fd0d0;font-weight:800;}
+.msg-line .ok{color:#8fd06b;font-weight:800;}
+.case-file{background:var(--warm-sand);border:1px solid #e7dcbb;border-left:6px solid var(--field-gold);border-radius:10px;padding:16px 18px;margin:0 0 18px;}
+.case-file .file-tab{display:inline-block;background:var(--field-gold);color:#4a3a10;font-family:var(--font-interface);font-weight:800;font-size:.7rem;letter-spacing:1.1px;text-transform:uppercase;padding:4px 12px;border-radius:6px;margin-bottom:9px;}
+.case-file h3{margin:0 0 6px;}
+.scene-caption{font-size:.98rem;color:var(--charcoal);background:#fff;border-left:4px solid var(--water-teal);border-radius:6px;padding:11px 15px;margin:0 0 18px;box-shadow:var(--shadow-sm);}
+.card.story{border-left:5px solid var(--water-teal);}
+.narrative{font-size:1.06rem;line-height:1.62;color:var(--charcoal);}
+.narrative p{margin:0 0 14px;}
+.narrative p:last-child{margin-bottom:0;}
+.narrative strong{color:var(--lake-navy);}
+.narrative .drop{float:left;font-family:var(--font-title);font-size:2.9rem;line-height:.8;color:var(--water-teal);padding:6px 10px 0 0;}
+.subtle-prompt{font-style:italic;color:var(--water-teal);font-weight:600;font-size:1rem;margin:14px 0 2px;}
+.station-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.station-card{position:relative;text-align:left;background:#fff;border:1px solid #d7e3e2;border-radius:16px;padding:0;overflow:hidden;box-shadow:var(--shadow-sm);cursor:pointer;transition:transform .12s,box-shadow .12s,border-color .12s;}
+.station-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border-color:var(--water-teal);}
+.station-card .st-top{height:8px;background:linear-gradient(90deg,var(--water-teal),var(--field-gold));}
+.station-card .st-body{padding:16px 16px 18px;}
+.station-card .st-kicker{font-family:var(--font-interface);font-size:.7rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--water-teal);}
+.station-card h3{margin:6px 0 6px;color:var(--lake-navy);}
+.station-card p{margin:0 0 12px;color:#4c5c63;font-size:.92rem;}
+.station-card .st-open{display:inline-flex;align-items:center;gap:8px;background:var(--field-gold);color:var(--charcoal);font-family:var(--font-interface);font-weight:800;border-radius:22px;padding:10px 18px;font-size:.9rem;}
+.about-lesson{background:#fff;border-radius:14px;box-shadow:var(--shadow-sm);margin:16px 0 0;overflow:hidden;}
+.conv-table{width:100%;border-collapse:collapse;margin:4px 0 8px;font-size:.92rem;}
+.conv-table th,.conv-table td{border:1px solid #d9e4e3;padding:9px 11px;text-align:left;vertical-align:top;}
+.conv-table thead th{background:var(--lake-navy);color:#fff;font-family:var(--font-interface);font-size:.72rem;letter-spacing:.4px;text-transform:uppercase;}
+.conv-table tbody th{background:var(--mist-blue);color:var(--lake-navy);font-weight:800;width:34%;}
+.conv-table tbody tr:nth-child(even) td{background:#f7fbfb;}
+.transfer{background:#0e2b34;color:var(--mist-blue);border-radius:14px;padding:16px 18px;margin:0 0 18px;box-shadow:var(--shadow-md);}
+.transfer h4{color:#fff;margin:0 0 10px;font-family:var(--font-interface);font-size:.78rem;letter-spacing:1px;text-transform:uppercase;}
+.transfer ul{list-style:none;margin:0;padding:0;}
+.transfer li{display:flex;align-items:center;gap:9px;padding:6px 0;font-size:.93rem;border-bottom:1px solid rgba(255,255,255,.07);}
+.transfer li:last-child{border-bottom:none;}
+.transfer li .tick{color:#8fd06b;font-weight:800;flex:none;}
+.record-board{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;}
+.record-col{background:#fff;border:1px solid #dce6e6;border-radius:14px;padding:14px 16px;box-shadow:var(--shadow-sm);}
+.record-col.you{border-color:var(--water-teal);box-shadow:0 0 0 2px rgba(22,140,140,.14),var(--shadow-sm);}
+.record-col .yn{display:inline-block;font-size:.64rem;font-weight:800;letter-spacing:.6px;text-transform:uppercase;color:var(--water-teal);margin-bottom:6px;}
+.record-col h4{margin:0 0 8px;color:var(--lake-navy);font-size:.98rem;}
+.record-col ul{margin:0;padding-left:18px;color:#40525a;font-size:.9rem;line-height:1.5;}
+@media(max-width:720px){.record-board{grid-template-columns:1fr;}}
+.reveal-action{text-align:center;margin:8px 0 18px;}
+@media(max-width:720px){.scene-hero h1,.scene-hero h1.title,.scene-hero h2{font-size:1.5rem;}.station-grid{grid-template-columns:1fr;}.scene-hero .scene-media{height:150px;}}
+@media(prefers-reduced-motion:reduce){.station-card{transition:none;}}
+</style>
+</head>
+<body>
+<header class="app-header" role="banner">
+  <div class="app-header-inner">
+    <div class="brand">
+      <span class="sis">Stories in Science</span>
+      <span class="grade">Grade 5 &middot; Life Science</span>
+    </div>
+    <div class="header-title" id="headerTitle" aria-live="polite">Launch</div>
+    <div class="header-actions">
+      <span class="autosave-chip" id="autosaveChip" role="status" aria-live="polite"><span class="autosave-dot"></span><span id="autosaveText">Ready</span></span>
+      <button class="hbtn" id="ttsBtn" aria-pressed="false" title="Read this page aloud">&#128266; Listen</button>
+      <button class="hbtn" id="glossaryBtn" aria-haspopup="dialog">Glossary</button>
+      <button class="hbtn" id="restartBtn">Restart</button>
+    </div>
+  </div>
+</header>
+
+<main class="stage" id="stage" tabindex="-1"></main>
+
+<nav class="navbar no-print" id="navbar" aria-label="Lesson navigation">
+  <div class="navbar-inner">
+    <button class="btn btn-ghost" id="backBtn">&larr; Back</button>
+    <span class="nav-hint" id="navHint"></span>
+    <button class="btn btn-gold" id="continueBtn">Continue &rarr;</button>
+  </div>
+</nav>
+
+<div id="modalRoot"></div>
+
+<script>
+/* =======================================================================
+   TROUBLE AT SILVER LAKE — Grade 5 Stories in Science (AZ 5.L3U1.10)
+   Single-file lesson engine. Vanilla JS.
+   ======================================================================= */
+"use strict";
+
+/* ---------------- Utilities ---------------- */
+const $  = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>Array.from(r.querySelectorAll(s));
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function nl2br(s){return esc(s).replace(/\n/g,"<br>");}
+function nowISO(){return new Date().toISOString();}
+function fmtDate(iso){if(!iso)return"—";try{return new Date(iso).toLocaleDateString(undefined,{year:"numeric",month:"long",day:"numeric"});}catch(e){return iso;}}
+function fmtDateTime(iso){if(!iso)return"—";try{return new Date(iso).toLocaleString();}catch(e){return iso;}}
+function fmtDuration(sec){sec=Math.max(0,Math.round(sec||0));const m=Math.floor(sec/60),s=sec%60;return m+" min "+s+" sec";}
+function sanitizeFile(s){return String(s||"").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"").slice(0,40)||"investigator";}
+function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+
+/* ---------------- Datasets ---------------- */
+const YEARS=[2022,2023,2024,2025,2026];
+const ZONES=["North Cove","West Shore","South Wetland","Central Lake"];
+const ZONE_COLOR={"North Cove":"#C85D4B","West Shore":"#168C8C","South Wetland":"#6F9148","Central Lake":"#123B4A"};
+
+const fishLengthData={
+  "North Cove":[10.8,10.6,9.8,9.0,8.4],
+  "West Shore":[10.7,10.8,10.6,10.7,10.5],
+  "South Wetland":[10.5,10.6,10.5,10.4,10.6],
+  "Central Lake":[10.9,10.8,10.9,10.7,10.8]
+};
+const fishMassData={
+  "North Cove":[24,23,20,17,14],
+  "West Shore":[23,24,23,24,23],
+  "South Wetland":[22,23,23,22,23],
+  "Central Lake":[24,24,25,24,24]
+};
+const fishConditionData={
+  "North Cove":[4.3,4.1,3.6,3.0,2.5],
+  "West Shore":[4.1,4.2,4.1,4.2,4.0],
+  "South Wetland":[4.0,4.1,4.0,4.0,4.1],
+  "Central Lake":[4.2,4.2,4.3,4.1,4.2]
+};
+const VARIABLES={
+  length:{key:"length",label:"Average body length",unit:"cm",data:fishLengthData,yMin:7,yMax:12,note:"lengthNote",
+    prompt:"What pattern do you notice in length?"},
+  mass:{key:"mass",label:"Average body mass",unit:"g",data:fishMassData,yMin:10,yMax:28,note:"massNote",
+    prompt:"How does the mass evidence compare with the length evidence?"},
+  condition:{key:"condition",label:"Field body-condition rating",unit:"(1–5 scale)",data:fishConditionData,yMin:1,yMax:5,note:"conditionNote",
+    prompt:"What does the condition evidence add?"}
+};
+
+const TIMES=["Pre-dawn","Morning","Afternoon","Evening","Late night"];
+const oxygenData={
+  "North Cove":{dry:[4.6,5.2,7.1,6.3,5.2],lightRain:[3.7,4.5,6.5,5.5,4.2],heavyRain:[2.4,3.2,5.8,4.6,3.1]},
+  "West Shore":{dry:[5.9,6.4,7.5,6.8,6.1],lightRain:[5.6,6.1,7.2,6.5,5.8],heavyRain:[5.3,5.8,6.9,6.2,5.5]},
+  "South Wetland":{dry:[5.7,6.2,7.3,6.7,5.9],lightRain:[5.4,5.9,7.0,6.3,5.6],heavyRain:[5.1,5.6,6.7,6.0,5.3]},
+  "Central Lake":{dry:[6.1,6.6,7.7,7.0,6.3],lightRain:[5.8,6.3,7.4,6.7,6.0],heavyRain:[5.5,6.0,7.1,6.4,5.7]}
+};
+const algaeIndicator={dry:"Low",lightRain:"Moderate",heavyRain:"High"};
+const PERIODS={
+  dry:{key:"dry",label:"Dry conditions",note:"dryDayNote",prompt:"What pattern occurs across the dry day?"},
+  lightRain:{key:"lightRain",label:"Two days after light rain",note:"lightRainNote",prompt:"How does the light-rain record compare?"},
+  heavyRain:{key:"heavyRain",label:"Three days after heavy rain",note:"heavyRainNote",prompt:"How does the heavy-rain record compare?"}
+};
+
+const waterRoutes=[
+  {id:"wooded-stream",name:"Wooded Feeder Stream",destination:"West Shore",dryNutrient:0.4,afterRainNutrient:0.6,landUse:"Forested land with limited development",animation:"Images/route-wooded-stream.png"},
+  {id:"wetland-outlet",name:"South Wetland Outlet",destination:"South Wetland",dryNutrient:0.5,afterRainNutrient:0.7,landUse:"Water passes through a broad vegetated wetland",animation:"Images/route-wetland-outlet.png"},
+  {id:"stormwater-channel",name:"Maple Park Stormwater Channel",destination:"North Cove",dryNutrient:0.8,afterRainNutrient:3.6,landUse:"Drains nearby neighborhoods and Silver Lake Community Park",animation:"Images/route-stormwater-channel.png"}
+];
+
+const baselineModel={features:[],runoffPercent:92,nutrientIndex:100,algaeResponse:"High"};
+const individualFeatureResults={
+  sourceControl:{id:"source-control",name:"Weather-smart fertilizer plan",description:"Use only the amount needed and avoid applying fertilizer before forecast heavy rain.",runoffPercent:92,nutrientIndex:52,algaeResponse:"Moderate"},
+  rainGarden:{id:"rain-garden",name:"Rain garden",description:"Build a planted basin near the sports-field and parking-area drains.",runoffPercent:54,nutrientIndex:64,algaeResponse:"Moderate"},
+  vegetatedBuffer:{id:"vegetated-buffer",name:"Vegetated creek buffer",description:"Plant a wide strip of grasses and native plants between the developed area and East Creek.",runoffPercent:70,nutrientIndex:60,algaeResponse:"Moderate"}
+};
+const FEATURE_BY_ID={
+  "source-control":individualFeatureResults.sourceControl,
+  "rain-garden":individualFeatureResults.rainGarden,
+  "vegetated-buffer":individualFeatureResults.vegetatedBuffer
+};
+const combinedModelResults={
+  "source-control+rain-garden":{runoffPercent:54,nutrientIndex:33,algaeResponse:"Low"},
+  "source-control+vegetated-buffer":{runoffPercent:70,nutrientIndex:31,algaeResponse:"Low"},
+  "rain-garden+vegetated-buffer":{runoffPercent:41,nutrientIndex:38,algaeResponse:"Moderate"},
+  "source-control+rain-garden+vegetated-buffer":{runoffPercent:35,nutrientIndex:20,algaeResponse:"Low"}
+};
+function comboResult(ids){
+  const key=ids.slice().sort().join("+");
+  if(ids.length===1)return FEATURE_BY_ID[ids[0]]?{runoffPercent:FEATURE_BY_ID[ids[0]].runoffPercent,nutrientIndex:FEATURE_BY_ID[ids[0]].nutrientIndex,algaeResponse:FEATURE_BY_ID[ids[0]].algaeResponse}:null;
+  return combinedModelResults[key]||null;
+}
+
+/* ---------------- Image manifest / alt text ---------------- */
+const IMG_ALT={
+  "Images/silver-lake-hero.png":"Wide view of Silver Lake with wooded shoreline, a sheltered cove, and a small field station.",
+  "Images/dr-marcus-reed.png":"Aquatic ecologist Dr. Marcus Reed wearing practical field-station clothing and holding a tablet.",
+  "Images/fishing-derby-current.png":"Current-year fishing derby participants displaying several juvenile bluegill that appear smaller than earlier catches.",
+  "Images/fishing-derby-past.png":"Previous fishing derby photo showing fuller-bodied juvenile bluegill.",
+  "Images/bluegill-north-cove-current.png":"Side-view educational illustration of a smaller, less robust juvenile bluegill from North Cove.",
+  "Images/bluegill-comparison-zone.png":"Side-view educational illustration of a same-age juvenile bluegill from a comparison zone.",
+  "Images/silver-lake-field-station.png":"Interior of the Silver Lake Fisheries Field Station and Hatchery with tanks, maps, and a briefing table.",
+  "Images/silver-lake-zone-map.png":"Map of Silver Lake showing North Cove, West Shore, South Wetland, and Central Lake zones.",
+  "Images/waterway-map-base.png":"Illustrated town map showing Silver Lake, surrounding land, and connected waterways.",
+  "Images/route-wooded-stream.png":"Animation of water moving along the wooded feeder stream toward West Shore.",
+  "Images/route-wetland-outlet.png":"Animation of water moving through the south wetland outlet.",
+  "Images/route-stormwater-channel.png":"Animation of water moving through the Maple Park stormwater channel toward North Cove.",
+  "Images/sports-complex-site-map.png":"Proposed sports-complex site map with fields, parking, drains, slope, and East Creek.",
+  "Images/sports-complex-baseline.png":"Model animation of runoff from the sports complex with no added protection.",
+  "Images/sports-complex-source-control.png":"Model animation showing a weather-smart fertilizer plan.",
+  "Images/sports-complex-rain-garden.png":"Model animation showing a rain garden capturing runoff.",
+  "Images/sports-complex-buffer.png":"Model animation showing a vegetated creek buffer.",
+  "Images/silver-lake-brief-header.png":"Decorative header banner for the Silver Lake Environmental Action Brief."
+};
+function imageBlock(src,extraClass=""){
+  const alt=IMG_ALT[src]||"Lesson image.";
+  return `<figure class="img-frame ${extraClass}" style="margin:0">
+    <img class="lesson-img" src="${src}" alt="${esc(alt)}" loading="lazy"
+      onerror="this.parentNode.querySelector('.img-ph').style.display='flex';this.style.display='none';">
+    <div class="img-ph" style="display:none" role="img" aria-label="${esc(alt)}">
+      <span class="ic" aria-hidden="true">🖼️</span>
+      <span>Image placeholder</span>
+      <span class="fn">${esc(src)}</span>
+      <span class="small" style="max-width:280px">${esc(alt)}</span>
+    </div>
+  </figure>`;
+}
+
+/* ---------------- State ---------------- */
+const LS_KEY="sil_troublesilverlake_v1";
+function defaultState(){
+  return {
+    meta:{lessonTitle:"Trouble at Silver Lake: An Aquatic Investigation",lessonVersion:"1.0",standard:"AZ 5.L3U1.10",studentLabel:"",sessionCode:"",startedAt:"",lastSavedAt:"",completedAt:""},
+    navigation:{currentScreen:1,visitedScreens:[],firstPath:"",secondPath:""},
+    timing:{totalActiveSeconds:0,screenSeconds:{},quizSeconds:0},
+    entry:{initialQuestions:"",assignmentAccepted:false},
+    firstInvestigation:{
+      communityJournal:{tabsViewed:[],photoNote:"",anglerNote:"",locationNote:"",conditionNote:"",starredEvidence:[],limitation:"",claim:""},
+      fisheriesData:{variablesViewed:[],selectedComparisonByVariable:{},savedGraphStateByVariable:{},lengthNote:"",massNote:"",conditionNote:"",claim:""},
+      briefingPreparation:{selectedEvidence:[],provisionalClaim:""},
+      convergenceOne:{combinedEvidence:[],revisedConclusion:"",remainingQuestion:""}
+    },
+    secondInvestigation:{
+      waterTimeline:{periodsViewed:[],selectedComparisonZone:"",algaeLayerUsed:false,dryDayNote:"",lightRainNote:"",heavyRainNote:"",claim:""},
+      waterwayMap:{routesViewed:[],routeNotes:{},routeRanking:[],selectedEvidence:[],claim:""},
+      briefingPreparation:{selectedEvidence:[],limitation:"",claim:""},
+      convergenceTwo:{chainOrder:[],evidenceAttachments:{},confidenceRatings:{},writtenExplanation:""}
+    },
+    application:{initialPrediction:"",baselineRun:null,individualRuns:[],finalCombinedRun:null,runNotes:{},monitoringChoice:"",monitoringJustification:""},
+    actionBrief:{discovery:"",strongestEvidence:[],evidenceJustifications:{},causeEffectExplanation:"",priorityIdea:"",priorityJustification:"",supportingIdea:"",supportingJustification:"",monitoringIdea:"",monitoringJustification:"",sportsComplexPlan:"",sportsComplexEvidence:"",furtherInvestigation:"",generatedAt:"",generatedHtml:"",deliveredAt:""},
+    reflection:{changedThinking:"",influentialEvidence:""},
+    quiz:{offered:false,choice:"",startedAt:"",submittedAt:"",answers:{},answeredCount:0,score:null,percentage:null,itemResults:[],feedbackDisplayed:false},
+    export:{lastExportedAt:""}
+  };
+}
+function deepMerge(base,over){
+  if(Array.isArray(base))return Array.isArray(over)?over:base;
+  if(base&&typeof base==="object"){
+    const out={};for(const k in base)out[k]=deepMerge(base[k],over?over[k]:undefined);
+    if(over&&typeof over==="object")for(const k in over)if(!(k in out))out[k]=over[k];
+    return out;
+  }
+  return over===undefined?base:over;
+}
+let state=defaultState();
+function hasSave(){try{return !!localStorage.getItem(LS_KEY);}catch(e){return false;}}
+function loadState(){
+  try{const raw=localStorage.getItem(LS_KEY);if(raw){state=deepMerge(defaultState(),JSON.parse(raw));return true;}}catch(e){}
+  return false;
+}
+let saveTimer=null;
+function save(){
+  state.meta.lastSavedAt=nowISO();
+  try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){}
+  const chip=$("#autosaveChip");if(chip){chip.classList.add("saved");$("#autosaveText").textContent="Saved";}
+  clearTimeout(saveTimer);
+  saveTimer=setTimeout(()=>{const c=$("#autosaveChip");if(c){$("#autosaveText").textContent="Saved "+new Date().toLocaleTimeString([], {hour:"2-digit",minute:"2-digit"});}},400);
+}
+function getSessionCode(){
+  if(!state.meta.sessionCode){
+    const A="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";let c="";
+    for(let i=0;i<6;i++)c+=A.charAt(Math.floor(Math.random()*A.length));
+    state.meta.sessionCode=c;try{save();}catch(e){}
+  }
+  return state.meta.sessionCode;
+}
+function getPath(p){return p.split(".").reduce((o,k)=>(o==null?o:o[k]),state);}
+function setPath(p,v){const ks=p.split(".");let o=state;for(let i=0;i<ks.length-1;i++)o=o[ks[i]];o[ks[ks.length-1]]=v;save();}
+
+/* ---------------- Timing ---------------- */
+let pageActive=!document.hidden;
+function currentTimingKey(){
+  const n=state.navigation.currentScreen;
+  if(n===5)return"5"+(state.navigation.firstPath==="community"?"A":state.navigation.firstPath==="data"?"B":"");
+  if(n===8)return"8"+(state.navigation.secondPath==="water"?"A":state.navigation.secondPath==="map"?"B":"");
+  return String(n);
+}
+setInterval(()=>{
+  if(!pageActive)return;
+  state.timing.totalActiveSeconds++;
+  const k=currentTimingKey();
+  state.timing.screenSeconds[k]=(state.timing.screenSeconds[k]||0)+1;
+  if(state.navigation.currentScreen===14 && quizActiveTiming)state.timing.quizSeconds++;
+},1000);
+document.addEventListener("visibilitychange",()=>{pageActive=!document.hidden;if(document.hidden)save();});
+window.addEventListener("blur",()=>{pageActive=false;});
+window.addEventListener("focus",()=>{pageActive=!document.hidden;});
+window.addEventListener("beforeunload",()=>{save();});
+let quizActiveTiming=false;
+/* ---------------- Modal system ---------------- */
+let lastFocus=null;
+function openModal(title,bodyHtml,footHtml,onMount){
+  lastFocus=document.activeElement;
+  const root=$("#modalRoot");
+  root.innerHTML=`<div class="modal-overlay" role="dialog" aria-modal="true" aria-label="${esc(title)}">
+    <div class="modal">
+      <div class="modal-head"><h3>${esc(title)}</h3><button class="close-x" aria-label="Close">&times;</button></div>
+      <div class="modal-body">${bodyHtml}</div>
+      ${footHtml?`<div class="modal-foot">${footHtml}</div>`:""}
+    </div></div>`;
+  const overlay=$(".modal-overlay",root);
+  const closeAll=()=>closeModal();
+  $(".close-x",root).addEventListener("click",closeAll);
+  overlay.addEventListener("mousedown",e=>{if(e.target===overlay)closeAll();});
+  document.addEventListener("keydown",escClose);
+  if(onMount)onMount(root);
+  const f=root.querySelector("input,button,textarea,select,a");if(f)f.focus();
+}
+function escClose(e){if(e.key==="Escape")closeModal();}
+function closeModal(){$("#modalRoot").innerHTML="";document.removeEventListener("keydown",escClose);if(lastFocus&&lastFocus.focus)lastFocus.focus();}
+
+/* ---------------- Glossary ---------------- */
+const GLOSSARY=[
+  ["aquatic ecologist","A scientist who studies how living things interact with water, habitats, and the conditions around them."],
+  ["juvenile","A young organism that is not yet fully grown, such as a young fish."],
+  ["bluegill","A common freshwater sunfish found in many North American lakes and ponds."],
+  ["population","All the organisms of the same kind living in the same area, such as the bluegill in Silver Lake."],
+  ["trait","A feature of an organism, such as body length or body mass."],
+  ["development","The way an organism grows and its traits form over time."],
+  ["body length","How long a fish is, usually measured from head to tail."],
+  ["body mass","How much matter a fish contains, measured as its weight in grams."],
+  ["body condition","A rating of how healthy and well-fed a fish appears for its size."],
+  ["evidence","Information gathered by observing or measuring that helps support or test an idea."],
+  ["claim","A statement that answers a question and can be supported with evidence."],
+  ["cause and effect","A relationship in which one event or condition leads to another."],
+  ["environmental condition","A feature of the surroundings, such as the amount of oxygen in the water."],
+  ["dissolved oxygen","Oxygen gas mixed into water that fish and other water organisms need to breathe."],
+  ["algae","Simple water plants that can grow quickly when there are extra nutrients."],
+  ["decomposition","The breaking down of dead plants and other material, which can use up oxygen."],
+  ["nutrient","A substance that living things use to grow; extra nutrients in water can cause fast algae growth."],
+  ["runoff","Water that flows over land instead of soaking in, often carrying materials with it."],
+  ["stormwater","Rainwater that flows off streets, lawns, and other surfaces after a storm."],
+  ["feeder stream","A small stream that carries water into a larger body of water."],
+  ["wetland","An area where the land is covered or soaked with water and supports water-loving plants."],
+  ["vegetated buffer","A strip of plants between developed land and a waterway that helps slow and filter runoff."],
+  ["rain garden","A planted basin that collects runoff and lets it soak into the ground."],
+  ["monitoring","Measuring conditions over time to watch for changes."],
+  ["mitigation","Actions taken to reduce or prevent a problem."],
+  ["model","A tool or simulation used to predict what might happen in a real system."],
+  ["uncertainty","The parts of a conclusion that are still not fully known or proven."],
+  ["nutrient reading","A measurement, in milligrams per liter, of how many dissolved nutrients are in the water. A higher reading means more nutrients are present."]
+];
+function openGlossary(term){
+  const body=`<input type="text" class="gloss-search" id="glossSearch" placeholder="Search terms…" aria-label="Search glossary">
+    <dl id="glossList">${GLOSSARY.map(([t,d])=>`<div class="gloss-term" data-t="${esc(t)}"><dt>${esc(t)}</dt><dd>${esc(d)}</dd></div>`).join("")}</dl>`;
+  openModal("Glossary",body,"",root=>{
+    const search=$("#glossSearch",root);
+    search.addEventListener("input",()=>{
+      const q=search.value.toLowerCase();
+      $$(".gloss-term",root).forEach(el=>{el.style.display=el.dataset.t.toLowerCase().includes(q)||el.textContent.toLowerCase().includes(q)?"block":"none";});
+    });
+    if(term){search.value=term;search.dispatchEvent(new Event("input"));}
+  });
+}
+$("#glossaryBtn").addEventListener("click",()=>openGlossary());
+
+/* ---------------- Binding helpers ---------------- */
+/* Bind a textarea/input to a state path, autosaving on input. */
+function bindField(root,selector,path){
+  const el=$(selector,root);if(!el)return;
+  const cur=getPath(path);if(cur!=null)el.value=cur;
+  el.addEventListener("input",()=>setPath(path,el.value));
+}
+function textField(id,label,path,ph=""){
+  const val=getPath(path)||"";
+  return `<label class="field-label" for="${id}">${esc(label)}</label>
+    <textarea id="${id}" data-path="${path}" placeholder="${esc(ph)}">${esc(val)}</textarea>`;
+}
+function autoBindAll(root){
+  $$("textarea[data-path],input[data-path]",root).forEach(el=>{
+    const p=el.dataset.path;const cur=getPath(p);if(cur!=null&&el.value==="")el.value=cur;
+    el.addEventListener("input",()=>setPath(p,el.value));
+  });
+}
+
+/* ---------------- Restart ---------------- */
+$("#restartBtn").addEventListener("click",()=>{
+  openModal("Restart Lesson?",
+    `<p>Restarting will erase all saved investigation work, model runs, reflections, quiz results, and the generated action brief. Continue?</p>`,
+    `<button class="btn btn-ghost" id="cancelRestart">Cancel</button><button class="btn btn-teal" id="confirmRestart" style="background:var(--rust-coral)">Restart Lesson</button>`,
+    root=>{
+      $("#cancelRestart",root).addEventListener("click",closeModal);
+      $("#confirmRestart",root).addEventListener("click",()=>{
+        try{localStorage.removeItem(LS_KEY);}catch(e){}
+        state=defaultState();closeModal();boot();
+      });
+    });
+});
+
+/* ---------------- Continue-rule + router ---------------- */
+let continueAllowed=true;      // reflects hidden-content rule only
+let continueHandler=null;      // function to run when Continue pressed
+function setContinue(allowed){
+  continueAllowed=allowed;
+  const btn=$("#continueBtn");
+  btn.disabled=!allowed;
+}
+function screenNumberFor(step){return step;}
+
+/* screen registry populated below */
+const SCREENS={};
+function registerScreen(n,def){SCREENS[n]=def;}
+
+function updateHeader(){
+  const n=state.navigation.currentScreen;
+  const def=activeScreenDef();
+  $("#headerTitle").textContent=def&&def.title?def.title:("Screen "+n);
+}
+function activeScreenDef(){
+  const n=state.navigation.currentScreen;
+  if(n===5)return state.navigation.firstPath==="community"?SCREENS["5A"]:state.navigation.firstPath==="data"?SCREENS["5B"]:SCREENS[5];
+  if(n===8)return state.navigation.secondPath==="water"?SCREENS["8A"]:state.navigation.secondPath==="map"?SCREENS["8B"]:SCREENS[8];
+  return SCREENS[n];
+}
+function renderCurrent(){
+  const def=activeScreenDef();
+  const stage=$("#stage");
+  continueHandler=null;
+  setContinue(true);
+  stage.innerHTML=def.render();
+  updateHeader();
+  // app-header + nav bar visibility
+  const appHeader=$(".app-header");
+  if(appHeader)appHeader.style.display=(def.hideAppHeader?"none":"");
+  const navbar=$("#navbar");
+  navbar.style.display=(def.hideNav?"none":"block");
+  $("#backBtn").style.visibility=(state.navigation.currentScreen<=1?"hidden":"visible");
+  $("#continueBtn").style.display=(def.hideContinue?"none":"inline-flex");
+  $("#navHint").textContent=def.hint||"";
+  if(def.init)def.init(stage);
+  if(!state.navigation.visitedScreens.includes(state.navigation.currentScreen))state.navigation.visitedScreens.push(state.navigation.currentScreen);
+  stage.focus();window.scrollTo(0,0);save();
+}
+function goToScreen(n){
+  if(typeof stopTTS==="function")stopTTS();
+  state.navigation.currentScreen=n;
+  if(n===14&&!state.meta.completedAt)state.meta.completedAt=nowISO();
+  save();renderCurrent();
+}
+function nextScreen(){
+  if(continueHandler){const ok=continueHandler();if(ok===false)return;}
+  const n=state.navigation.currentScreen;
+  if(n<14)goToScreen(n+1);
+}
+function prevScreen(){
+  const n=state.navigation.currentScreen;
+  if(n>1)goToScreen(n-1);
+}
+$("#continueBtn").addEventListener("click",()=>{if(!continueAllowed)return;nextScreen();});
+$("#backBtn").addEventListener("click",prevScreen);
+/* ---------------- Read-aloud (TTS) ---------------- */
+let ttsOn=false;
+function ttsSupported(){try{return typeof window!=="undefined" && "speechSynthesis" in window && typeof window.SpeechSynthesisUtterance==="function";}catch(e){return false;}}
+function updateTTSBtn(){const b=$("#ttsBtn");if(!b)return;b.innerHTML=ttsOn?"&#9209; Stop":"&#128266; Listen";b.setAttribute("aria-pressed",ttsOn?"true":"false");}
+function stopTTS(){try{if(ttsSupported())window.speechSynthesis.cancel();}catch(e){}ttsOn=false;updateTTSBtn();}
+function screenReadText(){
+  const stage=$("#stage");if(!stage)return "";
+  const sel=".scene-body,.lead-in,.dialogue,.think,.narrative,.subtle-prompt,.scene-caption,.prompt-box,.msg-line,.st-body,.case-file,.transfer,.record-col,h2,.field-label";
+  const picked=[];
+  stage.querySelectorAll(sel).forEach(el=>{
+    if(el.closest(".hidden"))return;
+    if(picked.some(p=>p.contains(el)))return;
+    if((el.textContent||"").replace(/\s+/g," ").trim())picked.push(el);
+  });
+  return picked.map(el=>(el.textContent||"").replace(/\s+/g," ").trim()).join(". ");
+}
+function toggleTTS(){
+  if(!ttsSupported())return;
+  if(ttsOn){stopTTS();return;}
+  const text=screenReadText();if(!text)return;
+  try{
+    window.speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);
+    u.rate=0.95;u.pitch=1;u.lang="en-US";
+    u.onend=()=>{ttsOn=false;updateTTSBtn();};
+    u.onerror=()=>{ttsOn=false;updateTTSBtn();};
+    window.speechSynthesis.speak(u);ttsOn=true;updateTTSBtn();
+  }catch(e){ttsOn=false;updateTTSBtn();}
+}
+(function(){const b=$("#ttsBtn");if(!b)return;if(!ttsSupported()){b.style.display="none";}else{b.addEventListener("click",toggleTTS);}})();
+/* ---------------- Shared: line chart ---------------- */
+function chartSVG(opts){
+  const W=opts.width||660,H=opts.height||320;
+  const m={t:18,r:16,b:52,l:52};
+  const pw=W-m.l-m.r, ph=H-m.t-m.b;
+  const xs=opts.xLabels, n=xs.length;
+  const yMin=opts.yMin, yMax=opts.yMax, yr=yMax-yMin||1;
+  const X=i=> m.l + (n<=1?pw/2:(i/(n-1))*pw);
+  const Y=v=> m.t + ph - ((v-yMin)/yr)*ph;
+  let bands="";
+  (opts.bands||[]).forEach(b=>{
+    const y1=Y(Math.min(b.to,yMax)), y2=Y(Math.max(b.from,yMin));
+    bands+=`<rect x="${m.l}" y="${y1}" width="${pw}" height="${Math.max(0,y2-y1)}" fill="${b.fill}" opacity="0.5"></rect>`;
+  });
+  let grid="",yticks=4;
+  for(let i=0;i<=yticks;i++){
+    const v=yMin+(yr*i/yticks), y=Y(v);
+    grid+=`<line class="grid-line" x1="${m.l}" y1="${y}" x2="${W-m.r}" y2="${y}"></line>`;
+    grid+=`<text x="${m.l-8}" y="${y+4}" text-anchor="end" font-size="11">${(+v.toFixed(1))}</text>`;
+  }
+  let xlab="";
+  xs.forEach((lab,i)=>{xlab+=`<text x="${X(i)}" y="${H-m.b+18}" text-anchor="middle" font-size="11">${esc(lab)}</text>`;});
+  let lines="";
+  opts.series.forEach(s=>{
+    const pts=s.values.map((v,i)=>`${X(i)},${Y(v)}`).join(" ");
+    lines+=`<polyline points="${pts}" fill="none" stroke="${s.color}" stroke-width="3" stroke-linejoin="round"></polyline>`;
+    s.values.forEach((v,i)=>{
+      lines+=`<circle cx="${X(i)}" cy="${Y(v)}" r="5" fill="${s.color}"><title>${esc(s.name)} — ${esc(xs[i])}: ${v} ${esc(opts.unit||"")}</title></circle>`;
+    });
+  });
+  const yLabel=opts.yLabel?`<text transform="translate(14,${m.t+ph/2}) rotate(-90)" text-anchor="middle" font-size="12" font-weight="700">${esc(opts.yLabel)}</text>`:"";
+  return `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="${esc(opts.ariaLabel||"Line chart")}" style="max-width:${W}px">
+    ${bands}${grid}
+    <line class="axis-line" x1="${m.l}" y1="${m.t}" x2="${m.l}" y2="${m.t+ph}"></line>
+    <line class="axis-line" x1="${m.l}" y1="${m.t+ph}" x2="${W-m.r}" y2="${m.t+ph}"></line>
+    ${yLabel}${xlab}${lines}
+  </svg>`;
+}
+function chartLegend(series){
+  return `<div class="oxy-legend">${series.map(s=>`<span><span class="swatch" style="background:${s.color}"></span>${esc(s.name)}</span>`).join("")}</div>`;
+}
+function chartTable(xLabels,series,unit){
+  let head=`<tr><th>${esc(unit||"")}</th>${series.map(s=>`<th>${esc(s.name)}</th>`).join("")}</tr>`;
+  let rows=xLabels.map((lab,i)=>`<tr><th>${esc(lab)}</th>${series.map(s=>`<td>${s.values[i]}</td>`).join("")}</tr>`).join("");
+  return `<table class="data-table"><caption class="sr-summary" style="text-align:left">Data table for the chart.</caption><thead>${head}</thead><tbody>${rows}</tbody></table>`;
+}
+
+/* ---------------- Shared: evidence selector ---------------- */
+function renderEvidence(groupPath,items,max,mode){
+  const sel=getPath(groupPath)||[];
+  const icon=mode==="star"?"★":"✓";
+  return `<div class="evi-list" data-group="${groupPath}" data-max="${max}" role="group" aria-label="Select evidence">
+    ${items.map(it=>{
+      const on=sel.includes(it.id);
+      return `<div class="evi-item ${on?"sel":""}" data-id="${it.id}">
+        <button type="button" class="evi-toggle" data-evi="${it.id}" aria-pressed="${on}" aria-label="${on?"Deselect":"Select"} ${esc(it.label)}">${on?icon:""}</button>
+        <div class="evi-body"><strong>${esc(it.label)}</strong>${it.desc?`<div class="small muted">${esc(it.desc)}</div>`:""}</div>
+      </div>`;
+    }).join("")}
+    <div class="small muted" data-evi-count>Selected ${sel.length} of up to ${max}.</div>
+  </div>`;
+}
+function initEvidence(root){
+  $$("[data-group]",root).forEach(group=>{
+    const path=group.dataset.group, max=+group.dataset.max;
+    const icon=group.getAttribute("data-mode")==="star"?"★":"✓";
+    group.addEventListener("click",e=>{
+      const btn=e.target.closest("[data-evi]");if(!btn)return;
+      let arr=getPath(path)||[];const id=btn.dataset.evi;
+      if(arr.includes(id))arr=arr.filter(x=>x!==id);
+      else{if(arr.length>=max){return;}arr=arr.concat([id]);}
+      setPath(path,arr);
+      const item=btn.closest(".evi-item");const on=arr.includes(id);
+      item.classList.toggle("sel",on);btn.setAttribute("aria-pressed",on);
+      btn.textContent=on?icon:"";
+      const cnt=group.querySelector("[data-evi-count]");if(cnt)cnt.textContent=`Selected ${arr.length} of up to ${max}.`;
+    });
+  });
+}
+/* simpler robust re-render for evidence icons */
+function evidenceIconRefresh(root){
+  $$("[data-group]",root).forEach(group=>{
+    const path=group.dataset.group;const sel=getPath(path)||[];
+    const star=group.getAttribute("data-mode")==="star";
+    $$(".evi-toggle",group).forEach(b=>{const on=sel.includes(b.dataset.evi);b.textContent=on?(star?"★":"✓"):"";});
+  });
+}
+
+/* prompt helper */
+function promptBox(q){return `<div class="prompt-box"><span class="q">${esc(q)}</span></div>`;}
+/* ---------- Narrative helpers ---------- */
+const REED_IMG="Images/dr-marcus-reed.png";
+function _attrLine(line,name,verb){
+  line=String(line).trim();
+  const last=line.slice(-1);
+  if(last===".")line=line.slice(0,-1)+",";
+  else if(last==="!"||last==="?"||last===","){/* keep */}
+  else line=line+",";
+  return `&ldquo;${esc(line)}&rdquo; ${name} ${esc(verb)}.`;
+}
+function _contQuote(line){
+  line=String(line).trim();
+  if(!/[.!?…]$/.test(line))line+=".";
+  return `&ldquo;${esc(line)}&rdquo;`;
+}
+function speak(nameHtml,lines,verb){
+  const L=Array.isArray(lines)?lines:[lines];
+  let html=`<p class="dialogue">`+_attrLine(L[0],nameHtml,verb||"says");
+  for(let i=1;i<L.length;i++)html+=" "+_contQuote(L[i]);
+  return html+`</p>`;
+}
+function reed(lines,verb){return speak(`<span class="sp">Dr. Reed</span>`,lines,verb||"says");}
+function say(who,initials,lines,verb){return speak(`<span class="sp">${esc(who)}</span>`,lines,verb||"says");}
+function dialogue(){return `<div class="dialogue-block">${[].slice.call(arguments).join("")}</div>`;}
+function thought(text){return `<p class="think">${esc(text)}</p>`;}
+function sceneHero(o){
+  const media=o.img?`<img class="scene-media" src="${o.img}" alt="${esc(IMG_ALT[o.img]||o.alt||"")}" onerror="this.style.display='none';this.parentNode.classList.remove('with-media');">`:"";
+  return `<div class="scene-hero ${o.img?"with-media":""}">${media}<div class="scene-body">
+    ${o.stamp?`<span class="location-stamp">${esc(o.stamp)}</span>`:""}
+    ${o.time?`<p class="time-stamp">${esc(o.time)}</p>`:""}
+    <h1 class="title">${esc(o.title)}</h1>
+    ${o.sub?`<p class="scene-sub">${esc(o.sub)}</p>`:""}
+  </div></div>`;
+}
+function sysMsg(head,lines){return `<div class="msg-screen"><div class="msg-head"><span class="dot"></span>${esc(head)}</div>${lines.map(l=>`<div class="msg-line">${l}</div>`).join("")}</div>`;}
+function caseFile(tab,html){return `<div class="case-file"><span class="file-tab">${esc(tab)}</span>${html}</div>`;}
+function sceneCaption(text){return `<div class="scene-caption">${esc(text)}</div>`;}
+function caseStatus(text){return `<div class="case-status"><span class="cs-dot"></span><div><div class="cs-label">Case status</div><div class="cs-text">${esc(text)}</div></div></div>`;}
+function story(){return `<div class="card story"><div class="narrative">${[].slice.call(arguments).join("")}</div></div>`;}
+function subtlePrompt(text){return `<p class="subtle-prompt">${esc(text)}</p>`;}
+
+/* =====================================================================
+   SCREEN 1 — Launch & Resume
+   ===================================================================== */
+registerScreen(1,{title:"Launch",hideNav:true,hideAppHeader:true,
+  render(){
+    const fp=state.navigation.firstPath, sp=state.navigation.secondPath;
+    const started=hasSave()&&state.navigation.currentScreen>1;
+    const s1=fp==="community"?"Community Journal path":fp==="data"?"Fisheries Data path":"Awaiting your choice…";
+    const s2=sp==="water"?"Water-Conditions path":sp==="map"?"Town Waterways path":"Awaiting your choice…";
+    const briefDone=!!state.actionBrief.generatedHtml;
+    const s3=briefDone?"Action Brief generated":(state.navigation.currentScreen>=12?"In progress":"Awaiting your choice…");
+    const objectives=[
+      "Identify natural and human factors that can change conditions in an aquatic ecosystem.",
+      "Analyze patterns in environmental and biological data to explain cause-and-effect relationships.",
+      "Construct an explanation for how environmental change can affect the development of traits in a fish population.",
+      "Use a model to test how different design choices affect runoff and water conditions.",
+      "Propose evidence-based community solutions and communicate them in an action brief.",
+      "Reflect on the strength, limitations, and uncertainty of evidence-based conclusions."
+    ];
+    return `<div class="screen"><div class="landing">
+      <div class="landing-head">
+        <div class="toprow">
+          <span class="sis-badge">Stories in Science</span>
+          <div class="landing-titles">
+            <p class="eyebrow">Grade 5 &middot; Life Science</p>
+            <h1>Trouble at Silver Lake: An Aquatic Investigation</h1>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-banner">
+        <h2>Trouble at Silver Lake</h2>
+        <p class="hero-lead">Late summer has always been the busiest season in Pinecrest. But three weeks after the annual fishing derby, people are still talking about the fish caught near Silver Lake.</p>
+        <p class="hero-lead" style="margin-top:-10px"><strong>You volunteered to help with community science this summer.</strong> A message from the field station is waiting.</p>
+        <button class="btn btn-gold" id="laBegin">${started?"Open the Message":"Open the Message"}</button>
+        <div style="margin-top:14px;font-size:.85rem;opacity:.92">&#128190; Your work saves automatically on this device.</div>
+      </div>
+
+      <details class="collapse about-lesson">
+        <summary class="collapse-head">Learning Objectives &amp; Instructional Alignment <span class="caret" aria-hidden="true">&#9660;</span></summary>
+        <div class="collapse-body">
+          <p class="intro">In this lesson, students investigate evidence from Silver Lake to construct an evidence-based explanation for how changes in an aquatic environment can affect the development of traits in a population of fish, and to propose community solutions that help protect the lake and its fishery.</p>
+
+          <p class="sect-label">Learning Objectives</p>
+          <div class="obj-grid">${objectives.map((o,i)=>`<div class="obj-card"><div class="obj-num">${i+1}</div><p>${esc(o)}</p></div>`).join("")}</div>
+
+          <p class="sect-label">Standards &amp; Practices</p>
+          <div class="align-grid">
+            <div class="align-col"><h4>Science Standard (Arizona Grade 5)</h4><p><span class="std-code">5.L3U1.10</span> &mdash; Construct an explanation based on evidence that the changes in an environment can affect the development of the traits in a population of organisms.</p></div>
+            <div class="align-col"><h4>Science &amp; Engineering Practices</h4><p>Analyzing and Interpreting Data &middot; Developing and Using Models &middot; Constructing Explanations &middot; Obtaining, Evaluating, and Communicating Information</p></div>
+            <div class="align-col"><h4>Crosscutting Concepts</h4><p>Cause and Effect &middot; Patterns &middot; Systems and System Models &middot; Stability and Change</p></div>
+          </div>
+
+          <div class="framework-callout"><h4>&#9733; Stories in Science Framework Alignment</h4><p>Students enter through a narrative role on the Silver Lake Aquatic Science Investigation Team, choose investigation pathways (community observations vs. fisheries data; water conditions vs. town waterways), analyze real-world-style evidence, build a cause-and-effect model, test solutions with a design model, generate an Environmental Action Brief, and export a Field Journal artifact.</p></div>
+        </div>
+      </details>
+
+      <div class="name-setup" style="opacity:.85">
+        <label for="studentLabel">Name or student ID <span class="opt">(optional)</span></label>
+        <input type="text" id="studentLabel" maxlength="60" placeholder="Leave blank if you prefer">
+      </div>
+      <div class="utility-row">
+        <button id="laResume">Resume</button><span class="u-sep">&middot;</span>
+        <button id="laExport">Export Journal</button><span class="u-sep">&middot;</span>
+        <button id="laGloss">Glossary</button><span class="u-sep">&middot;</span>
+        <button id="laRestart" class="u-danger">Restart Lesson</button><span class="u-sep">&middot;</span>
+        <span class="u-code">Code: ${esc(getSessionCode())}</span>
+      </div>
+
+      <div class="landing-footer">&copy; 2026 Brooke Toon. All rights reserved. This lesson is part of the Stories in Science Framework developed by the author. Generative AI tools were used to support the development of this instructional material. This content may not be reproduced, distributed, modified, or used for commercial purposes without permission.</div>
+    </div></div>`;
+  },
+  init(root){
+    const header=$(".app-header"); if(header)header.style.display="none";
+    const nameEl=$("#studentLabel",root);
+    if(nameEl){nameEl.value=state.meta.studentLabel||"";nameEl.addEventListener("input",()=>setPath("meta.studentLabel",nameEl.value.trim()));}
+    const go=()=>{
+      if(!state.meta.startedAt)state.meta.startedAt=nowISO();
+      const target=(hasSave()&&state.navigation.currentScreen>1)?state.navigation.currentScreen:2;
+      goToScreen(target);
+    };
+    $("#laBegin",root).addEventListener("click",go);
+    const rz=$("#laResume",root); if(rz)rz.addEventListener("click",go);
+    const ex=$("#laExport",root); if(ex)ex.addEventListener("click",()=>exportJournal());
+    $("#laGloss",root).addEventListener("click",()=>openGlossary());
+    $("#laRestart",root).addEventListener("click",()=>$("#restartBtn").click());
+  }
+});
+
+/* =====================================================================
+   SCREEN 2 — Three Weeks After the Fishing Derby
+   ===================================================================== */
+registerScreen(2,{title:"Summer in Pinecrest",hint:"",
+  render(){
+    return `<div class="screen">
+      ${sceneHero({stamp:"Pinecrest",time:"Late summer",title:"Summer in Pinecrest",sub:"The whole town knows this water.",img:"Images/silver-lake-hero.png",alt:"Silver Lake high in the pines: cold clear water, a wooded shoreline, and a distant fishing pier."})}
+      ${story(
+        `<p><span class="drop">P</span>inecrest is a small forest mountain town built around Silver Lake, and the summer fishing derby is the biggest day of the year. At this year's weigh-in table, several families said their young bluegill seemed smaller than they remembered.</p>`
+      )}
+      ${dialogue(
+        say("Jordan","JL","I've fished North Cove since I was little. These young bluegill look smaller."),
+        say("Sam","SP","Ours near West Shore looked normal, though. Maybe Jordan's group just happened to catch smaller ones.")
+      )}
+      ${caseFile("Saved from the derby",`
+        <p style="margin:0 0 8px">The town saved what people brought to the weigh-in table:</p>
+        <p style="margin:0 0 10px"><span class="pill">Photographs</span><span class="pill">Catch notes</span><span class="pill">Location reports</span></p>
+        <div class="two-col">${imageBlock("Images/fishing-derby-current.png")}${imageBlock("Images/fishing-derby-past.png")}</div>
+        <p class="small muted" style="margin-top:8px">Left: this summer's tray. Right: an earlier summer, shown with a similar tray for reference. No one measured the fish at the derby.</p>
+      `)}
+      <div class="card panel-journal">
+        ${promptBox("What would you need to know before deciding that the fish population had really changed?")}
+        ${textField("q_initial","Your questions","entry.initialQuestions","Type any questions you'd want answered…")}
+      </div>
+    </div>`;
+  },
+  init(root){autoBindAll(root);}
+});
+
+/* =====================================================================
+   SCREEN 3 — Your First Team Assignment
+   ===================================================================== */
+registerScreen(3,{title:"Meet Dr. Reed",hint:"",
+  render(){
+    return `<div class="screen">
+      ${sceneHero({stamp:"Pinecrest · Silver Lake Field Station",title:"Meet Dr. Reed",sub:"Your summer volunteer team has its first assignment.",img:"Images/silver-lake-field-station.png",alt:"The Silver Lake field station near the shore, with tanks and equipment for studying the lake."})}
+      ${caseStatus("Community concern — not yet confirmed")}
+      ${sysMsg("Community science · Pinecrest",[
+        `Thanks for volunteering this summer. You've been added to Pinecrest's <span class="k">Silver Lake community-science team</span>.`,
+        `Your coordinator is <span class="k">Dr. Marcus Reed, aquatic ecologist</span> — he's here to meet you.`
+      ])}
+      ${dialogue(
+        `<p class="lead-in">A video window blinks open on the field-station tablet. A man with a sun-faded cap and an easy grin leans into view.</p>`,
+        reed("I'm Dr. Marcus Reed, the aquatic ecologist coordinating the investigation."),
+        reed("Most reports came from North Cove, but that does not necessarily mean the fish there changed. We need a fair comparison."),
+        reed("The town council wants an update. Your first job is to find out whether the reported pattern is supported.")
+      )}
+      <details class="collapse about-lesson" style="margin:0 0 18px">
+        <summary class="collapse-head">About Dr. Reed's work <span class="caret" aria-hidden="true">&#9660;</span></summary>
+        <div class="collapse-body"><p style="margin:0">An <strong>aquatic ecologist</strong> studies how living things interact with water, habitats, and changing conditions — from the tiniest algae to the fish a whole town depends on.</p></div>
+      </details>
+      <div class="reveal-action"><button class="btn btn-gold" id="acceptBtn">Accept the Assignment</button></div>
+      <div id="assignPanel" class="hidden">
+        ${caseFile("Assignment 01",`<h3>Your first assignment</h3><p style="margin:0">Determine whether a measurable change has occurred in Silver Lake's young bluegill.</p>`)}
+        ${dialogue(reed("Good. Two small teams are heading out this morning. Start wherever your curiosity takes you."))}
+      </div>
+    </div>`;
+  },
+  init(root){
+    function accept(){
+      $("#assignPanel",root).classList.remove("hidden");
+      $("#acceptBtn",root).textContent="Assignment accepted ✓";
+      $("#acceptBtn",root).disabled=true;
+      state.entry.assignmentAccepted=true;save();setContinue(true);
+    }
+    $("#acceptBtn",root).addEventListener("click",accept);
+    if(state.entry.assignmentAccepted)accept();else setContinue(false);
+  }
+});
+
+/* =====================================================================
+   SCREEN 4 — Decision Point 1
+   ===================================================================== */
+registerScreen(4,{title:"Two Evidence Stations",hideContinue:true,hint:"Open a station to begin.",
+  render(){
+    return `<div class="screen">
+      ${sceneHero({stamp:"Pinecrest · Silver Lake",title:"Where Will You Start?",sub:"Two teams, two kinds of evidence, one question."})}
+      ${dialogue(reed("Two teams are examining the derby concern in different ways. Choose where you'll begin."))}
+      <div class="station-grid">
+        <button class="station-card" data-path="community">
+          <div class="st-top"></div>
+          <div class="st-body">
+            <span class="st-kicker">Community team</span>
+            <h3>Join the Community Records Team</h3>
+            <p>Determine what the derby photographs, angler statements, and catch locations actually suggest — and what they can't prove on their own.</p>
+            <span class="st-open">Open the Case Journal &rarr;</span>
+          </div>
+        </button>
+        <button class="station-card" data-path="data">
+          <div class="st-top"></div>
+          <div class="st-body">
+            <span class="st-kicker">Field station</span>
+            <h3>Join the Fisheries Survey Team</h3>
+            <p>Test whether the community concern holds up against years of standardized, same-age bluegill measurements.</p>
+            <span class="st-open">Enter the Data Lab &rarr;</span>
+          </div>
+        </button>
+      </div>
+    </div>`;
+  },
+  init(root){
+    $$(".station-card",root).forEach(card=>card.addEventListener("click",()=>{
+      state.navigation.firstPath=card.dataset.path;
+      save();goToScreen(5);
+    }));
+  }
+});
+/* =====================================================================
+   SCREEN 5A — Community Investigation Journal (Path A)
+   ===================================================================== */
+const CJ_TABS=[
+  {key:"photos",label:"Derby Photos"},
+  {key:"anglers",label:"Angler Notes"},
+  {key:"locations",label:"Catch Locations"},
+  {key:"condition",label:"Fish Condition Gallery"}
+];
+const CJ_EVIDENCE=[
+  {id:"photo-comparison",label:"Photo comparison",desc:"Current-year vs. earlier-summer North Cove derby photos."},
+  {id:"angler-notes",label:"Angler observations",desc:"Community notes describing smaller, thinner young bluegill near North Cove."},
+  {id:"catch-cluster",label:"Catch-location cluster",desc:"Smaller-fish reports cluster near North Cove."},
+  {id:"condition-gallery",label:"Fish condition gallery",desc:"Side-view comparison of North Cove and comparison-zone bluegill."}
+];
+function cjPanel(key){
+  if(key==="photos")return `
+    <div class="two-col">${imageBlock("Images/fishing-derby-current.png")}${imageBlock("Images/fishing-derby-past.png")}</div>
+    <p class="small muted">Left: this summer near North Cove. Right: an earlier North Cove summer, shown with a similar fish tray for reference.</p>
+    ${promptBox("What similarities and differences do you observe?")}
+    ${textField("cj_photo","Your note","firstInvestigation.communityJournal.photoNote")}`;
+  if(key==="anglers")return `
+    <div class="report-box"><p style="margin:0">"I have fished North Cove for years. This summer, many of the young bluegill looked smaller and thinner than I remember."</p><p class="small muted" style="margin:6px 0 0">— Jordan Lee</p></div>
+    <div class="report-box" style="margin-top:8px"><p style="margin:0">"Our catches near West Shore looked about the same as last summer."</p><p class="small muted" style="margin:6px 0 0">— Sam Patel</p></div>
+    ${promptBox("Which details repeat? Which details conflict?")}
+    ${textField("cj_angler","Your note","firstInvestigation.communityJournal.anglerNote")}`;
+  if(key==="locations")return `
+    ${imageBlock("Images/silver-lake-zone-map.png")}
+    <ul>
+      <li><strong>North Cove:</strong> two reports of smaller young bluegill.</li>
+      <li><strong>West Shore:</strong> one report of typical-sized fish.</li>
+    </ul>
+    ${promptBox("What location pattern do the reports suggest?")}
+    ${textField("cj_loc","Your note","firstInvestigation.communityJournal.locationNote")}`;
+  return `
+    <div class="two-col">${imageBlock("Images/bluegill-north-cove-current.png")}${imageBlock("Images/bluegill-comparison-zone.png")}</div>
+    <p class="small muted">Standardized side-view illustrations of same-age juvenile bluegill. No measurements are provided here.</p>
+    ${promptBox("What differences do you observe in body length and body shape?")}
+    ${textField("cj_cond","Your note","firstInvestigation.communityJournal.conditionNote")}`;
+}
+registerScreen("5A",{title:"Community Case Journal",hint:"Open all four case pages to continue.",
+  render(){
+    return `<div class="screen">
+      ${sceneHero({stamp:"Community Case Journal",title:"Inside the Case Journal",sub:"The derby team's photographs, notes, and observations, organized page by page."})}
+      ${dialogue(reed("Look for repeated details across the four pages."))}
+      <div class="card">
+        <div class="tabs" role="tablist" aria-label="Community case journal pages">
+          ${CJ_TABS.map((t,i)=>`<button class="tab-btn" role="tab" id="tab-${t.key}" aria-controls="panel-cj" data-tab="${t.key}" aria-selected="${i===0?"true":"false"}">${esc(t.label)}<span class="seen" data-seen="${t.key}"></span></button>`).join("")}
+        </div>
+        <div class="tab-panel" id="panel-cj" role="tabpanel" tabindex="0"></div>
+      </div>
+      <div id="cjReveal" class="card panel-journal reveal hidden">
+        <h2>What do the reports suggest?</h2>
+        ${promptBox("What overall pattern do these community records suggest?")}
+        ${textField("cj_claim","Your provisional claim","firstInvestigation.communityJournal.claim")}
+        ${promptBox("What is one limitation of this evidence?")}
+        ${textField("cj_limit","Limitation","firstInvestigation.communityJournal.limitation")}
+      </div>
+    </div>`;
+  },
+  init(root){
+    const viewed=state.firstInvestigation.communityJournal.tabsViewed;
+    const panel=$("#panel-cj",root);
+    function openTab(key){
+      $$(".tab-btn",root).forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===key?"true":"false"));
+      panel.innerHTML=cjPanel(key);autoBindAll(panel);
+      if(!viewed.includes(key)){viewed.push(key);save();}
+      $(`[data-seen="${key}"]`,root).textContent="✓";
+      checkReveal();
+    }
+    function checkReveal(){
+      viewed.forEach(k=>{const s=$(`[data-seen="${k}"]`,root);if(s)s.textContent="✓";});
+      if(viewed.length>=CJ_TABS.length){
+        $("#cjReveal",root).classList.remove("hidden");
+        setContinue(true);
+      }else{setContinue(false);}
+    }
+    $$(".tab-btn",root).forEach(b=>b.addEventListener("click",()=>openTab(b.dataset.tab)));
+    // open first tab (or last viewed)
+    openTab(viewed.length?viewed[viewed.length-1]:"photos");
+    if(viewed.length<CJ_TABS.length)setContinue(false);
+  }
+});
+
+/* =====================================================================
+   SCREEN 5B — Fisheries Data Reviewer (Path B)
+   ===================================================================== */
+registerScreen("5B",{title:"Fisheries Data Lab",hint:"Open all three measurements to continue.",
+  render(){
+    const fd=state.firstInvestigation.fisheriesData;
+    return `<div class="screen">
+      ${sceneHero({stamp:"Field Station · Data Workstation",title:"At the Data Workstation",sub:"A secure terminal loads years of standardized bluegill surveys."})}
+      ${dialogue(reed("These surveys compare one-year-old bluegill collected during the same season with the same method."))}
+      <div class="card panel-science">
+        <div id="fdCaption" class="scene-caption" style="display:none"></div>
+        <p class="small muted">Standardized summer surveys of <strong>one-year-old juvenile bluegill</strong>, same sampling method, 2022–2026. North Cove stays on the graph; choose one zone to compare and one measurement at a time.</p>
+        <div class="graph-controls">
+          <fieldset class="control-group"><legend>Measurement</legend><div class="chip-row" id="varRow">
+            ${Object.values(VARIABLES).map(v=>`<button class="chip" data-var="${v.key}" aria-pressed="false">${esc(v.label)}</button>`).join("")}
+          </div></fieldset>
+          <fieldset class="control-group"><legend>Compare North Cove with</legend><div class="chip-row" id="zoneRow">
+            <button class="chip locked" disabled>North Cove</button>
+            ${ZONES.filter(z=>z!=="North Cove").map(z=>`<button class="chip" data-zone="${z}" aria-pressed="false">${esc(z)}</button>`).join("")}
+          </div></fieldset>
+        </div>
+        <div class="graph-wrap" id="graphWrap"><p class="muted" style="padding:20px;text-align:center">Choose a measurement to display the graph.</p></div>
+        <div id="graphLegend"></div>
+        <button class="btn btn-ghost data-table-toggle" id="tableToggle" aria-expanded="false" style="display:none">Show data table</button>
+        <div id="graphTable" class="hidden"></div>
+        <div id="graphSummary" class="sr-summary" style="display:none"></div>
+      </div>
+      <div id="fdNotes"></div>
+      <div id="fdReveal" class="card panel-science reveal hidden">
+        <h2>What pattern do the data support?</h2>
+        ${promptBox("What claim is supported across all three measurements?")}
+        ${textField("fd_claim","Your provisional claim","firstInvestigation.fisheriesData.claim")}
+      </div>
+    </div>`;
+  },
+  init(root){
+    const fd=state.firstInvestigation.fisheriesData;
+    let curVar=null;
+    function comparisonFor(vkey){return fd.selectedComparisonByVariable[vkey]||"West Shore";}
+    function draw(){
+      if(!curVar)return;
+      const V=VARIABLES[curVar];const comp=comparisonFor(curVar);
+      const series=[
+        {name:"North Cove",color:ZONE_COLOR["North Cove"],values:V.data["North Cove"]},
+        {name:comp,color:ZONE_COLOR[comp],values:V.data[comp]}
+      ];
+      $("#graphWrap",root).innerHTML=chartSVG({xLabels:YEARS.map(String),series,yMin:V.yMin,yMax:V.yMax,unit:V.unit,yLabel:V.label+" ("+V.unit+")",ariaLabel:V.label+" by year for North Cove and "+comp});
+      $("#graphLegend",root).innerHTML=chartLegend(series);
+      $("#graphTable",root).innerHTML=chartTable(YEARS.map(String),series,"Year ("+V.unit+")");
+      const nc=V.data["North Cove"];
+      $("#graphSummary",root).textContent=`North Cove ${V.label.toLowerCase()} went from ${nc[0]} to ${nc[nc.length-1]} ${V.unit} between 2022 and 2026, while ${comp} stayed near ${V.data[comp][0]}–${V.data[comp][V.data[comp].length-1]} ${V.unit}.`;
+      $("#graphSummary",root).style.display="block";
+      $("#tableToggle",root).style.display="inline-flex";
+      // save graph state
+      fd.savedGraphStateByVariable[curVar]={comparison:comp,northCove:nc.slice(),comparisonValues:V.data[comp].slice(),unit:V.unit,label:V.label};
+      fd.selectedComparisonByVariable[curVar]=comp;
+      save();
+      // update note visibility + zone pressed state
+      renderNotes();
+      $$("#zoneRow .chip[data-zone]",root).forEach(b=>b.setAttribute("aria-pressed",b.dataset.zone===comp?"true":"false"));
+    }
+    function renderNotes(){
+      const wrap=$("#fdNotes",root);
+      wrap.innerHTML=fd.variablesViewed.map(vk=>{
+        const V=VARIABLES[vk];
+        return `<div class="card panel-journal"><h3>${esc(V.label)} — field note</h3>${promptBox(V.prompt)}${textField("note_"+vk,"Your note","firstInvestigation.fisheriesData."+V.note)}</div>`;
+      }).join("");
+      autoBindAll(wrap);
+      if(fd.variablesViewed.length>=3){$("#fdReveal",root).classList.remove("hidden");setContinue(true);}
+      else setContinue(false);
+    }
+    function selectVar(vk){
+      curVar=vk;
+      if(!fd.variablesViewed.includes(vk)){fd.variablesViewed.push(vk);save();}
+      $$("#varRow .chip",root).forEach(b=>b.setAttribute("aria-pressed",b.dataset.var===vk?"true":"false"));
+      draw();
+    }
+    $$("#varRow .chip",root).forEach(b=>b.addEventListener("click",()=>selectVar(b.dataset.var)));
+    $$("#zoneRow .chip[data-zone]",root).forEach(b=>b.addEventListener("click",()=>{
+      if(!curVar){return;}
+      fd.selectedComparisonByVariable[curVar]=b.dataset.zone;save();draw();
+    }));
+    $("#tableToggle",root).addEventListener("click",()=>{
+      const t=$("#graphTable",root),btn=$("#tableToggle",root);
+      const open=t.classList.toggle("hidden")===false;
+      btn.setAttribute("aria-expanded",open);btn.textContent=open?"Hide data table":"Show data table";
+    });
+    renderNotes();
+    if(fd.variablesViewed.length){selectVar(fd.variablesViewed[fd.variablesViewed.length-1]);}
+    else setContinue(false);
+  }
+});
+/* =====================================================================
+   SCREEN 6 — Prepare for Team Briefing 1
+   ===================================================================== */
+function firstPathClaimPath(){return state.navigation.firstPath==="community"?"firstInvestigation.communityJournal.claim":"firstInvestigation.fisheriesData.claim";}
+function firstBriefingEvidence(){
+  if(state.navigation.firstPath==="community")return [
+    {id:"photo-comparison",label:"Photo comparison",desc:"Current vs. earlier North Cove derby photos."},
+    {id:"angler-notes",label:"Angler observations",desc:"Community notes about smaller young bluegill near North Cove."},
+    {id:"catch-cluster",label:"Catch-location cluster",desc:"Smaller-fish reports cluster near North Cove."},
+    {id:"condition-gallery",label:"Fish condition gallery",desc:"Side-view comparison of bluegill."}
+  ];
+  return [
+    {id:"length-graph",label:"Saved length graph",desc:"North Cove length declines while comparison zone stays stable."},
+    {id:"mass-graph",label:"Saved mass graph",desc:"North Cove mass declines over the survey years."},
+    {id:"condition-graph",label:"Saved condition graph",desc:"North Cove body condition trends downward."}
+  ];
+}
+/* Screen 6 (Briefing Call transfer) merged into the convergence below. */
+
+/* =====================================================================
+   SCREEN 7 — Field Station Briefing 1
+   ===================================================================== */
+const COMBINED1_EVIDENCE=[
+  {id:"c1-community-pattern",label:"Community reports of smaller young bluegill near North Cove"},
+  {id:"c1-standardized-decline",label:"Standardized three-year decline in North Cove length, mass, and condition"},
+  {id:"c1-stable-zones",label:"Comparison zones stayed relatively stable"},
+  {id:"c1-same-age",label:"Same-species, same-age fish were compared"}
+];
+registerScreen(6,{title:"Briefing at the Field Station",hint:"Open the shared evidence board to continue.",
+  render(){
+    const youCommunity=state.navigation.firstPath==="community";
+    return `<div class="screen">
+      ${sceneHero({stamp:"Silver Lake Fisheries Field Station & Hatchery",title:"Briefing at the Field Station",sub:"Both teams gather around the shared display.",img:"Images/silver-lake-field-station.png",alt:"Field station interior with juvenile-fish tanks, a briefing table, and a shared display."})}
+      ${dialogue(reed("Let's bring both records together."))}
+      ${dialogue(youCommunity
+        ? say("the Fisheries Data Team","FD",["North Cove average length changed from 10.8 cm to 8.4 cm.","Mass and condition also changed over the same period.","The comparison zones remained relatively stable."],"reports")
+        : say("the Community Journal Team","CJ",["Multiple reports described smaller, thinner young bluegill near North Cove.","A West Shore report described typical fish.","The observations were not standardized measurements."],"reports"))}
+      <div class="reveal-action"><button class="btn btn-teal" id="revealCombine1">Open the Shared Evidence Board</button></div>
+      <div id="combine1" class="card panel-science reveal hidden">
+        <h2>Both records, side by side</h2>
+        <div style="overflow-x:auto"><table class="conv-table">
+          <thead><tr><th>Community record</th><th>Survey record</th></tr></thead>
+          <tbody>
+            <tr><td>Multiple reports near North Cove</td><td>North Cove measurements decline</td></tr>
+            <tr><td>Fish described as smaller and thinner</td><td>Length, mass, and condition decline</td></tr>
+            <tr><td>No standardized measurements</td><td>Same age, species, season, and method</td></tr>
+            <tr><td>West Shore report described typical fish</td><td>Comparison zones remain stable</td></tr>
+          </tbody>
+        </table></div>
+        ${promptBox("What conclusion is supported when both records are considered together?")}
+        ${textField("c1_concl","Revised conclusion","firstInvestigation.convergenceOne.revisedConclusion")}
+      </div>
+    </div>`;
+  },
+  init(root){
+    autoBindAll(root);
+    const already=!!state.firstInvestigation.convergenceOne.remainingQuestion;
+    function reveal(){
+      $("#combine1",root).classList.remove("hidden");
+      $("#revealCombine1",root).style.display="none";
+      state.firstInvestigation.convergenceOne.remainingQuestion="Why are young fish developing differently in one part of the same lake?";
+      save();autoBindAll($("#combine1",root));setContinue(true);
+    }
+    $("#revealCombine1",root).addEventListener("click",reveal);
+    if(already)reveal();else setContinue(false);
+  }
+});
+
+/* =====================================================================
+   SCREEN 8 — Decision Point 2
+   ===================================================================== */
+registerScreen(7,{title:"What Is Different About North Cove?",hideContinue:true,hint:"Open a station to continue.",
+  render(){
+    return `<div class="screen">
+      ${sceneHero({stamp:"Field Station · Briefing Room",title:"What Is Different About North Cove?",sub:"Dr. Reed activates two stations on the briefing-room display."})}
+      ${caseStatus("A developmental trait pattern has been confirmed in same-age juvenile bluegill near North Cove.")}
+      ${dialogue(reed("We have evidence that the pattern is real. Now we need to investigate why it is concentrated in one part of the lake."))}
+      ${subtlePrompt("What should the team investigate about North Cove next?")}
+      <div class="station-grid">
+        <button class="station-card" data-path="water">
+          <div class="st-top"></div>
+          <div class="st-body">
+            <span class="st-kicker">Monitoring console</span>
+            <h3>Water-Monitoring Console</h3>
+            <p>Investigate what repeatedly happens in North Cove's water.</p>
+            <span class="st-open">Check the Sensor Logs &rarr;</span>
+          </div>
+        </button>
+        <button class="station-card" data-path="map">
+          <div class="st-top"></div>
+          <div class="st-body">
+            <span class="st-kicker">Map table</span>
+            <h3>Town Waterway Map</h3>
+            <p>Trace what enters North Cove after rainfall.</p>
+            <span class="st-open">Trace the Water Routes &rarr;</span>
+          </div>
+        </button>
+      </div>
+    </div>`;
+  },
+  init(root){
+    $$(".station-card",root).forEach(card=>card.addEventListener("click",()=>{
+      state.navigation.secondPath=card.dataset.path;save();goToScreen(8);
+    }));
+  }
+});
+/* =====================================================================
+   SCREEN 9A — Water-Conditions Timeline (Path A)
+   ===================================================================== */
+const OXY_BANDS=[
+  {from:5,to:8,fill:"rgba(111,145,72,0.20)"},
+  {from:3,to:5,fill:"rgba(227,168,59,0.24)"},
+  {from:2,to:3,fill:"rgba(200,93,75,0.24)"}
+];
+registerScreen("8A",{title:"Sensor Logs",hint:"Open all three records to continue.",
+  render(){
+    return `<div class="screen">
+      ${sceneHero({stamp:"North Cove · Water-Monitoring Console",title:"North Cove Sensor Logs",sub:"Several overnight readings differ from the daytime samples."})}
+      ${dialogue(reed("A single daytime reading may not show the whole pattern."))}
+      <div class="card panel-science">
+        <p class="small muted">Dissolved oxygen (mg/L) across one 24-hour period. North Cove stays on the graph; choose a zone to compare. <button class="btn btn-ghost small" id="oxyGloss" style="min-height:auto;padding:4px 10px">What is dissolved oxygen?</button></p>
+        <div class="period-tabs" id="periodTabs" role="tablist" aria-label="Rain periods">
+          ${Object.values(PERIODS).map((p,i)=>`<button class="chip" role="tab" data-period="${p.key}" aria-selected="${i===0?"true":"false"}">${esc(p.label)}<span class="seen" data-pseen="${p.key}" style="margin-left:6px;color:var(--marsh-green)"></span></button>`).join("")}
+        </div>
+        <fieldset class="control-group" style="margin-bottom:10px"><legend>Compare North Cove with</legend><div class="chip-row" id="oxyZoneRow">
+          <button class="chip locked" disabled>North Cove</button>
+          ${ZONES.filter(z=>z!=="North Cove").map(z=>`<button class="chip" data-zone="${z}" aria-pressed="false">${esc(z)}</button>`).join("")}
+        </div></fieldset>
+        <div class="oxy-legend" aria-hidden="true">
+          <span><span class="swatch" style="background:rgba(111,145,72,0.5)"></span>5 mg/L+ generally supportive</span>
+          <span><span class="swatch" style="background:rgba(227,168,59,0.6)"></span>3–5 mg/L stressful for many fish</span>
+          <span><span class="swatch" style="background:rgba(200,93,75,0.6)"></span>below 3 mg/L very low</span>
+        </div>
+        <label class="algae-toggle"><input type="checkbox" id="algaeToggle" style="min-width:22px;min-height:22px"> Show algae indicator</label>
+        <div id="algaeReadout" class="callout" style="display:none"></div>
+        <div class="graph-wrap" id="oxyGraph"></div>
+        <div id="oxyLegend"></div>
+        <button class="btn btn-ghost data-table-toggle" id="oxyTableToggle" aria-expanded="false">Show data table</button>
+        <div id="oxyTable" class="hidden"></div>
+        <div id="oxySummary" class="sr-summary"></div>
+      </div>
+      <div id="oxyNotes"></div>
+      <div id="oxyReveal" class="card panel-science reveal hidden">
+        <h2>What does the water keep doing?</h2>
+        ${promptBox("What recurring water condition is supported?")}
+        ${textField("oxy_claim","Your claim","secondInvestigation.waterTimeline.claim")}
+      </div>
+    </div>`;
+  },
+  init(root){
+    const wt=state.secondInvestigation.waterTimeline;
+    let curPeriod=wt.periodsViewed.length?wt.periodsViewed[wt.periodsViewed.length-1]:"dry";
+    let comp=wt.selectedComparisonZone||"West Shore";
+    wt.selectedComparisonZone=comp;
+    function draw(){
+      const nc=oxygenData["North Cove"][curPeriod], cv=oxygenData[comp][curPeriod];
+      const series=[{name:"North Cove",color:ZONE_COLOR["North Cove"],values:nc},{name:comp,color:ZONE_COLOR[comp],values:cv}];
+      $("#oxyGraph",root).innerHTML=chartSVG({xLabels:TIMES,series,yMin:2,yMax:8,unit:"mg/L",yLabel:"Dissolved oxygen (mg/L)",bands:OXY_BANDS,ariaLabel:"Dissolved oxygen across the day for North Cove and "+comp+", "+PERIODS[curPeriod].label});
+      $("#oxyLegend",root).innerHTML=chartLegend(series);
+      $("#oxyTable",root).innerHTML=chartTable(TIMES,series,"Time (mg/L)");
+      const low=Math.min(...nc);
+      $("#oxySummary",root).textContent=`During ${PERIODS[curPeriod].label.toLowerCase()}, North Cove dissolved oxygen ranges from ${low} to ${Math.max(...nc)} mg/L, with the lowest reading before dawn. ${comp} stays near ${Math.min(...cv)}–${Math.max(...cv)} mg/L.`;
+      $$("#oxyZoneRow .chip[data-zone]",root).forEach(b=>b.setAttribute("aria-pressed",b.dataset.zone===comp?"true":"false"));
+      updateAlgae();
+      if(!wt.periodsViewed.includes(curPeriod)){wt.periodsViewed.push(curPeriod);}
+      $(`[data-pseen="${curPeriod}"]`,root).textContent="✓";
+      wt.periodsViewed.forEach(k=>{const s=$(`[data-pseen="${k}"]`,root);if(s)s.textContent="✓";});
+      save();renderNotes();
+    }
+    function updateAlgae(){
+      const on=$("#algaeToggle",root).checked;const ro=$("#algaeReadout",root);
+      if(on){ro.style.display="block";ro.innerHTML=`<em>A second sensor layer appears beneath the oxygen record.</em><br><strong>Algae indicator (${esc(PERIODS[curPeriod].label)}):</strong> ${esc(algaeIndicator[curPeriod])}. This is supporting evidence only.`;wt.algaeLayerUsed=true;save();}
+      else ro.style.display="none";
+    }
+    function renderNotes(){
+      const wrap=$("#oxyNotes",root);
+      wrap.innerHTML=wt.periodsViewed.map(k=>{const P=PERIODS[k];return `<div class="card panel-journal"><h3>${esc(P.label)} — note</h3>${promptBox(P.prompt)}${textField("oxynote_"+k,"Your note","secondInvestigation.waterTimeline."+P.note)}</div>`;}).join("");
+      autoBindAll(wrap);
+      if(wt.periodsViewed.length>=3){$("#oxyReveal",root).classList.remove("hidden");setContinue(true);}else setContinue(false);
+    }
+    $$("#periodTabs .chip",root).forEach(b=>b.addEventListener("click",()=>{
+      curPeriod=b.dataset.period;
+      $$("#periodTabs .chip",root).forEach(x=>x.setAttribute("aria-selected",x===b?"true":"false"));
+      draw();
+    }));
+    $$("#oxyZoneRow .chip[data-zone]",root).forEach(b=>b.addEventListener("click",()=>{comp=b.dataset.zone;wt.selectedComparisonZone=comp;save();draw();}));
+    $("#algaeToggle",root).addEventListener("change",updateAlgae);
+    $("#oxyTableToggle",root).addEventListener("click",()=>{const t=$("#oxyTable",root),btn=$("#oxyTableToggle",root);const open=t.classList.toggle("hidden")===false;btn.setAttribute("aria-expanded",open);btn.textContent=open?"Hide data table":"Show data table";});
+    $("#oxyGloss",root).addEventListener("click",()=>openGlossary("dissolved oxygen"));
+    $$("#periodTabs .chip",root).forEach(x=>x.setAttribute("aria-selected",x.dataset.period===curPeriod?"true":"false"));
+    draw();
+    if(wt.periodsViewed.length<3)setContinue(false);
+  }
+});
+
+/* =====================================================================
+   SCREEN 9B — Town Waterways Hotspot Map (Path B)
+   ===================================================================== */
+function mapSVG(){
+  return `<svg viewBox="0 0 640 380" width="100%" role="img" aria-label="Illustrated map of Silver Lake with three water routes: the Wooded Feeder Stream to West Shore, the South Wetland Outlet, and the Maple Park Stormwater Channel to North Cove.">
+    <rect x="0" y="0" width="640" height="380" fill="#dceef0"/>
+    <path d="M120,60 Q90,150 140,230 Q200,320 340,320 Q470,320 500,220 Q520,130 430,80 Q300,30 120,60 Z" fill="#8fc6cf" stroke="#168C8C" stroke-width="3"/>
+    <text x="300" y="200" text-anchor="middle" font-size="20" font-family="Fredoka, sans-serif" fill="#0d5560">Silver Lake</text>
+    <path d="M120,60 Q140,110 190,120 Q170,80 160,60 Z" fill="#5fa8b3" stroke="#0d5560"/>
+    <text x="160" y="100" font-size="11" fill="#0d3b44" font-weight="700">North Cove</text>
+    <text x="470" y="180" font-size="11" fill="#0d3b44" font-weight="700">West Shore</text>
+    <text x="300" y="315" font-size="11" fill="#0d3b44" font-weight="700">South Wetland</text>
+    <text x="300" y="150" font-size="11" fill="#0d3b44" font-weight="700">Central Lake</text>
+    <rect x="30" y="20" width="120" height="60" rx="6" fill="#e9e0c8" stroke="#c9b98a"/>
+    <text x="90" y="48" text-anchor="middle" font-size="10" fill="#6f6141">Neighborhoods &</text>
+    <text x="90" y="62" text-anchor="middle" font-size="10" fill="#6f6141">Maple Park</text>
+    <path d="M150,50 Q160,70 175,95" stroke="#C85D4B" stroke-width="4" fill="none" stroke-dasharray="6 4"/>
+    <rect x="520" y="230" width="100" height="46" rx="6" fill="#dfe9cf" stroke="#9fb87f"/>
+    <text x="570" y="256" text-anchor="middle" font-size="10" fill="#4b5c33">Forested land</text>
+    <path d="M520,250 Q500,200 480,175" stroke="#6F9148" stroke-width="4" fill="none" stroke-dasharray="6 4"/>
+    <path d="M300,360 Q300,340 300,322" stroke="#6F9148" stroke-width="4" fill="none" stroke-dasharray="6 4"/>
+  </svg>`;
+}
+registerScreen("8B",{title:"Town Waterway Table",hint:"Open all three route files to continue.",
+  render(){
+    return `<div class="screen">
+      ${sceneHero({stamp:"Field Station · Map Table",title:"The Town Waterway Table",sub:"Three water routes glow across the town map — all sampled after the same recent storm."})}
+      ${dialogue(reed("No single clue is enough. Compare destination, surrounding land, and measurements."))}
+      <div class="card">
+        <div class="map-wrap">${mapSVG()}</div>
+        <p class="small muted" style="margin-top:8px">Open each route file to inspect three layers: how the water moves, its <strong>nutrient reading, mg/L</strong>, and a land-use clue. <button class="btn btn-ghost small" id="nutGloss" style="min-height:auto;padding:4px 10px">What is a nutrient reading?</button></p>
+        <div class="route-list" id="routeList">
+          ${waterRoutes.map(r=>`<button class="route-btn" data-route="${r.id}">
+            <span><span class="rname">${esc(r.name)}</span><br><span class="rmeta">Open the route file</span></span>
+            <span class="badge" data-rbadge="${r.id}" style="display:none">Viewed ✓</span>
+          </button>`).join("")}
+        </div>
+      </div>
+      <div id="mapReveal" class="card panel-journal reveal hidden">
+        <h2>Which route fits the evidence?</h2>
+        ${promptBox("Which route is most strongly connected to North Cove? Support your ranking with evidence.")}
+        <ul class="rank-list" id="rankList"></ul>
+        <label class="field-label">Select the evidence that helped you decide</label>
+        ${renderEvidence("secondInvestigation.waterwayMap.selectedEvidence",[
+          {id:"route-destination",label:"Flow destination",desc:"Which lake zone each route empties into."},
+          {id:"after-rain-nutrient",label:"After-rain nutrient reading",desc:"How much the nutrient reading rises after rain."},
+          {id:"land-use",label:"Land-use clue",desc:"What kind of land each route drains."}
+        ],3,"check")}
+        ${textField("map_claim","Your claim","secondInvestigation.waterwayMap.claim")}
+      </div>
+    </div>`;
+  },
+  init(root){
+    const wm=state.secondInvestigation.waterwayMap;
+    const ROUTE_NOTE={"wooded-stream":"Field technician's note: water ran clear both times. No unusual smell.","wetland-outlet":"Field technician's note: outlet flow was steady. No unusual smell.","stormwater-channel":"Field technician's note: water carried visible sediment after the rain event."};
+    function openRoute(r){
+      const body=`
+        ${imageBlock(r.animation)}
+        <p class="small muted">Layer 1: water movement (animation). ${esc(ROUTE_NOTE[r.id]||"")}</p>
+        <div class="callout"><strong>Layer 2 — Nutrient reading, mg/L:</strong><br>Dry conditions: ${r.dryNutrient} mg/L &nbsp;·&nbsp; After rain: ${r.afterRainNutrient} mg/L</div>
+        <div class="callout"><strong>Layer 3 — Destination & land use:</strong><br>Empties into <strong>${esc(r.destination)}</strong>. ${esc(r.landUse)}.</div>
+        <label class="field-label" for="rnote">Optional note about this route</label>
+        <textarea id="rnote"></textarea>`;
+      openModal(r.name,body,`<button class="btn btn-teal" id="rdone">Done</button>`,mroot=>{
+        const nt=$("#rnote",mroot);nt.value=wm.routeNotes[r.id]||"";
+        nt.addEventListener("input",()=>{wm.routeNotes[r.id]=nt.value;save();});
+        $("#rdone",mroot).addEventListener("click",closeModal);
+      });
+      if(!wm.routesViewed.includes(r.id)){wm.routesViewed.push(r.id);save();}
+      markViewed();checkReveal();
+    }
+    function markViewed(){
+      wm.routesViewed.forEach(id=>{const b=$(`[data-rbadge="${id}"]`,root);if(b)b.style.display="inline-block";const btn=$(`[data-route="${id}"]`,root);if(btn)btn.classList.add("viewed");});
+    }
+    function renderRank(){
+      if(!wm.routeRanking.length)wm.routeRanking=waterRoutes.map(r=>r.id);
+      const ul=$("#rankList",root);
+      ul.innerHTML=wm.routeRanking.map((id,i)=>{const r=waterRoutes.find(x=>x.id===id);
+        return `<li class="rank-item" data-id="${id}"><span class="rank-num">${i+1}</span><span>${esc(r.name)}</span>
+          <span class="rank-move"><button data-dir="up" aria-label="Move ${esc(r.name)} up">▲</button><button data-dir="down" aria-label="Move ${esc(r.name)} down">▼</button></span></li>`;}).join("");
+      $$(".rank-move button",ul).forEach(b=>b.addEventListener("click",()=>{
+        const li=b.closest(".rank-item");const id=li.dataset.id;const idx=wm.routeRanking.indexOf(id);
+        const dir=b.dataset.dir==="up"?-1:1;const j=idx+dir;
+        if(j<0||j>=wm.routeRanking.length)return;
+        [wm.routeRanking[idx],wm.routeRanking[j]]=[wm.routeRanking[j],wm.routeRanking[idx]];save();renderRank();
+      }));
+    }
+    function checkReveal(){
+      if(wm.routesViewed.length>=3){$("#mapReveal",root).classList.remove("hidden");renderRank();setContinue(true);}else setContinue(false);
+    }
+    $$(".route-btn",root).forEach(b=>b.addEventListener("click",()=>openRoute(waterRoutes.find(r=>r.id===b.dataset.route))));
+    $("#nutGloss",root).addEventListener("click",()=>openGlossary("nutrient reading"));
+    initEvidence(root);evidenceIconRefresh(root);autoBindAll(root);
+    markViewed();checkReveal();
+    if(wm.routesViewed.length<3)setContinue(false);
+  }
+});
+/* =====================================================================
+   SCREEN 10 — Prepare the Second Team Briefing
+   ===================================================================== */
+function secondPathClaimPath(){return state.navigation.secondPath==="water"?"secondInvestigation.waterTimeline.claim":"secondInvestigation.waterwayMap.claim";}
+function secondBriefingEvidence(){
+  if(state.navigation.secondPath==="water")return[
+    {id:"recurring-low-oxygen",label:"Recurring low dissolved oxygen in North Cove"},
+    {id:"predawn-low",label:"Lowest oxygen occurs before dawn"},
+    {id:"rain-deepens-drop",label:"Drops are deeper after rainfall"},
+    {id:"algae-support",label:"Higher algae indicator during the worst periods"}
+  ];
+  return[
+    {id:"stormwater-to-northcove",label:"Stormwater channel empties into North Cove"},
+    {id:"nutrient-rise",label:"Nutrient reading rises sharply after rain"},
+    {id:"drains-park",label:"Channel drains neighborhoods and the community park"},
+    {id:"others-differ",label:"Other routes don't share destination + nutrient rise"}
+  ];
+}
+/* Screen 10 (Return to the Briefing transfer) merged into the evidence wall below. */
+
+/* =====================================================================
+   SCREEN 11 — Field Station Briefing 2 + Cause-and-Effect Chain
+   ===================================================================== */
+const CHAIN_CARDS=[
+  {id:"c-rain",text:"Rain falls on fertilized lawns and park fields."},
+  {id:"c-runoff",text:"Nutrient-rich runoff enters the stormwater system."},
+  {id:"c-channel",text:"The stormwater channel carries nutrients into North Cove."},
+  {id:"c-algae",text:"Algae growth and decomposition increase."},
+  {id:"c-oxygen",text:"Dissolved oxygen repeatedly drops."},
+  {id:"c-fish",text:"Juvenile bluegill grow under less favorable conditions and show reduced length, mass, and body condition."}
+];
+const CHAIN_MAP=Object.fromEntries(CHAIN_CARDS.map(c=>[c.id,c.text]));
+const CHAIN_EVIDENCE=[
+  {id:"e-length",label:"North Cove fish-length trend"},
+  {id:"e-mass",label:"North Cove fish-mass trend"},
+  {id:"e-condition",label:"North Cove condition trend"},
+  {id:"e-destination",label:"Stormwater route destination"},
+  {id:"e-nutrient",label:"After-rain nutrient reading"},
+  {id:"e-algae",label:"Algae indicator"},
+  {id:"e-predawn",label:"Pre-dawn oxygen pattern"},
+  {id:"e-stable",label:"Stable comparison-zone oxygen"},
+  {id:"e-popular",label:"Popular fishing location (limited relevance)"}
+];
+const CONF_OPTS=[["strong","Strongly supported"],["uncertain","Supported but uncertain"],["needs","Needs more evidence"]];
+registerScreen(9,{title:"Evidence Chain",hint:"Arrange the chain, then continue when ready.",
+  render(){
+    const c2=state.secondInvestigation.convergenceTwo;
+    const youWater=state.navigation.secondPath==="water";
+    return `<div class="screen">
+      ${sceneHero({stamp:"Field Station · Evidence Wall",title:"The Silver Lake Evidence Wall",sub:"The final record reaches the field station.",img:"Images/silver-lake-field-station.png",alt:"A field-station evidence wall showing water-sensor records and a town waterway map."})}
+      ${dialogue(reed(["These teams investigated different parts of the system.","Determine whether the evidence can be connected into a cause-and-effect explanation."]))}
+      ${dialogue(say("the Water-Monitoring Team","WM",["Before dawn after heavy rain, North Cove measured 2.4 milligrams per liter.","The comparison zone remained above 5.","The algae indicator was also highest during that period."],"reports"))}
+      <div class="card"><p class="small muted" style="margin:0 0 8px">Representative sensor record:</p>${promptBox("North Cove dissolved oxygen: 2.4 mg/L before dawn, three days after heavy rain. Comparison zone: above 5 mg/L.")}</div>
+      ${dialogue(say("the Town Waterway Team","TW",["The wooded stream entered West Shore and changed from 0.4 to 0.6.","The wetland outlet entered South Wetland and changed from 0.5 to 0.7.","The Maple Park channel entered North Cove and changed from 0.8 to 3.6."],"reports"))}
+      <div class="card"><p class="small muted" style="margin:0 0 8px">Representative route record — Maple Park Stormwater Channel:</p>${imageBlock("Images/route-stormwater-channel.png")}</div>
+      <div class="card panel-journal">
+        <h2>Arrange the evidence chain</h2>
+        <p class="small muted">Move the cards into the sequence you think best explains the change. Drag them, or use the ▲ ▼ buttons. For each connection, attach evidence and rate your confidence.</p>
+        <ul class="chain-list" id="chainList"></ul>
+      </div>
+      <div class="card">
+        ${promptBox("Explain how the environmental change may have affected the development of traits in the juvenile bluegill population.")}
+        <p class="small muted">Cautious language helps: <em>likely contributed, evidence supports, recurring conditions, may have affected growth</em>.</p>
+        ${textField("c2_explain","Your explanation","secondInvestigation.convergenceTwo.writtenExplanation")}
+      </div>
+      <div id="chainWrap2"></div>
+    </div>`;
+  },
+  init(root){
+    const c2=state.secondInvestigation.convergenceTwo;
+    if(!c2.chainOrder||c2.chainOrder.length!==6)c2.chainOrder=shuffle(CHAIN_CARDS.map(c=>c.id));
+    let dragId=null;
+    function attachEvidence(cardId){
+      const cur=c2.evidenceAttachments[cardId]||[];
+      const body=`<p class="small muted">Attach any evidence that supports this connection.</p>
+        <div class="evi-list">${CHAIN_EVIDENCE.map(e=>`<label class="evi-item"><input type="checkbox" data-e="${e.id}" ${cur.includes(e.id)?"checked":""} style="min-width:22px;min-height:22px"><span class="evi-body">${esc(e.label)}</span></label>`).join("")}</div>`;
+      openModal("Attach evidence",body,`<button class="btn btn-teal" id="edone">Save</button>`,mroot=>{
+        $("#edone",mroot).addEventListener("click",()=>{
+          const picked=$$("input[data-e]:checked",mroot).map(i=>i.dataset.e);
+          c2.evidenceAttachments[cardId]=picked;save();closeModal();renderChain();
+        });
+      });
+    }
+    function move(cardId,dir){
+      const i=c2.chainOrder.indexOf(cardId),j=i+dir;
+      if(j<0||j>=c2.chainOrder.length)return;
+      [c2.chainOrder[i],c2.chainOrder[j]]=[c2.chainOrder[j],c2.chainOrder[i]];save();renderChain();
+    }
+    function checkComplete(){
+      const done=c2.chainOrder.every(id=>c2.confidenceRatings[id]);
+      const wrap=$("#chainWrap2",root);
+      wrap.innerHTML=done?`<div class="card">${dialogue(reed(["This explanation fits multiple records.","It supports recurring low oxygen as a likely contributor — not necessarily the only cause."]))}${caseStatus("Evidence-supported explanation developed")}</div>`:"";
+    }
+    function renderChain(){
+      const ul=$("#chainList",root);
+      ul.innerHTML=c2.chainOrder.map((id,idx)=>{
+        const conf=c2.confidenceRatings[id]||"";const att=(c2.evidenceAttachments[id]||[]).length;
+        return `<li class="chain-card" draggable="true" data-id="${id}">
+          <span class="chain-handle" aria-hidden="true">⋮⋮</span>
+          <span class="chain-order">${idx+1}</span>
+          <div class="chain-text">${esc(CHAIN_MAP[id])}
+            <div class="confidence-row" role="group" aria-label="Confidence for this connection">
+              ${CONF_OPTS.map(([k,l])=>`<button class="conf-btn ${conf===k?"active":""}" data-conf="${k}" data-card="${id}">${l}</button>`).join("")}
+            </div>
+            <button class="btn btn-ghost small" data-attach="${id}" style="margin-top:6px;min-height:auto;padding:6px 12px">Attach evidence${att?` (${att})`:""}</button>
+          </div>
+          <span class="chain-controls"><button data-move="up" data-card="${id}" aria-label="Move up">▲</button><button data-move="down" data-card="${id}" aria-label="Move down">▼</button></span>
+        </li>`;
+      }).join("");
+      $$("[data-conf]",ul).forEach(b=>b.addEventListener("click",()=>{c2.confidenceRatings[b.dataset.card]=b.dataset.conf;save();renderChain();checkComplete();}));
+      $$("[data-attach]",ul).forEach(b=>b.addEventListener("click",()=>attachEvidence(b.dataset.attach)));
+      $$("[data-move]",ul).forEach(b=>b.addEventListener("click",()=>move(b.dataset.card,b.dataset.move==="up"?-1:1)));
+      $$(".chain-card",ul).forEach(li=>{
+        li.addEventListener("dragstart",e=>{dragId=li.dataset.id;li.classList.add("dragging");e.dataTransfer.effectAllowed="move";});
+        li.addEventListener("dragend",()=>{li.classList.remove("dragging");$$(".chain-card",ul).forEach(x=>x.classList.remove("over"));});
+        li.addEventListener("dragover",e=>{e.preventDefault();li.classList.add("over");});
+        li.addEventListener("dragleave",()=>li.classList.remove("over"));
+        li.addEventListener("drop",e=>{e.preventDefault();const targetId=li.dataset.id;if(!dragId||dragId===targetId)return;
+          const from=c2.chainOrder.indexOf(dragId),to=c2.chainOrder.indexOf(targetId);
+          c2.chainOrder.splice(to,0,c2.chainOrder.splice(from,1)[0]);save();renderChain();});
+      });
+    }
+    autoBindAll(root);renderChain();checkComplete();setContinue(true);
+  }
+});
+/* ---------------- Shared: model result renderer ---------------- */
+function deltaHtml(val,base,lowerBetter){
+  const d=val-base;if(d===0)return `<span class="delta">same as baseline</span>`;
+  const good=lowerBetter?d<0:d>0;
+  return `<span class="delta ${good?"down":"up"}">${d<0?"▼":"▲"} ${Math.abs(d)} vs baseline</span>`;
+}
+function modelResultCard(res,label,vsBaseline){
+  const b=baselineModel;
+  return `<div class="run-result"><h4 style="margin:0 0 6px">${esc(label)}</h4>
+    <div class="metric-grid">
+      <div class="metric"><div class="val">${res.runoffPercent}%</div><div class="lab">Runoff to East Creek</div>${vsBaseline?deltaHtml(res.runoffPercent,b.runoffPercent,true):""}</div>
+      <div class="metric"><div class="val">${res.nutrientIndex}</div><div class="lab">Nutrient index (0–100)</div>${vsBaseline?deltaHtml(res.nutrientIndex,b.nutrientIndex,true):""}</div>
+      <div class="metric"><div class="val algae-${res.algaeResponse}">${res.algaeResponse}</div><div class="lab">Predicted algae response</div></div>
+    </div></div>`;
+}
+
+/* =====================================================================
+   SCREEN 12 — A New Challenge: Proposed Sports Complex
+   ===================================================================== */
+registerScreen(10,{title:"Parks Department Request",hint:"Run the current design to continue.",
+  render(){
+    return `<div class="screen">
+      ${sceneHero({stamp:"Field Station · Briefing Room",title:"A Request from the Parks Department",sub:"Dr. Reed opens the second item on the council's agenda."})}
+      ${sysMsg("Incoming request · Pinecrest Parks Department",[
+        `The proposed <span class="k">Pinecrest Community Sports Complex</span> near East Creek is still in the design stage.`,
+        `The planning team is asking whether runoff from the site could create conditions similar to those investigated at North Cove.`
+      ])}
+      ${dialogue(reed("Use what you learned from Silver Lake to test the current design."))}
+      <div class="card">
+        ${imageBlock("Images/sports-complex-site-map.png")}
+        <p class="small muted">The site includes sports fields, a parking area, drains, a slope, and a route into East Creek.</p>
+      </div>
+      <div class="card panel-journal">
+        ${promptBox("What do you predict may happen during heavy rain if the current design has no added protection?")}
+        ${textField("app_pred","Your prediction","application.initialPrediction")}
+      </div>
+      <div class="card panel-science">
+        <button class="btn btn-gold" id="runBaseline">Run the Current Design</button>
+        <div id="baselineOut" class="hidden" style="margin-top:12px"></div>
+      </div>
+    </div>`;
+  },
+  init(root){
+    autoBindAll(root);
+    function showBaseline(){
+      $("#baselineOut",root).classList.remove("hidden");
+      $("#baselineOut",root).innerHTML=modelResultCard(baselineModel,"Baseline — current design, no added protection",false)+
+        `<p class="small muted">This is the starting point. In the next step you'll test features that could change these results.</p>`;
+      state.application.baselineRun=Object.assign({},baselineModel,{at:nowISO()});save();setContinue(true);
+    }
+    $("#runBaseline",root).addEventListener("click",showBaseline);
+    if(state.application.baselineRun){showBaseline();}else setContinue(false);
+  }
+});
+
+/* =====================================================================
+   SCREEN 13 — Sports Complex Modeling System
+   ===================================================================== */
+const MODEL_FEATURES=[
+  {id:"source-control",group:"Source control",name:"Weather-smart fertilizer plan",desc:"Use only the amount needed and avoid applying fertilizer before forecast heavy rain."},
+  {id:"rain-garden",group:"Runoff route",name:"Rain garden",desc:"Build a planted basin near the sports-field and parking-area drains."},
+  {id:"vegetated-buffer",group:"Creek protection",name:"Vegetated creek buffer",desc:"Plant a wide strip of grasses and native plants between the developed area and East Creek."}
+];
+registerScreen(11,{title:"Modeling Lab",hint:"Run all three feature tests to continue.",
+  render(){
+    return `<div class="screen">
+      ${sceneHero({stamp:"Field Station · Runoff Modeling Lab",title:"Runoff Modeling Lab",sub:"The simulation table is ready. Rain will move across the proposed site."})}
+      ${dialogue(reed("Test each feature separately first. Then decide which features belong together."))}
+      <div class="card panel-science">
+        <h3>Test one feature at a time</h3>
+        <p class="small muted">Each test changes only one feature from the current design (${baselineModel.runoffPercent}% runoff · index ${baselineModel.nutrientIndex} · algae ${baselineModel.algaeResponse}). Run all three to open the combined design.</p>
+        <fieldset class="control-group" style="width:100%"><legend>Choose a feature to test</legend>
+          <div class="idea-grid" id="featurePick">
+            ${MODEL_FEATURES.map(f=>`<label class="idea-card" style="display:flex;gap:10px;align-items:flex-start;cursor:pointer">
+              <input type="radio" name="feat" value="${f.id}" style="min-width:20px;min-height:20px;margin-top:3px">
+              <span><strong>${esc(f.group)}: ${esc(f.name)}</strong><br><span class="small muted">${esc(f.desc)}</span> <span class="pill" data-fdone="${f.id}" style="display:none">tested ✓</span></span>
+            </label>`).join("")}
+          </div>
+        </fieldset>
+        <button class="btn btn-gold" id="runFeature" style="margin-top:10px">Run analysis</button>
+        <div id="featureOut" style="margin-top:12px"></div>
+      </div>
+      <div id="combinedSection" class="card panel-journal hidden">
+        <h3>Design the combined solution</h3>
+        ${promptBox("Compare the three runs. What did each feature change?")}
+        <p class="small muted">Choose at least two features, then run the final combined analysis.</p>
+        <div class="role-select" id="comboPick">
+          ${MODEL_FEATURES.map(f=>`<button data-combo="${f.id}">${esc(f.name)}</button>`).join("")}
+        </div>
+        <button class="btn btn-teal" id="runCombined" style="margin-top:10px">Run final combined analysis</button>
+        <div id="combinedOut" style="margin-top:12px"></div>
+        ${promptBox("Which combination will you recommend, and what model evidence supports your choice?")}
+        ${textField("combo_rationale","Your recommendation","application.runNotes.combinedRationale")}
+      </div>
+      <div class="card">
+        <h3>Run log</h3>
+        <div class="run-log" id="runLog"></div>
+      </div>
+    </div>`;
+  },
+  init(root){
+    const app=state.application;
+    if(!app.runNotes)app.runNotes={};
+    if(!app.baselineRun)app.baselineRun=Object.assign({},baselineModel,{at:nowISO()});
+    let comboSel=(app.finalCombinedRun&&app.finalCombinedRun.features)?app.finalCombinedRun.features.slice():[];
+    function testedFeatures(){return Array.from(new Set(app.individualRuns.map(r=>r.id)));}
+    function refreshDoneBadges(){testedFeatures().forEach(id=>{const b=$(`[data-fdone="${id}"]`,root);if(b)b.style.display="inline-block";});}
+    function renderLog(){
+      const log=$("#runLog",root);const items=[];
+      if(app.baselineRun)items.push(`Baseline — ${app.baselineRun.runoffPercent}% runoff · index ${app.baselineRun.nutrientIndex} · algae ${app.baselineRun.algaeResponse}`);
+      app.individualRuns.forEach(r=>{const f=FEATURE_BY_ID[r.id];items.push(`${f?f.name:r.id} — ${r.runoffPercent}% · index ${r.nutrientIndex} · algae ${r.algaeResponse}`);});
+      if(app.finalCombinedRun)items.push(`Final combined (${app.finalCombinedRun.features.map(id=>FEATURE_BY_ID[id]?FEATURE_BY_ID[id].name:id).join(" + ")}) — ${app.finalCombinedRun.runoffPercent}% · index ${app.finalCombinedRun.nutrientIndex} · algae ${app.finalCombinedRun.algaeResponse}`);
+      log.innerHTML=items.length?items.map(t=>`<div class="run-log-item">${esc(t)}</div>`).join(""):`<p class="small muted">No runs yet.</p>`;
+    }
+    function maybeUnlockCombined(){
+      if(testedFeatures().length>=3){$("#combinedSection",root).classList.remove("hidden");setContinue(true);}else setContinue(false);
+    }
+    function runFeature(){
+      const sel=$("input[name=feat]:checked",root);if(!sel){$("#featureOut",root).innerHTML=`<p class="small blank-note">Choose a feature first.</p>`;return;}
+      const f=FEATURE_BY_ID[sel.value];
+      const res={id:f.id,runoffPercent:f.runoffPercent,nutrientIndex:f.nutrientIndex,algaeResponse:f.algaeResponse,at:nowISO()};
+      app.individualRuns.push(res);save();
+      $("#featureOut",root).innerHTML=modelResultCard(f,f.name+" vs. current design",true)+
+        promptBox("What changed compared with the current design?")+
+        `<textarea id="fnote_${f.id}" data-path="application.runNotes.${f.id}"></textarea>`;
+      autoBindAll($("#featureOut",root));
+      refreshDoneBadges();renderLog();maybeUnlockCombined();
+    }
+    function toggleCombo(id,btn){
+      const i=comboSel.indexOf(id);if(i>=0){comboSel.splice(i,1);btn.classList.remove("active");}else{comboSel.push(id);btn.classList.add("active");}
+    }
+    function runCombined(){
+      if(comboSel.length<2){$("#combinedOut",root).innerHTML=`<p class="small blank-note">Choose at least two features.</p>`;return;}
+      const res=comboResult(comboSel);
+      if(!res){$("#combinedOut",root).innerHTML=`<p class="small blank-note">That combination is not available.</p>`;return;}
+      app.finalCombinedRun={features:comboSel.slice(),runoffPercent:res.runoffPercent,nutrientIndex:res.nutrientIndex,algaeResponse:res.algaeResponse,at:nowISO()};save();
+      $("#combinedOut",root).innerHTML=modelResultCard(res,"Combined design: "+comboSel.map(id=>FEATURE_BY_ID[id].name).join(" + "),true);
+      renderLog();
+    }
+    $("#runFeature",root).addEventListener("click",runFeature);
+    $$("[data-combo]",root).forEach(b=>{if(comboSel.includes(b.dataset.combo))b.classList.add("active");b.addEventListener("click",()=>toggleCombo(b.dataset.combo,b));});
+    $("#runCombined",root).addEventListener("click",runCombined);
+    autoBindAll(root);refreshDoneBadges();renderLog();maybeUnlockCombined();
+    if(app.finalCombinedRun){$("#combinedOut",root).innerHTML=modelResultCard(app.finalCombinedRun,"Combined design: "+app.finalCombinedRun.features.map(id=>FEATURE_BY_ID[id].name).join(" + "),true);}
+    if(testedFeatures().length<3)setContinue(false);
+  }
+});
+/* =====================================================================
+   SCREEN 14 — Build the Environmental Response
+   ===================================================================== */
+const ALL_EVIDENCE=[
+  {id:"ev-length",label:"North Cove length decline (fisheries data)"},
+  {id:"ev-mass",label:"North Cove mass decline (fisheries data)"},
+  {id:"ev-condition",label:"North Cove body-condition decline"},
+  {id:"ev-community",label:"Community reports of smaller young bluegill near North Cove"},
+  {id:"ev-cluster",label:"Smaller-fish reports cluster near North Cove"},
+  {id:"ev-destination",label:"Stormwater channel empties into North Cove"},
+  {id:"ev-nutrient",label:"Nutrient reading rises sharply after rain"},
+  {id:"ev-lowoxy",label:"Recurring low dissolved oxygen in North Cove"},
+  {id:"ev-predawn",label:"Lowest oxygen occurs before dawn"},
+  {id:"ev-algae",label:"Higher algae indicator in the worst periods"},
+  {id:"ev-stable",label:"Comparison zones stayed stable"}
+];
+const EV_MAP=Object.fromEntries(ALL_EVIDENCE.map(e=>[e.id,e.label]));
+const RESPONSE_IDEAS=[
+  {id:"fertilizer",name:"Weather-smart fertilizer practices",desc:"Use only the amount needed and avoid applying fertilizer before forecast heavy rain."},
+  {id:"rain-garden",name:"Rain garden",desc:"Build a planted basin near the park and stormwater drains."},
+  {id:"buffer",name:"Vegetated buffer",desc:"Plant a wide strip of grasses and native plants between developed land and the waterway."},
+  {id:"nutrient-monitor",name:"Nutrient monitoring",desc:"Test nutrient levels in the stormwater channel and North Cove after major rain."},
+  {id:"do-monitor",name:"Algae and dissolved-oxygen monitoring",desc:"Continue tracking algae indicators and dissolved oxygen across the day."}
+];
+const IDEA_MAP=Object.fromEntries(RESPONSE_IDEAS.map(i=>[i.id,i]));
+registerScreen(12,{title:"Prepare the Town Response",hint:"Continue any time — sections are optional.",
+  render(){
+    const ab=state.actionBrief;
+    return `<div class="screen">
+      ${sceneHero({stamp:"Town Hall · Communication Workspace",time:"The next evening",title:"Prepare the Town Response"})}
+
+      <div class="card">
+        <p class="small muted" style="margin:0 0 8px"><strong>Jordan asks:</strong> Was the derby concern supported?</p>
+        <h3>State the Finding</h3>
+        ${promptBox("What changed, and where was the pattern strongest?")}
+        ${textField("ab_discovery","Your response","actionBrief.discovery")}</div>
+
+      <div class="card"><h3>Choose the Evidence</h3>
+        <label class="field-label">Select two or three pieces of evidence from the whole investigation</label>
+        <div class="evi-list" id="strongEvi">
+          ${ALL_EVIDENCE.map(e=>{const on=(ab.strongestEvidence||[]).includes(e.id);
+            return `<label class="evi-item ${on?"sel":""}"><input type="checkbox" data-strong="${e.id}" ${on?"checked":""} style="min-width:22px;min-height:22px"><span class="evi-body">${esc(e.label)}</span></label>`;}).join("")}
+        </div>
+        <div id="eviJust"></div>
+      </div>
+
+      <div class="card">
+        <p class="small muted" style="margin:0 0 8px"><strong>Town Council asks:</strong> What environmental change may have contributed?</p>
+        <h3>Explain the Chain</h3>
+        ${promptBox("What environmental change most likely contributed to the developmental pattern, and how confident can we be?")}
+        ${textField("ab_cause","Your explanation","actionBrief.causeEffectExplanation")}</div>
+
+      <div class="card">
+        <p class="small muted" style="margin:0 0 8px"><strong>Lake managers ask:</strong> What actions should be considered?</p>
+        <h3>Recommend a North Cove Response</h3>
+        <div class="idea-grid">
+          ${RESPONSE_IDEAS.map(i=>`<div class="idea-card"><h4>${esc(i.name)}</h4><p class="small muted" style="margin:0">${esc(i.desc)}</p></div>`).join("")}
+        </div>
+        ${roleSelect("Priority idea","priorityIdea")}
+        ${textField("ab_pj","Justification","actionBrief.priorityJustification","What would this idea accomplish, where does it connect to the cause-and-effect chain, and why does it fit the evidence?")}
+        ${roleSelect("Supporting idea","supportingIdea")}
+        ${textField("ab_sj","Justification","actionBrief.supportingJustification")}
+        ${roleSelect("Monitoring idea","monitoringIdea")}
+        ${textField("ab_mj","Justification","actionBrief.monitoringJustification")}
+      </div>
+
+      <div class="card">
+        <p class="small muted" style="margin:0 0 8px"><strong>Parks Department asks:</strong> What should change in the sports-complex plan?</p>
+        <h3>Protect the Proposed Sports Complex</h3>
+        ${promptBox("What changes should be included in the sports-complex design?")}
+        ${textField("ab_scplan","Your design","actionBrief.sportsComplexPlan")}
+        ${promptBox("What model results support your design?")}
+        ${textField("ab_scevi","Model evidence","actionBrief.sportsComplexEvidence")}</div>
+
+      <div class="card">
+        <p class="small muted" style="margin:0 0 8px"><strong>Field station asks:</strong> What should continue to be monitored?</p>
+        <h3>Identify What to Keep Monitoring</h3>
+        ${promptBox("What should the town continue investigating or measuring?")}
+        ${textField("ab_further","Your response","actionBrief.furtherInvestigation")}</div>
+    </div>`;
+  },
+  init(root){
+    const ab=state.actionBrief;
+    if(!ab.strongestEvidence)ab.strongestEvidence=[];
+    if(!ab.evidenceJustifications)ab.evidenceJustifications={};
+    function renderJust(){
+      const wrap=$("#eviJust",root);
+      wrap.innerHTML=ab.strongestEvidence.map(id=>`<div class="callout"><strong>${esc(EV_MAP[id]||id)}</strong>${promptBox("Why is this evidence important?")}<textarea data-path="actionBrief.evidenceJustifications.${id}"></textarea></div>`).join("");
+      autoBindAll(wrap);
+    }
+    $$("[data-strong]",root).forEach(cb=>cb.addEventListener("change",()=>{
+      const id=cb.dataset.strong;let arr=ab.strongestEvidence;
+      if(cb.checked){if(arr.length>=3){cb.checked=false;return;}if(!arr.includes(id))arr.push(id);}
+      else{ab.strongestEvidence=arr.filter(x=>x!==id);}
+      cb.closest(".evi-item").classList.toggle("sel",cb.checked);
+      save();renderJust();
+    }));
+    $$("[data-role]",root).forEach(group=>{
+      const path="actionBrief."+group.dataset.role;
+      $$("button",group).forEach(b=>b.addEventListener("click",()=>{
+        const cur=getPath(path);const val=cur===b.dataset.idea?"":b.dataset.idea;
+        setPath(path,val);
+        $$("button",group).forEach(x=>x.classList.toggle("active",x.dataset.idea===val));
+      }));
+    });
+    autoBindAll(root);renderJust();setContinue(true);
+  }
+});
+function roleSelect(label,field){
+  const cur=getPath("actionBrief."+field)||"";
+  return `<label class="field-label">${esc(label)}</label>
+    <div class="role-select" data-role="${field}">
+      ${RESPONSE_IDEAS.map(i=>`<button data-idea="${i.id}" class="${cur===i.id?"active":""}">${esc(i.name)}</button>`).join("")}
+    </div>`;
+}
+/* ---------------- Deterministic Action Brief builder ---------------- */
+function orBlank(v){return (v&&String(v).trim())?esc(v):`<span class="blank-note">No response provided.</span>`;}
+function buildBriefHtml(){
+  const ab=state.actionBrief, c2=state.secondInvestigation.convergenceTwo, app=state.application;
+  const who=state.meta.studentLabel?esc(state.meta.studentLabel):"Investigator";
+  const date=fmtDate(ab.generatedAt||nowISO());
+  // Evidence
+  let evi="";
+  if((ab.strongestEvidence||[]).length){
+    evi=`<ul style="padding-left:18px;margin:6px 0">`+ab.strongestEvidence.map(id=>{
+      const j=(ab.evidenceJustifications||{})[id];
+      return `<li style="margin-bottom:6px"><strong>${esc(EV_MAP[id]||id)}</strong>${j&&j.trim()?` — ${esc(j)}`:""}</li>`;
+    }).join("")+`</ul>`;
+  }else evi=`<p>${orBlank("")}</p>`;
+  // Chain
+  let chain="";
+  if(c2.chainOrder&&c2.chainOrder.length===6){
+    chain=`<ol class="brief-chain">`+c2.chainOrder.map(id=>{
+      const conf=(c2.confidenceRatings||{})[id];const cl=conf?CONF_OPTS.find(o=>o[0]===conf):null;
+      return `<li>${esc(CHAIN_MAP[id])}${cl?` <span class="pill" style="margin-left:4px">${esc(cl[1])}</span>`:""}</li>`;
+    }).join("")+`</ol>`;
+  }
+  // Response ideas
+  function ideaBlock(role,justField){
+    const id=ab[role];if(!id)return `<p><span class="blank-note">No idea selected.</span></p>`;
+    const idea=IDEA_MAP[id];const j=ab[justField];
+    return `<div class="callout"><strong>${esc(idea?idea.name:id)}</strong> — ${esc(idea?idea.desc:"")}<br><em>${orBlank(j)}</em></div>`;
+  }
+  // Combined model
+  let model="";
+  if(app.finalCombinedRun){
+    const r=app.finalCombinedRun;
+    model=`<p><strong>Modeled combined design:</strong> ${r.features.map(id=>esc(FEATURE_BY_ID[id]?FEATURE_BY_ID[id].name:id)).join(" + ")}</p>
+      <p>Runoff to East Creek: <strong>${r.runoffPercent}%</strong> · Nutrient index: <strong>${r.nutrientIndex}</strong> · Predicted algae response: <strong class="algae-${r.algaeResponse}">${r.algaeResponse}</strong> (baseline was ${baselineModel.runoffPercent}% / ${baselineModel.nutrientIndex} / ${baselineModel.algaeResponse}).</p>`;
+  }
+  return `<div class="brief-doc" id="briefDoc">
+    <div class="brief-banner">
+      <h2>Silver Lake Environmental Action Brief</h2>
+      <div class="sub">Prepared by the Silver Lake Aquatic Science Investigation Team</div>
+      <div class="sub" style="margin-top:6px">Investigator: ${who} · Mentor: Dr. Marcus Reed · ${date}</div>
+      <div class="sub">${esc(state.meta.lessonTitle)} · ${esc(state.meta.standard)}</div>
+    </div>
+    <div class="brief-body">
+      <div class="brief-section full"><h3>Fish Population Finding</h3><p>${orBlank(ab.discovery)}</p></div>
+      <div class="brief-section"><h3>Evidence</h3>${evi}</div>
+      <div class="brief-section"><h3>Recommended Response for North Cove</h3>
+        <p class="small muted" style="margin:0 0 4px">Priority</p>${ideaBlock("priorityIdea","priorityJustification")}
+        <p class="small muted" style="margin:8px 0 4px">Supporting</p>${ideaBlock("supportingIdea","supportingJustification")}
+        <p class="small muted" style="margin:8px 0 4px">Monitoring</p>${ideaBlock("monitoringIdea","monitoringJustification")}
+      </div>
+      <div class="brief-section full"><h3>How the Environmental Change Affected Fish Development</h3>
+        <p>${orBlank(ab.causeEffectExplanation)}</p>${chain}</div>
+      <div class="brief-section full"><h3>Sports Complex Prevention Design</h3>
+        <p><strong>Proposed features:</strong> ${orBlank(ab.sportsComplexPlan)}</p>
+        <p><strong>Model evidence:</strong> ${orBlank(ab.sportsComplexEvidence)}</p>${model}</div>
+      <div class="brief-section full"><h3>Monitoring and Further Investigation</h3>
+        <p>${orBlank(ab.furtherInvestigation)}</p></div>
+    </div>
+  </div>`;
+}
+
+/* =====================================================================
+   SCREEN 15 — Generate the Action Brief
+   ===================================================================== */
+registerScreen(13,{title:"Communication Desk",hint:"Generate and deliver the brief to continue.",
+  render(){
+    const ab=state.actionBrief;
+    const review=[
+      ["What We Discovered",ab.discovery],
+      ["Strongest Evidence",(ab.strongestEvidence||[]).map(id=>EV_MAP[id]||id).join("; ")],
+      ["Cause-and-Effect Explanation",ab.causeEffectExplanation],
+      ["Priority idea",ab.priorityIdea?IDEA_MAP[ab.priorityIdea].name:""],
+      ["Supporting idea",ab.supportingIdea?IDEA_MAP[ab.supportingIdea].name:""],
+      ["Monitoring idea",ab.monitoringIdea?IDEA_MAP[ab.monitoringIdea].name:""],
+      ["Sports Complex design",ab.sportsComplexPlan],
+      ["Further Investigation",ab.furtherInvestigation]
+    ];
+    return `<div class="screen">
+      ${sceneHero({stamp:"Communication Desk",title:"The Communication Desk",sub:"A professional workspace for turning the investigation into something the town can use."})}
+      ${dialogue(reed("Review your work. The system will organize your ideas without changing them."))}
+      <div class="card">
+        <h3>Review your inputs</h3>
+        <p class="small muted">Use <strong>Back</strong> to return and edit any section. The brief only organizes what you wrote — it does not add or change your reasoning.</p>
+        <dl>${review.map(([k,v])=>`<div class="gloss-term"><dt>${esc(k)}</dt><dd>${v&&String(v).trim()?esc(v):"<span class='blank-note'>No response provided.</span>"}</dd></div>`).join("")}</dl>
+        <button class="btn btn-gold" id="genBrief">Generate Silver Lake Environmental Action Brief</button>
+      </div>
+      <div id="briefHost" class="hidden">
+        <div id="briefRender" style="margin-bottom:12px"></div>
+        <div class="no-print" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+          <button class="btn btn-outline" id="regenBrief">Regenerate Brief</button>
+          <button class="btn btn-ghost" id="editBrief">Return to Edit</button>
+        </div>
+        <div class="reveal-action"><button class="btn btn-gold" id="deliverBrief">Deliver Brief to Pinecrest Town Council</button></div>
+        <div id="deliverConfirm" class="hidden"></div>
+      </div>
+    </div>`;
+  },
+  init(root){
+    function generate(){
+      state.actionBrief.generatedAt=nowISO();
+      const html=buildBriefHtml();
+      state.actionBrief.generatedHtml=html;save();
+      $("#briefRender",root).innerHTML=html;
+      $("#briefHost",root).classList.remove("hidden");
+      $("#briefHost",root).scrollIntoView({behavior:(matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth")});
+      refreshDeliverState();
+    }
+    function deliver(){
+      state.actionBrief.deliveredAt=nowISO();save();
+      $("#deliverConfirm",root).classList.remove("hidden");
+      $("#deliverConfirm",root).innerHTML=sysMsg("Brief received",[`<span class="ok">✓</span> Council agenda file updated.`]);
+      $("#deliverBrief",root).disabled=true;$("#deliverBrief",root).textContent="Brief Delivered ✓";
+      setContinue(true);
+    }
+    function refreshDeliverState(){
+      if(state.actionBrief.deliveredAt){
+        $("#deliverConfirm",root).classList.remove("hidden");
+        $("#deliverConfirm",root).innerHTML=sysMsg("Brief received",[`<span class="ok">✓</span> Council agenda file updated.`]);
+        $("#deliverBrief",root).disabled=true;$("#deliverBrief",root).textContent="Brief Delivered ✓";
+        setContinue(true);
+      }else setContinue(false);
+    }
+    $("#genBrief",root).addEventListener("click",generate);
+    $("#regenBrief",root).addEventListener("click",generate);
+    $("#editBrief",root).addEventListener("click",()=>goToScreen(12));
+    $("#deliverBrief",root).addEventListener("click",deliver);
+    if(state.actionBrief.generatedHtml){
+      $("#briefRender",root).innerHTML=buildBriefHtml();
+      $("#briefHost",root).classList.remove("hidden");refreshDeliverState();
+    }else setContinue(false);
+  }
+});
+/* ---------------- Quiz data ---------------- */
+const QUIZ=[
+  {id:"q1",question:"Scientists compared juvenile bluegill of the same age. Fish from North Cove had a lower average length and body mass than fish from other parts of Silver Lake. Which conclusion is best supported by this evidence?",
+   correct:"B",
+   choices:[
+     {key:"A",text:"North Cove contains a different species of fish.",feedback:"The fish in the investigation are all bluegill. A difference in body size does not mean that the fish became a different species. Look for the conclusion that describes what the same-age measurements actually showed."},
+     {key:"B",text:"Young bluegill in North Cove developed smaller body sizes.",feedback:"Correct. Comparing bluegill of the same species and age showed that the North Cove fish developed shorter bodies and lower mass."},
+     {key:"C",text:"All adult fish in Silver Lake are becoming smaller.",feedback:"The evidence focused on juvenile bluegill, not all adult fish in the lake. Look for an answer that stays within the population and age group that scientists measured."},
+     {key:"D",text:"Bluegill naturally lose body mass as they grow.",feedback:"The scientists compared fish of the same age. The pattern was connected to location and year, not to older fish naturally losing mass. Focus on what differed between North Cove and the comparison zones."}
+   ],noResponse:"No answer was selected. Review which fish were compared and what the length and mass evidence showed."},
+  {id:"q2",question:"Which finding best supports the idea that an environmental condition may be affecting the development of North Cove bluegill?",
+   correct:"C",
+   choices:[
+     {key:"A",text:"North Cove is a popular fishing location.",feedback:"This explains why community members may have noticed the fish there first, but it does not show an environmental condition affecting growth. Look for evidence describing the water conditions experienced by the fish."},
+     {key:"B",text:"The fishing derby occurs during the summer.",feedback:"The season of the derby does not explain why same-age fish in one part of the lake developed differently. Look for a repeated environmental pattern in North Cove."},
+     {key:"C",text:"Dissolved oxygen repeatedly drops to stressful levels in North Cove.",feedback:"Correct. Repeated low dissolved oxygen is an environmental condition that could make growth conditions less favorable for juvenile bluegill."},
+     {key:"D",text:"Several different fish species live in Silver Lake.",feedback:"The number of species in the lake does not explain the developmental pattern in the juvenile bluegill. Look for evidence that directly describes a changing condition in North Cove."}
+   ],noResponse:"No answer was selected. Look for the choice that identifies a recurring condition in North Cove's water."},
+  {id:"q3",question:"Which sequence best explains how nutrient-rich runoff could affect juvenile bluegill?",
+   correct:"B",
+   choices:[
+     {key:"A",text:"More runoff → more adult fish → less rain → smaller young fish",feedback:"This sequence does not match the investigation evidence. Runoff did not cause less rain, and the evidence did not show that more adult fish explained the pattern. Look for the chain connecting nutrients, algae, oxygen, and growth conditions."},
+     {key:"B",text:"More nutrients → more algae and decomposition → lower dissolved oxygen → less favorable growth conditions",feedback:"Correct. This sequence connects the environmental change to the recurring water condition and then to less favorable conditions for juvenile fish growth."},
+     {key:"C",text:"More algae → more oxygen at all times → faster fish growth",feedback:"Algae may produce oxygen during daylight, but algae and decomposition can also contribute to lower oxygen, especially overnight. The North Cove timeline showed recurring oxygen drops rather than higher oxygen at all times."},
+     {key:"D",text:"Lower oxygen → fertilizer moves onto lawns → fish change species",feedback:"This sequence reverses the direction of the evidence. Rain moved nutrients from land toward the lake, and the fish remained bluegill. Look for a chain that begins with nutrient-rich runoff."}
+   ],noResponse:"No answer was selected. Review the order of events in the team's cause-and-effect chain."},
+  {id:"q4",question:"Which explanation is best supported by the Silver Lake evidence?",
+   correct:"C",
+   choices:[
+     {key:"A",text:"Low dissolved oxygen was definitely the only cause of the smaller fish.",feedback:"The evidence supports low oxygen as a likely contributor, but it does not prove that it was the only possible cause. Look for an explanation that matches the evidence without claiming more certainty than the investigation provides."},
+     {key:"B",text:"Nutrient runoff immediately changed the inherited traits of every bluegill.",feedback:"The investigation focused on how environmental conditions affected the development of body-size traits. It did not show an immediate change to inherited information, and it did not include every bluegill."},
+     {key:"C",text:"Recurring low oxygen likely contributed to reduced growth in juvenile bluegill.",feedback:"Correct. This explanation connects the repeated environmental condition to the developmental pattern while accurately showing that the evidence supports a likely contribution rather than absolute proof."},
+     {key:"D",text:"The evidence proves that every fish in North Cove will remain small.",feedback:"The evidence described a population pattern among sampled juvenile fish. It did not predict the future of every individual fish. Look for an explanation that stays within the limits of the evidence."}
+   ],noResponse:"No answer was selected. Choose the explanation that is supported by the evidence but does not overclaim."},
+  {id:"q5",question:"Which investigation would provide the strongest evidence that an environmental change is affecting fish development?",
+   correct:"C",
+   choices:[
+     {key:"A",text:"Compare different fish species caught by different anglers.",feedback:"Different species naturally grow to different sizes, and different anglers may use different methods. Look for a comparison that keeps species, age, season, and survey method consistent."},
+     {key:"B",text:"Compare adult fish with newly hatched fish.",feedback:"Fish of very different ages naturally differ in size. This comparison would not show whether the same-age fish developed differently under different environmental conditions."},
+     {key:"C",text:"Compare the same species and age group from different lake zones using the same survey method.",feedback:"Correct. Keeping species, age group, season, and survey method consistent makes the lake-zone comparison more reliable."},
+     {key:"D",text:"Ask one angler whether the fish look different.",feedback:"One observation can raise a useful question, but it is not strong enough to establish a developmental pattern. Look for a standardized comparison using multiple measurements."}
+   ],noResponse:"No answer was selected. Think about which investigation controls the most important differences between the fish being compared."},
+  {id:"q6",question:"After several years of increased runoff, scientists find that same-age young perch near one stream are shorter and have lower body mass than perch elsewhere in the lake. Oxygen levels near that stream also repeatedly fall below supportive levels. Which explanation is best supported?",
+   correct:"B",
+   choices:[
+     {key:"A",text:"The perch chose to become smaller.",feedback:"Organisms do not choose how environmental conditions affect their growth. Look for the explanation that connects the recurring water condition to how the young fish developed."},
+     {key:"B",text:"The low-oxygen environment may have affected how the young perch grew and developed.",feedback:"Correct. This applies the same evidence-based reasoning to a new fish population and a new lake location."},
+     {key:"C",text:"The environmental change turned the perch into a new species.",feedback:"The fish are still perch. Environmental conditions may affect how traits such as body size develop without changing the fish into a different species."},
+     {key:"D",text:"The fish measurements cannot be connected to environmental conditions.",feedback:"The repeated low-oxygen pattern and the size pattern occur in the same area, so the evidence supports a possible connection. The strongest answer should still use cautious language rather than claiming absolute proof."}
+   ],noResponse:"No answer was selected. Look for the explanation that connects the recurring environmental condition to the developmental pattern without overclaiming."}
+];
+function quizChoiceText(item,key){const c=item.choices.find(c=>c.key===key);return c?c.text:"";}
+function quizChoiceFeedback(item,key){const c=item.choices.find(c=>c.key===key);return c?c.feedback:"";}
+
+/* =====================================================================
+   SCREEN 16 — Congratulations, Reflection, Quiz, Export
+   ===================================================================== */
+registerScreen(14,{title:"Investigation Complete",hideContinue:true,
+  render(){
+    return `<div class="screen">
+      ${sceneHero({stamp:"Silver Lake",title:"Investigation Complete",sub:"Evening settles over Silver Lake. A monitoring buoy continues to blink in North Cove.",img:"Images/silver-lake-hero.png",alt:"A calm view of Silver Lake at the close of the investigation."})}
+      ${sysMsg("Town confirmation",[`<span class="ok">✓</span> Brief delivered. North Cove monitoring will continue.`])}
+      ${dialogue(reed("Thank you for your work. Pinecrest now has stronger evidence to guide its next steps."))}
+      ${caseStatus("Investigation complete — monitoring continues")}
+      <div class="card panel-journal">
+        <h2>Final reflection</h2>
+        ${promptBox("How did your thinking about the Silver Lake fish change during the investigation?")}
+        ${textField("ref1","Your reflection","reflection.changedThinking")}
+        ${promptBox("Which piece of evidence changed your thinking the most? What did it help you understand about how the environment can change an animal's traits?")}
+        ${textField("ref2","Your reflection","reflection.influentialEvidence")}
+      </div>
+      <div class="card">
+        <h2>Check your understanding</h2>
+        <p>Would you like to check your understanding with a short six-question quiz?</p>
+        <div class="seg" role="group" aria-label="Quiz choice">
+          <button id="quizYes">Yes, take the quiz</button>
+          <button id="quizNo">No, finish my journal</button>
+        </div>
+        <div id="quizHost" class="hidden" style="margin-top:14px"></div>
+        <div id="quizResults" style="margin-top:14px"></div>
+      </div>
+      <div id="exportHost" class="card hidden">
+        <h2>Finish</h2>
+        <p class="small muted">Your investigation journal collects everything you did, including any blanks or skipped items, exactly as you left them.</p>
+        <button class="btn btn-gold" id="exportBtn">Export Investigation Journal</button>
+        <span id="exportNote" class="small muted" style="margin-left:10px"></span>
+      </div>
+    </div>`;
+  },
+  init(root){
+    autoBindAll(root);
+    state.quiz.offered=true;save();
+    const host=$("#quizHost",root),results=$("#quizResults",root);
+    function showExport(){$("#exportHost",root).classList.remove("hidden");}
+    function chooseNo(){
+      state.quiz.choice="declined";quizActiveTiming=false;save();
+      $("#quizYes",root).classList.remove("active");$("#quizNo",root).classList.add("active");
+      host.classList.add("hidden");host.innerHTML="";results.innerHTML="";
+      showExport();
+    }
+    function chooseYes(){
+      state.quiz.choice="taken";if(!state.quiz.startedAt)state.quiz.startedAt=nowISO();
+      if(!state.quiz.submittedAt)quizActiveTiming=true;save();
+      $("#quizNo",root).classList.remove("active");$("#quizYes",root).classList.add("active");
+      host.classList.remove("hidden");renderQuiz();
+      if(state.quiz.submittedAt)renderResults();
+    }
+    function renderQuiz(){
+      if(state.quiz.submittedAt){host.innerHTML="";return;}
+      host.innerHTML=QUIZ.map((item,i)=>`<div class="quiz-item"><div class="quiz-q">${i+1}. ${esc(item.question)}</div>
+        ${item.choices.map(c=>`<label class="choice"><input type="radio" name="${item.id}" value="${c.key}" ${state.quiz.answers[item.id]===c.key?"checked":""}><span><strong>${c.key}.</strong> ${esc(c.text)}</span></label>`).join("")}
+      </div>`).join("")+`<button class="btn btn-gold" id="submitQuiz">Submit Quiz</button>`;
+      $$("input[type=radio]",host).forEach(r=>r.addEventListener("change",()=>{state.quiz.answers[r.name]=r.value;save();}));
+      $("#submitQuiz",host).addEventListener("click",gradeQuiz);
+    }
+    function gradeQuiz(){
+      state.quiz.submittedAt=nowISO();quizActiveTiming=false;
+      let score=0,answered=0;const itemResults=[];
+      QUIZ.forEach(item=>{
+        const sel=state.quiz.answers[item.id]||"";
+        const isCorrect=sel===item.correct;
+        if(sel)answered++;if(isCorrect)score++;
+        itemResults.push({id:item.id,selected:sel,correct:isCorrect,answered:!!sel});
+      });
+      state.quiz.score=score;state.quiz.answeredCount=answered;state.quiz.percentage=Math.round(score/QUIZ.length*100);
+      state.quiz.itemResults=itemResults;state.quiz.feedbackDisplayed=true;save();
+      host.innerHTML="";renderResults();
+    }
+    function renderResults(){
+      const q=state.quiz;
+      let html=`<div class="result-banner"><div class="score">Score: ${q.score} of ${QUIZ.length}</div>
+        <div>Questions answered: ${q.answeredCount} of ${QUIZ.length} · ${q.percentage}% · Time: ${fmtDuration(state.timing.quizSeconds)}</div></div>
+        <p>Quiz complete. Review your responses and feedback below. Your results will be included in your investigation journal.</p>`;
+      QUIZ.forEach((item,i)=>{
+        const sel=q.answers[item.id]||"";const isCorrect=sel===item.correct;
+        html+=`<div class="quiz-item"><div class="quiz-q">${i+1}. ${esc(item.question)}</div>`;
+        item.choices.forEach(c=>{
+          let cls="choice";if(c.key===item.correct)cls+=" correct";if(c.key===sel&&!isCorrect)cls+=" incorrect";
+          html+=`<div class="${cls}"><span><strong>${c.key}.</strong> ${esc(c.text)}${c.key===sel?" &nbsp;<em>(your answer)</em>":""}${c.key===item.correct?" &nbsp;✓":""}</span></div>`;
+        });
+        if(!sel)html+=`<div class="fb none">${esc(item.noResponse)}</div>`;
+        else html+=`<div class="fb ${isCorrect?"ok":"no"}">${esc(quizChoiceFeedback(item,sel))}</div>`;
+        html+=`</div>`;
+      });
+      results.innerHTML=html;showExport();
+    }
+    $("#quizYes",root).addEventListener("click",chooseYes);
+    $("#quizNo",root).addEventListener("click",chooseNo);
+    $("#exportBtn",root).addEventListener("click",()=>{exportJournal();$("#exportNote",root).textContent="Downloaded. You can export again any time.";});
+    // restore prior choice
+    if(state.quiz.choice==="declined"){chooseNo();}
+    else if(state.quiz.choice==="taken"){chooseYes();}
+  }
+});
+/* =====================================================================
+   INVESTIGATION JOURNAL EXPORT
+   ===================================================================== */
+const TIMING_LABELS={"1":"Assignment Waiting","2":"Summer in Pinecrest","3":"Meet Dr. Reed","4":"Two Evidence Stations","5A":"Community Case Journal","5B":"Fisheries Data Lab","6":"Briefing at the Field Station","7":"What Is Different About North Cove?","8A":"Sensor Logs","8B":"Town Waterway Table","9":"Evidence Chain","10":"Parks Department Request","11":"Modeling Lab","12":"Prepare the Town Response","13":"Communication Desk","14":"Investigation Complete"};
+function xv(v){return (v&&String(v).trim())?esc(v):`<span class="blank">(no response provided)</span>`;}
+function xlist(arr,mapFn){return (arr&&arr.length)?`<ul>${arr.map(mapFn||(x=>`<li>${esc(x)}</li>`)).join("")}</ul>`:`<p class="blank">(none selected)</p>`;}
+function exportImg(src){const alt=IMG_ALT[src]||"Lesson image.";return `<div class="imgref"><strong>Image:</strong> ${esc(src)}<br><span class="cap">${esc(alt)}</span></div>`;}
+function exportChart(series,xLabels,opts){
+  return chartSVG(Object.assign({xLabels,series},opts))+chartTable(xLabels,series,opts.unit||"");
+}
+function exportJournal(){
+  const s=state, ab=s.actionBrief, c2=s.secondInvestigation.convergenceTwo, app=s.application;
+  const label=s.meta.studentLabel||"Investigator";
+  // Decision Point 1 section
+  let dp1="";
+  if(s.navigation.firstPath==="community"){
+    const cj=s.firstInvestigation.communityJournal;
+    dp1=`<p><strong>Path chosen:</strong> Community Investigation Journal</p>
+      <p><strong>Tabs opened:</strong> ${cj.tabsViewed.length?esc(cj.tabsViewed.join(", ")):"<span class='blank'>none</span>"}</p>
+      <p><strong>Derby photos note:</strong> ${xv(cj.photoNote)}</p>
+      <p><strong>Angler notes:</strong> ${xv(cj.anglerNote)}</p>
+      <p><strong>Catch locations note:</strong> ${xv(cj.locationNote)}</p>
+      <p><strong>Fish condition note:</strong> ${xv(cj.conditionNote)}</p>
+      <p><strong>Limitation:</strong> ${xv(cj.limitation)}</p>
+      <p><strong>Claim:</strong> ${xv(cj.claim)}</p>`;
+  }else{
+    const fd=s.firstInvestigation.fisheriesData;
+    let graphs="";
+    Object.keys(fd.savedGraphStateByVariable||{}).forEach(vk=>{
+      const g=fd.savedGraphStateByVariable[vk];const V=VARIABLES[vk];
+      const series=[{name:"North Cove",color:ZONE_COLOR["North Cove"],values:g.northCove},{name:g.comparison,color:ZONE_COLOR[g.comparison]||"#168C8C",values:g.comparisonValues}];
+      graphs+=`<h4>${esc(g.label)} — North Cove vs ${esc(g.comparison)}</h4>${exportChart(series,YEARS.map(String),{yMin:V.yMin,yMax:V.yMax,unit:g.unit,yLabel:g.label+" ("+g.unit+")"})}
+        <p><strong>Note:</strong> ${xv(fd[V.note])}</p>`;
+    });
+    dp1=`<p><strong>Path chosen:</strong> Fisheries Data Reviewer</p>
+      <p><strong>Measurements viewed:</strong> ${fd.variablesViewed.length?esc(fd.variablesViewed.join(", ")):"<span class='blank'>none</span>"}</p>
+      ${graphs||"<p class='blank'>(no graphs saved)</p>"}
+      <p><strong>Claim:</strong> ${xv(fd.claim)}</p>`;
+  }
+  const bp1=s.firstInvestigation.briefingPreparation;
+  const co1=s.firstInvestigation.convergenceOne;
+  // Decision Point 2 section
+  let dp2="";
+  if(s.navigation.secondPath==="water"){
+    const wt=s.secondInvestigation.waterTimeline;let graphs="";
+    (wt.periodsViewed||[]).forEach(pk=>{
+      const comp=wt.selectedComparisonZone||"West Shore";
+      const series=[{name:"North Cove",color:ZONE_COLOR["North Cove"],values:oxygenData["North Cove"][pk]},{name:comp,color:ZONE_COLOR[comp],values:oxygenData[comp][pk]}];
+      graphs+=`<h4>${esc(PERIODS[pk].label)} — North Cove vs ${esc(comp)}</h4>${exportChart(series,TIMES,{yMin:2,yMax:8,unit:"mg/L",yLabel:"Dissolved oxygen (mg/L)",bands:OXY_BANDS})}
+        <p><strong>Note:</strong> ${xv(wt[PERIODS[pk].note])}</p>`;
+    });
+    dp2=`<p><strong>Path chosen:</strong> Water-Conditions Timeline</p>
+      <p><strong>Comparison zone:</strong> ${xv(wt.selectedComparisonZone)} · <strong>Algae layer used:</strong> ${wt.algaeLayerUsed?"Yes":"No"}</p>
+      <p><strong>Periods viewed:</strong> ${wt.periodsViewed.length?esc(wt.periodsViewed.join(", ")):"<span class='blank'>none</span>"}</p>
+      ${graphs||"<p class='blank'>(no periods viewed)</p>"}
+      <p><strong>Claim:</strong> ${xv(wt.claim)}</p>`;
+  }else{
+    const wm=s.secondInvestigation.waterwayMap;
+    dp2=`<p><strong>Path chosen:</strong> Town Waterways Map</p>
+      <p><strong>Routes opened:</strong> ${wm.routesViewed.length?esc(wm.routesViewed.join(", ")):"<span class='blank'>none</span>"}</p>
+      <p><strong>Route ranking (most → least likely):</strong> ${wm.routeRanking.length?esc(wm.routeRanking.map(id=>{const r=waterRoutes.find(x=>x.id===id);return r?r.name:id;}).join(" → ")):"<span class='blank'>not ranked</span>"}</p>
+      <p><strong>Route notes:</strong></p>${xlist(Object.keys(wm.routeNotes||{}).filter(k=>wm.routeNotes[k]),k=>{const r=waterRoutes.find(x=>x.id===k);return `<li><strong>${esc(r?r.name:k)}:</strong> ${esc(wm.routeNotes[k])}</li>`;})}
+      <p><strong>Selected evidence:</strong> ${wm.selectedEvidence.length?esc(wm.selectedEvidence.join(", ")):"<span class='blank'>none</span>"}</p>
+      <p><strong>Claim:</strong> ${xv(wm.claim)}</p>`;
+  }
+  const bp2=s.secondInvestigation.briefingPreparation;
+  // Chain
+  const chainHtml=(c2.chainOrder&&c2.chainOrder.length)?`<ol>${c2.chainOrder.map(id=>{
+    const conf=(c2.confidenceRatings||{})[id];const cl=conf?CONF_OPTS.find(o=>o[0]===conf):null;
+    const att=(c2.evidenceAttachments||{})[id]||[];
+    return `<li>${esc(CHAIN_MAP[id]||id)}${cl?` — <em>${esc(cl[1])}</em>`:""}${att.length?`<br><span class="cap">Evidence: ${att.map(e=>{const ce=CHAIN_EVIDENCE.find(x=>x.id===e);return esc(ce?ce.label:e);}).join(", ")}</span>`:""}</li>`;
+  }).join("")}</ol>`:"<p class='blank'>(chain not built)</p>";
+  // Model
+  let runsHtml=`<p><strong>Baseline:</strong> ${app.baselineRun?`${app.baselineRun.runoffPercent}% runoff · index ${app.baselineRun.nutrientIndex} · algae ${app.baselineRun.algaeResponse}`:"<span class='blank'>not run</span>"}</p>`;
+  if(app.individualRuns.length){runsHtml+=`<p><strong>Individual runs:</strong></p><ul>${app.individualRuns.map(r=>{const f=FEATURE_BY_ID[r.id];return `<li>${esc(f?f.name:r.id)} — ${r.runoffPercent}% · index ${r.nutrientIndex} · algae ${r.algaeResponse}${app.runNotes[r.id]?` — note: ${esc(app.runNotes[r.id])}`:""}</li>`;}).join("")}</ul>`;}
+  else runsHtml+=`<p class="blank">(no individual runs)</p>`;
+  runsHtml+=`<p><strong>Final combined run:</strong> ${app.finalCombinedRun?`${app.finalCombinedRun.features.map(id=>FEATURE_BY_ID[id]?FEATURE_BY_ID[id].name:id).join(" + ")} — ${app.finalCombinedRun.runoffPercent}% · index ${app.finalCombinedRun.nutrientIndex} · algae ${app.finalCombinedRun.algaeResponse}`:"<span class='blank'>not run</span>"}</p>`;
+  if(app.runNotes&&app.runNotes.combinedRationale)runsHtml+=`<p><strong>Combined recommendation:</strong> ${esc(app.runNotes.combinedRationale)}</p>`;
+  // Brief inputs
+  function ideaLine(role,jf){const id=ab[role];const i=id?IDEA_MAP[id]:null;return `${i?esc(i.name):"<span class='blank'>(none)</span>"} — ${xv(ab[jf])}`;}
+  let strongEvi=(ab.strongestEvidence||[]).length?`<ul>${ab.strongestEvidence.map(id=>`<li><strong>${esc(EV_MAP[id]||id)}:</strong> ${xv((ab.evidenceJustifications||{})[id])}</li>`).join("")}</ul>`:"<p class='blank'>(none selected)</p>";
+  // Quiz
+  let quizHtml="";
+  const q=s.quiz;
+  if(!q.offered||q.choice==="declined"){quizHtml=`<p>Optional Check Your Understanding Quiz: Not attempted by student choice.</p>`;}
+  else if(q.choice==="taken"&&!q.submittedAt){quizHtml=`<p>Optional Check Your Understanding Quiz: Started but not submitted.</p>`;}
+  else if(q.submittedAt){
+    quizHtml=`<p><strong>Score:</strong> ${q.score} of ${QUIZ.length} · <strong>Answered:</strong> ${q.answeredCount} of ${QUIZ.length} · ${q.percentage}%</p>
+      <p><strong>Quiz time:</strong> ${fmtDuration(s.timing.quizSeconds)} · Started ${fmtDateTime(q.startedAt)} · Submitted ${fmtDateTime(q.submittedAt)}</p>`;
+    QUIZ.forEach((item,i)=>{
+      const sel=q.answers[item.id]||"";const correct=sel===item.correct;
+      quizHtml+=`<div class="qitem"><p><strong>${i+1}. ${esc(item.question)}</strong></p><ul>${item.choices.map(c=>`<li>${c.key===item.correct?"✓ ":""}${c.key===sel?"➤ ":""}<strong>${c.key}.</strong> ${esc(c.text)}</li>`).join("")}</ul>
+        <p><strong>Your answer:</strong> ${sel?esc(sel):"<span class='blank'>none</span>"} · <strong>Correct:</strong> ${esc(item.correct)} · ${sel?(correct?"Correct":"Not correct"):"Not answered"}</p>
+        <p class="fbq">${sel?esc(quizChoiceFeedback(item,sel)):esc(item.noResponse)}</p></div>`;
+    });
+  }
+  // Timing
+  const st=s.timing.screenSeconds||{};
+  const pathTime=(s.navigation.firstPath==="community"?(st["5A"]||0):(st["5B"]||0))+(s.navigation.secondPath==="water"?(st["8A"]||0):(st["8B"]||0));
+  const modelTime=(st["10"]||0)+(st["11"]||0);
+  let timingRows=Object.keys(TIMING_LABELS).filter(k=>st[k]).map(k=>`<tr><td>${esc(TIMING_LABELS[k])}</td><td>${fmtDuration(st[k])}</td></tr>`).join("");
+
+  const doc=`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trouble at Silver Lake — Investigation Journal — ${esc(label)}</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#123B4A;--teal:#168C8C;--gold:#E3A83B;--sand:#F7F1E3;--mist:#EAF5F4;--coral:#C85D4B;--green:#6F9148;--char:#243238;}
+*{box-sizing:border-box;}body{font-family:'Nunito',system-ui,-apple-system,'Segoe UI',Arial,sans-serif;color:var(--char);margin:0;background:#fff;line-height:1.55;}
+.wrap{max-width:820px;margin:0 auto;padding:24px;}
+h1,h2,h3,h4{font-family:'Fredoka','Baloo 2',system-ui,Arial,sans-serif;color:var(--navy);line-height:1.2;}
+.cover{background:linear-gradient(120deg,var(--navy),var(--teal));color:#fff;border-radius:12px;padding:28px;margin-bottom:20px;}
+.cover h1{color:#fff;font-family:'Fredoka','Baloo 2',sans-serif;font-size:1.9rem;margin:0 0 6px;}
+.cover p{margin:2px 0;opacity:.95;}
+.sec{border:1px solid #d7e3e2;border-radius:12px;padding:18px 20px;margin-bottom:16px;page-break-inside:avoid;}
+.sec>h2{margin-top:0;border-bottom:3px solid var(--gold);padding-bottom:6px;}
+.blank{color:#a06a4b;font-style:italic;}
+.cap{font-size:.85rem;color:#5a6a70;}
+.imgref{background:var(--sand);border-left:4px solid var(--gold);padding:8px 12px;border-radius:6px;margin:8px 0;font-size:.88rem;}
+table{border-collapse:collapse;width:100%;font-size:.85rem;margin:8px 0;}
+th,td{border:1px solid #cdd9d8;padding:6px 8px;text-align:center;}th{background:var(--mist);}
+.data-table caption{display:none;}
+.grid-line{stroke:rgba(18,59,74,.10);}.axis-line{stroke:var(--char);stroke-width:1.5;}svg text{font-family:inherit;fill:var(--char);}
+.pill{display:inline-block;background:var(--mist);border:1px solid #cfe6e4;border-radius:12px;padding:2px 8px;font-size:.75rem;margin:2px;}
+.callout{background:var(--sand);border-left:4px solid var(--gold);padding:8px 12px;border-radius:6px;margin:6px 0;}
+.qitem{border-top:1px dashed #ccc;padding-top:8px;margin-top:8px;}.fbq{background:#f4f2ea;border-left:4px solid var(--gold);padding:6px 10px;border-radius:6px;}
+.algae-High{color:var(--coral);}.algae-Moderate{color:var(--gold);}.algae-Low{color:var(--green);}
+.brief-doc{border:1px solid #cdd9d8;border-radius:12px;overflow:hidden;margin-top:10px;}
+.brief-banner{background:linear-gradient(120deg,var(--navy),var(--teal));color:#fff;padding:18px 20px;}
+.brief-banner h2{color:#fff;margin:0;border:none;font-family:'Fredoka','Baloo 2',sans-serif;}
+.brief-banner .sub{font-size:.85rem;opacity:.92;}
+.brief-body{padding:16px 20px;}
+.brief-section h3{border-bottom:2px solid var(--gold);padding-bottom:4px;}
+.brief-chain{padding-left:20px;}.brief-chain li{margin-bottom:4px;}
+.blank-note{color:#a06a4b;font-style:italic;}
+@media print{.sec,.brief-doc{page-break-inside:avoid;}.cover{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}
+</style></head><body><div class="wrap">
+<div class="cover">
+  <p style="text-transform:uppercase;letter-spacing:2px;font-size:.8rem;margin-bottom:8px">Stories in Science · Grade 5</p>
+  <h1>Trouble at Silver Lake</h1>
+  <p><strong>An Aquatic Investigation</strong> · Pinecrest · ${esc(s.meta.standard)}</p>
+  <p>Investigator: ${esc(label)}</p>
+  <p>Started: ${fmtDate(s.meta.startedAt)} · Exported: ${fmtDate(nowISO())}</p>
+  <p>First path: ${esc(s.navigation.firstPath||"—")} · Second path: ${esc(s.navigation.secondPath||"—")}</p>
+  <p>Total active time: ${fmtDuration(s.timing.totalActiveSeconds)}</p>
+</div>
+
+<div class="sec"><h2>Summer in Pinecrest</h2>
+  <p>After Pinecrest's summer fishing derby, families noticed that many young bluegill — mostly from North Cove — looked smaller and thinner than in past summers.</p>
+  <p><strong>Your initial questions:</strong> ${xv(s.entry.initialQuestions)}</p></div>
+
+<div class="sec"><h2>The Evidence Stations</h2>${dp1}</div>
+
+<div class="sec"><h2>Field Station Briefing</h2>
+  <p><strong>Community Journal Team (high-level):</strong> smaller/thinner juvenile bluegill reported near North Cove across more than one source; a pattern but not precise measurement.</p>
+  <p><strong>Fisheries Data Team (high-level):</strong> same-age juvenile bluegill in North Cove show a three-year decline in length, mass, and condition; comparison zones stable.</p>
+  <p class="cap">The investigation presented both records together at the briefing: community observations and photographs alongside the standardized survey trends (length, mass, and body condition), shown side by side across four comparison questions.</p>
+  <p><strong>Revised conclusion:</strong> ${xv(co1.revisedConclusion)}</p>
+  <p><strong>Emerging question:</strong> ${xv(co1.remainingQuestion)}</p></div>
+
+<div class="sec"><h2>Two Questions Remain</h2>${dp2}
+  <p class="cap">The investigation presented both second-investigation records at the evidence wall: the North Cove water-condition record and the town waterway-route record.</p></div>
+
+<div class="sec"><h2>Cause-and-Effect Evidence Chain</h2>${chainHtml}
+  <p><strong>Written explanation:</strong> ${xv(c2.writtenExplanation)}</p></div>
+
+<div class="sec"><h2>Sports Complex Model</h2>${runsHtml}</div>
+
+<div class="sec"><h2>Silver Lake Environmental Action Brief — Inputs</h2>
+  <p><strong>What we discovered:</strong> ${xv(ab.discovery)}</p>
+  <p><strong>Strongest evidence:</strong></p>${strongEvi}
+  <p><strong>Cause-and-effect explanation:</strong> ${xv(ab.causeEffectExplanation)}</p>
+  <p><strong>Priority idea:</strong> ${ideaLine("priorityIdea","priorityJustification")}</p>
+  <p><strong>Supporting idea:</strong> ${ideaLine("supportingIdea","supportingJustification")}</p>
+  <p><strong>Monitoring idea:</strong> ${ideaLine("monitoringIdea","monitoringJustification")}</p>
+  <p><strong>Sports complex design:</strong> ${xv(ab.sportsComplexPlan)}</p>
+  <p><strong>Model evidence:</strong> ${xv(ab.sportsComplexEvidence)}</p>
+  <p><strong>Further investigation:</strong> ${xv(ab.furtherInvestigation)}</p></div>
+
+<div class="sec"><h2>Generated Action Brief</h2>
+  ${ab.generatedHtml?ab.generatedHtml:"<p class='blank'>(brief not generated)</p>"}
+  <p class="cap">Generated: ${ab.generatedAt?fmtDateTime(ab.generatedAt):"—"}</p></div>
+
+<div class="sec"><h2>Final Reflection</h2>
+  <p><strong>How your thinking changed:</strong> ${xv(s.reflection.changedThinking)}</p>
+  <p><strong>Most influential evidence:</strong> ${xv(s.reflection.influentialEvidence)}</p></div>
+
+<div class="sec"><h2>Optional Check Your Understanding Quiz</h2>${quizHtml}</div>
+
+<div class="sec"><h2>Timing Record</h2>
+  <table><thead><tr><th>Screen</th><th>Active time</th></tr></thead><tbody>${timingRows||"<tr><td colspan='2'>—</td></tr>"}</tbody></table>
+  <p><strong>Path time:</strong> ${fmtDuration(pathTime)} · <strong>Model time:</strong> ${fmtDuration(modelTime)} · <strong>Quiz time:</strong> ${fmtDuration(s.timing.quizSeconds)}</p>
+  <p><strong>Total active time:</strong> ${fmtDuration(s.timing.totalActiveSeconds)}</p></div>
+
+</div></body></html>`;
+
+  s.export.lastExportedAt=nowISO();save();
+  const blob=new Blob([doc],{type:"text/html"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;a.download=`trouble-at-silver-lake-investigation-journal-${sanitizeFile(label)}-${new Date().toISOString().slice(0,10)}.html`;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url),1500);
+}
+
+/* =====================================================================
+   BOOT
+   ===================================================================== */
+function boot(){
+  // launch always shows first; Resume jumps to stored screen
+  const stage=$("#stage");
+  continueHandler=null;setContinue(true);
+  stage.innerHTML=SCREENS[1].render();
+  $("#navbar").style.display="none";
+  $("#backBtn").style.visibility="hidden";
+  $("#headerTitle").textContent="Launch";
+  SCREENS[1].init(stage);
+}
+// guard: if a branch screen is active without a chosen path, step back
+const _origRenderCurrent=renderCurrent;
+renderCurrent=function(){
+  const n=state.navigation.currentScreen;
+  if(n===5&&!state.navigation.firstPath){state.navigation.currentScreen=4;}
+  if(n===8&&!state.navigation.secondPath){state.navigation.currentScreen=7;}
+  _origRenderCurrent();
+};
+loadState();
+boot();
+</script>
+</body>
+</html>
