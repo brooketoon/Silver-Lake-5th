@@ -419,6 +419,10 @@ table.data-table th{background:var(--mist-blue);font-family:var(--font-interface
 .scene-hero h1,.scene-hero h1.title,.scene-hero h2{color:#fff;font-family:var(--font-title);margin:8px 0 4px;line-height:1.08;font-size:1.9rem;}
 .scene-sub{color:var(--mist-blue);font-size:1.02rem;margin:6px 0 0;max-width:60ch;}
 .location-stamp{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-interface);font-size:.7rem;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:#fff;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);padding:5px 12px;border-radius:20px;}
+.case-status{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #d7e3e2;border-left:5px solid var(--field-gold);border-radius:12px;padding:12px 16px;margin:0 0 18px;box-shadow:var(--shadow-sm);}
+.case-status .cs-dot{width:10px;height:10px;border-radius:50%;background:var(--field-gold);flex:none;box-shadow:0 0 0 3px rgba(227,168,59,.22);}
+.case-status .cs-label{font-family:var(--font-interface);font-size:.68rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#8a979d;}
+.case-status .cs-text{font-family:var(--font-interface);font-weight:800;color:var(--lake-navy);font-size:.94rem;}
 .time-stamp{font-family:var(--font-interface);font-size:.74rem;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--field-gold);margin:10px 0 0;}
 .dialogue-block{background:#fff;border:1px solid #dbe6e6;border-left:4px solid var(--water-teal);border-radius:14px;padding:15px 18px;box-shadow:var(--shadow-sm);margin:0 0 18px;}
 .dialogue-block .lead-in{color:#5a6b72;font-size:1rem;line-height:1.55;margin:0 0 12px;}
@@ -561,11 +565,11 @@ const fishConditionData={
 };
 const VARIABLES={
   length:{key:"length",label:"Average body length",unit:"cm",data:fishLengthData,yMin:7,yMax:12,note:"lengthNote",
-    prompt:"Compare North Cove with another lake zone. What pattern do you notice in juvenile bluegill length over time?"},
+    prompt:"What pattern do you notice in length?"},
   mass:{key:"mass",label:"Average body mass",unit:"g",data:fishMassData,yMin:10,yMax:28,note:"massNote",
-    prompt:"What does the mass graph add to your understanding of the fish in North Cove?"},
+    prompt:"How does the mass evidence compare with the length evidence?"},
   condition:{key:"condition",label:"Field body-condition rating",unit:"(1–5 scale)",data:fishConditionData,yMin:1,yMax:5,note:"conditionNote",
-    prompt:"How does the body-condition trend support, challenge, or refine your earlier observations?"}
+    prompt:"What does the condition evidence add?"}
 };
 
 const TIMES=["Pre-dawn","Morning","Afternoon","Evening","Late night"];
@@ -577,9 +581,9 @@ const oxygenData={
 };
 const algaeIndicator={dry:"Low",lightRain:"Moderate",heavyRain:"High"};
 const PERIODS={
-  dry:{key:"dry",label:"Dry conditions",note:"dryDayNote",prompt:"What happens to dissolved oxygen during this 24-hour period?"},
-  lightRain:{key:"lightRain",label:"Two days after light rain",note:"lightRainNote",prompt:"What changes after light rain, and what does the algae indicator add?"},
-  heavyRain:{key:"heavyRain",label:"Three days after heavy rain",note:"heavyRainNote",prompt:"How is this period different from the other two?"}
+  dry:{key:"dry",label:"Dry conditions",note:"dryDayNote",prompt:"What pattern occurs across the dry day?"},
+  lightRain:{key:"lightRain",label:"Two days after light rain",note:"lightRainNote",prompt:"How does the light-rain record compare?"},
+  heavyRain:{key:"heavyRain",label:"Three days after heavy rain",note:"heavyRainNote",prompt:"How does the heavy-rain record compare?"}
 };
 
 const waterRoutes=[
@@ -667,7 +671,7 @@ function defaultState(){
       convergenceTwo:{chainOrder:[],evidenceAttachments:{},confidenceRatings:{},writtenExplanation:""}
     },
     application:{initialPrediction:"",baselineRun:null,individualRuns:[],finalCombinedRun:null,runNotes:{},monitoringChoice:"",monitoringJustification:""},
-    actionBrief:{discovery:"",strongestEvidence:[],evidenceJustifications:{},causeEffectExplanation:"",priorityIdea:"",priorityJustification:"",supportingIdea:"",supportingJustification:"",monitoringIdea:"",monitoringJustification:"",sportsComplexPlan:"",sportsComplexEvidence:"",furtherInvestigation:"",generatedAt:"",generatedHtml:""},
+    actionBrief:{discovery:"",strongestEvidence:[],evidenceJustifications:{},causeEffectExplanation:"",priorityIdea:"",priorityJustification:"",supportingIdea:"",supportingJustification:"",monitoringIdea:"",monitoringJustification:"",sportsComplexPlan:"",sportsComplexEvidence:"",furtherInvestigation:"",generatedAt:"",generatedHtml:"",deliveredAt:""},
     reflection:{changedThinking:"",influentialEvidence:""},
     quiz:{offered:false,choice:"",startedAt:"",submittedAt:"",answers:{},answeredCount:0,score:null,percentage:null,itemResults:[],feedbackDisplayed:false},
     export:{lastExportedAt:""}
@@ -712,7 +716,7 @@ let pageActive=!document.hidden;
 function currentTimingKey(){
   const n=state.navigation.currentScreen;
   if(n===5)return"5"+(state.navigation.firstPath==="community"?"A":state.navigation.firstPath==="data"?"B":"");
-  if(n===9)return"9"+(state.navigation.secondPath==="water"?"A":state.navigation.secondPath==="map"?"B":"");
+  if(n===8)return"8"+(state.navigation.secondPath==="water"?"A":state.navigation.secondPath==="map"?"B":"");
   return String(n);
 }
 setInterval(()=>{
@@ -720,7 +724,7 @@ setInterval(()=>{
   state.timing.totalActiveSeconds++;
   const k=currentTimingKey();
   state.timing.screenSeconds[k]=(state.timing.screenSeconds[k]||0)+1;
-  if(state.navigation.currentScreen===16 && quizActiveTiming)state.timing.quizSeconds++;
+  if(state.navigation.currentScreen===14 && quizActiveTiming)state.timing.quizSeconds++;
 },1000);
 document.addEventListener("visibilitychange",()=>{pageActive=!document.hidden;if(document.hidden)save();});
 window.addEventListener("blur",()=>{pageActive=false;});
@@ -849,7 +853,7 @@ function updateHeader(){
 function activeScreenDef(){
   const n=state.navigation.currentScreen;
   if(n===5)return state.navigation.firstPath==="community"?SCREENS["5A"]:state.navigation.firstPath==="data"?SCREENS["5B"]:SCREENS[5];
-  if(n===9)return state.navigation.secondPath==="water"?SCREENS["9A"]:state.navigation.secondPath==="map"?SCREENS["9B"]:SCREENS[9];
+  if(n===8)return state.navigation.secondPath==="water"?SCREENS["8A"]:state.navigation.secondPath==="map"?SCREENS["8B"]:SCREENS[8];
   return SCREENS[n];
 }
 function renderCurrent(){
@@ -874,13 +878,13 @@ function renderCurrent(){
 function goToScreen(n){
   if(typeof stopTTS==="function")stopTTS();
   state.navigation.currentScreen=n;
-  if(n===16&&!state.meta.completedAt)state.meta.completedAt=nowISO();
+  if(n===14&&!state.meta.completedAt)state.meta.completedAt=nowISO();
   save();renderCurrent();
 }
 function nextScreen(){
   if(continueHandler){const ok=continueHandler();if(ok===false)return;}
   const n=state.navigation.currentScreen;
-  if(n<16)goToScreen(n+1);
+  if(n<14)goToScreen(n+1);
 }
 function prevScreen(){
   const n=state.navigation.currentScreen;
@@ -1045,6 +1049,7 @@ function sceneHero(o){
 function sysMsg(head,lines){return `<div class="msg-screen"><div class="msg-head"><span class="dot"></span>${esc(head)}</div>${lines.map(l=>`<div class="msg-line">${l}</div>`).join("")}</div>`;}
 function caseFile(tab,html){return `<div class="case-file"><span class="file-tab">${esc(tab)}</span>${html}</div>`;}
 function sceneCaption(text){return `<div class="scene-caption">${esc(text)}</div>`;}
+function caseStatus(text){return `<div class="case-status"><span class="cs-dot"></span><div><div class="cs-label">Case status</div><div class="cs-text">${esc(text)}</div></div></div>`;}
 function story(){return `<div class="card story"><div class="narrative">${[].slice.call(arguments).join("")}</div></div>`;}
 function subtlePrompt(text){return `<p class="subtle-prompt">${esc(text)}</p>`;}
 
@@ -1072,37 +1077,30 @@ registerScreen(1,{title:"Launch",hideNav:true,hideAppHeader:true,
         <div class="toprow">
           <span class="sis-badge">Stories in Science</span>
           <div class="landing-titles">
-            <p class="eyebrow">Arizona Grade 5 &middot; Life Science</p>
+            <p class="eyebrow">Grade 5 &middot; Life Science</p>
             <h1>Trouble at Silver Lake: An Aquatic Investigation</h1>
           </div>
         </div>
-        <div class="action-row">
-          <span class="code-chip">Code: <b>${esc(getSessionCode())}</b></span>
-          <button class="lbtn" id="laResume">&#8617; Resume</button>
-          <button class="lbtn" id="laExport">&#11015; Export Journal</button>
-          <button class="lbtn" id="laGloss">&#128214; Glossary</button>
-          <button class="lbtn danger" id="laRestart">&#8635; Restart Lesson</button>
-        </div>
-        <div class="name-setup">
-          <label for="studentLabel">Name or student ID <span class="opt">(optional)</span></label>
-          <input type="text" id="studentLabel" maxlength="60" placeholder="Leave blank if you prefer">
-        </div>
-      </div>
-
-      <p class="mission-path-title">&#129517; Your Mission Path</p>
-      <div class="stepper" aria-label="Your investigation path">
-        <div class="step ${fp?"done":""}"><span class="step-num">1</span><div><div class="step-label">Investigation Start</div><div class="step-state">${esc(s1)}</div></div></div>
-        <span class="step-arrow" aria-hidden="true">&rarr;</span>
-        <div class="step ${sp?"done":""}"><span class="step-num">2</span><div><div class="step-label">Evidence Focus</div><div class="step-state">${esc(s2)}</div></div></div>
-        <span class="step-arrow" aria-hidden="true">&rarr;</span>
-        <div class="step ${briefDone?"done":""}"><span class="step-num">3</span><div><div class="step-label">Response Plan</div><div class="step-state">${esc(s3)}</div></div></div>
       </div>
 
       <div class="hero-banner">
         <h2>Trouble at Silver Lake</h2>
-        <p class="hero-lead">You've just joined the Silver Lake community-science team in the mountain town of <strong>Pinecrest</strong>. After this summer's big fishing derby, families noticed the young fish looked smaller than they remember. <strong>Your job is to investigate what changed, follow the evidence, and help the town protect the lake and its fish.</strong></p>
-        <button class="btn btn-gold" id="laBegin">${started?"Resume Investigation":"Start Investigation"}</button>
+        <p class="hero-lead">Late summer has always been the busiest season in Pinecrest. But three weeks after the annual fishing derby, people are still talking about the fish caught near Silver Lake.</p>
+        <p class="hero-lead" style="margin-top:-10px"><strong>You volunteered to help with community science this summer.</strong> A message from the field station is waiting.</p>
+        <button class="btn btn-gold" id="laBegin">${started?"Open the Message":"Open the Message"}</button>
         <div style="margin-top:14px;font-size:.85rem;opacity:.92">&#128190; Your work saves automatically on this device.</div>
+      </div>
+
+      <div class="action-row" style="opacity:.85">
+        <span class="code-chip">Code: <b>${esc(getSessionCode())}</b></span>
+        <button class="lbtn" id="laResume">&#8617; Resume</button>
+        <button class="lbtn" id="laExport">&#11015; Export Journal</button>
+        <button class="lbtn" id="laGloss">&#128214; Glossary</button>
+        <button class="lbtn danger" id="laRestart">&#8635; Restart Lesson</button>
+      </div>
+      <div class="name-setup">
+        <label for="studentLabel">Name or student ID <span class="opt">(optional)</span></label>
+        <input type="text" id="studentLabel" maxlength="60" placeholder="Leave blank if you prefer">
       </div>
 
       <details class="collapse about-lesson">
@@ -1115,7 +1113,7 @@ registerScreen(1,{title:"Launch",hideNav:true,hideAppHeader:true,
 
           <p class="sect-label">Standards &amp; Practices</p>
           <div class="align-grid">
-            <div class="align-col"><h4>Arizona Science Standard</h4><p><span class="std-code">5.L3U1.10</span> &mdash; Construct an explanation based on evidence that the changes in an environment can affect the development of the traits in a population of organisms.</p></div>
+            <div class="align-col"><h4>Science Standard (Arizona Grade 5)</h4><p><span class="std-code">5.L3U1.10</span> &mdash; Construct an explanation based on evidence that the changes in an environment can affect the development of the traits in a population of organisms.</p></div>
             <div class="align-col"><h4>Science &amp; Engineering Practices</h4><p>Analyzing and Interpreting Data &middot; Developing and Using Models &middot; Constructing Explanations &middot; Obtaining, Evaluating, and Communicating Information</p></div>
             <div class="align-col"><h4>Crosscutting Concepts</h4><p>Cause and Effect &middot; Patterns &middot; Systems and System Models &middot; Stability and Change</p></div>
           </div>
@@ -1150,19 +1148,14 @@ registerScreen(1,{title:"Launch",hideNav:true,hideAppHeader:true,
 registerScreen(2,{title:"Summer in Pinecrest",hint:"",
   render(){
     return `<div class="screen">
-      ${sceneHero({stamp:"Pinecrest, Arizona",time:"Late summer",title:"Summer in Pinecrest",sub:"The whole town knows this water.",img:"Images/silver-lake-hero.png",alt:"Silver Lake high in the pines: cold clear water, a wooded shoreline, and a distant fishing pier."})}
+      ${sceneHero({stamp:"Pinecrest",time:"Late summer",title:"Summer in Pinecrest",sub:"The whole town knows this water.",img:"Images/silver-lake-hero.png",alt:"Silver Lake high in the pines: cold clear water, a wooded shoreline, and a distant fishing pier."})}
       ${story(
-        `<p><span class="drop">S</span>ilver Lake sits high in the pines above <strong>Pinecrest</strong>, a small Arizona mountain town where nearly everyone knows the water. The lake is cold and clear, ringed by ponderosa and granite, and in summer it is the center of just about everything.</p>`,
-        `<p>People here have fished Silver Lake for as long as anyone can remember &mdash; grandparents teaching grandkids the same quiet coves. The biggest day of the year is the <strong>summer fishing derby</strong>, when the whole town gathers at the shore to weigh their catch and swap stories.</p>`,
-        `<p>This year, something felt different. At the weigh-in table, families kept saying the same thing: the young bluegill &mdash; the little ones kids usually reel in &mdash; looked <strong>smaller and thinner</strong> than they remembered. Not everywhere. Mostly from one part of the lake called <strong>North Cove</strong>.</p>`,
-        `<p>Silver Lake has always provided. If something is changing the fish, Pinecrest wants to know &mdash; and this summer, you signed up to help find out.</p>`
+        `<p><span class="drop">P</span>inecrest is a small forest mountain town built around Silver Lake, and the summer fishing derby is the biggest day of the year. At this year's weigh-in table, several families said their young bluegill seemed smaller than they remembered.</p>`
       )}
       ${dialogue(
-        say("Jordan","JL","I've fished North Cove my whole life. This summer the little ones just look… off. Smaller."),
-        say("Sam","SP","Ours over by West Shore looked normal, though. Maybe it was just a slow year?")
+        say("Jordan","JL","I've fished North Cove since I was little. These young bluegill look smaller."),
+        say("Sam","SP","Ours near West Shore looked normal, though. Maybe Jordan's group just happened to catch smaller ones.")
       )}
-      ${subtlePrompt("What would make you believe the fish had really changed — and not just looked different this once?")}
-      ${thought("A few photos and a feeling aren't proof. If the fish really changed, the evidence should show up in more than one place.")}
       ${caseFile("Saved from the derby",`
         <p style="margin:0 0 8px">The town saved what people brought to the weigh-in table:</p>
         <p style="margin:0 0 10px"><span class="pill">Photographs</span><span class="pill">Catch notes</span><span class="pill">Location reports</span></p>
@@ -1170,7 +1163,7 @@ registerScreen(2,{title:"Summer in Pinecrest",hint:"",
         <p class="small muted" style="margin-top:8px">Left: this summer's tray. Right: an earlier summer, shown with a similar tray for reference. No one measured the fish at the derby.</p>
       `)}
       <div class="card panel-journal">
-        ${promptBox("What would you want to know before deciding that something has really changed in Silver Lake's fish?")}
+        ${promptBox("What would you need to know before deciding that the fish population had really changed?")}
         ${textField("q_initial","Your questions","entry.initialQuestions","Type any questions you'd want answered…")}
       </div>
     </div>`;
@@ -1185,24 +1178,24 @@ registerScreen(3,{title:"Meet Dr. Reed",hint:"",
   render(){
     return `<div class="screen">
       ${sceneHero({stamp:"Pinecrest · Silver Lake Field Station",title:"Meet Dr. Reed",sub:"Your summer volunteer team has its first assignment.",img:"Images/silver-lake-field-station.png",alt:"The Silver Lake field station near the shore, with tanks and equipment for studying the lake."})}
+      ${caseStatus("Community concern — not yet confirmed")}
       ${sysMsg("Community science · Pinecrest",[
         `Thanks for volunteering this summer. You've been added to Pinecrest's <span class="k">Silver Lake community-science team</span>.`,
         `Your coordinator is <span class="k">Dr. Marcus Reed, aquatic ecologist</span> — he's here to meet you.`
       ])}
       ${dialogue(
         `<p class="lead-in">A video window blinks open on the field-station tablet. A man with a sun-faded cap and an easy grin leans into view.</p>`,
-        reed(["Hi — I'm Dr. Marcus Reed. I'm an aquatic ecologist, which is a scientist who studies how living things and water fit together.","I grew up right here in Pinecrest. I learned to fish on Silver Lake, probably in the same coves you did."]),
-        reed(["So when families say the young fish look different, I take that seriously. But what we notice and what's really happening aren't always the same thing.","Here's the important part: I'm not going to tell you what's wrong with the lake. I don't know yet — nobody does. We'll figure it out together, by following the evidence."]),
-        reed(["Your job isn't to guess the answer. It's to look closely, ask good questions, and decide what the evidence can and can't tell us.","Want to take a look at what we've got?"])
+        reed("I'm Dr. Marcus Reed, the aquatic ecologist coordinating the investigation."),
+        reed("Most reports came from North Cove, but that does not necessarily mean the fish there changed. We need a fair comparison."),
+        reed("The town council wants an update. Your first job is to find out whether the reported pattern is supported.")
       )}
-      ${thought("Start simple: did the fish really change, or did they just look different this once?")}
       <details class="collapse about-lesson" style="margin:0 0 18px">
         <summary class="collapse-head">About Dr. Reed's work <span class="caret" aria-hidden="true">&#9660;</span></summary>
         <div class="collapse-body"><p style="margin:0">An <strong>aquatic ecologist</strong> studies how living things interact with water, habitats, and changing conditions — from the tiniest algae to the fish a whole town depends on.</p></div>
       </details>
       <div class="reveal-action"><button class="btn btn-gold" id="acceptBtn">Accept the Assignment</button></div>
       <div id="assignPanel" class="hidden">
-        ${caseFile("Assignment 01",`<h3>Your first assignment</h3><p style="margin:0">Figure out whether something has really changed in Silver Lake's fish &mdash; and decide what the team should look into next.</p>`)}
+        ${caseFile("Assignment 01",`<h3>Your first assignment</h3><p style="margin:0">Determine whether a measurable change has occurred in Silver Lake's young bluegill.</p>`)}
         ${dialogue(reed("Good. Two small teams are heading out this morning. Start wherever your curiosity takes you."))}
       </div>
     </div>`;
@@ -1226,14 +1219,14 @@ registerScreen(4,{title:"Two Evidence Stations",hideContinue:true,hint:"Open a s
   render(){
     return `<div class="screen">
       ${sceneHero({stamp:"Pinecrest · Silver Lake",title:"Where Will You Start?",sub:"Two teams, two kinds of evidence, one question."})}
-      ${dialogue(reed(["Two small teams are heading out this morning. Both are chasing the same question — did the young fish really change? — but they'll look at very different kinds of evidence.","I'm not going to tell you which to pick. Start where your curiosity takes you. You'll see the other team's findings when we regroup."]))}
+      ${dialogue(reed("Two teams are examining the derby concern in different ways. Choose where you'll begin."))}
       <div class="station-grid">
         <button class="station-card" data-path="community">
           <div class="st-top"></div>
           <div class="st-body">
             <span class="st-kicker">Community team</span>
-            <h3>Community Case Journal</h3>
-            <p>The derby team organized photographs, angler notes, location records, and visual observations into a digital case journal.</p>
+            <h3>Join the Community Records Team</h3>
+            <p>Determine what the derby photographs, angler statements, and catch locations actually suggest — and what they can't prove on their own.</p>
             <span class="st-open">Open the Case Journal &rarr;</span>
           </div>
         </button>
@@ -1241,8 +1234,8 @@ registerScreen(4,{title:"Two Evidence Stations",hideContinue:true,hint:"Open a s
           <div class="st-top"></div>
           <div class="st-body">
             <span class="st-kicker">Field station</span>
-            <h3>Fisheries Data Lab</h3>
-            <p>The field station has several years of standardized bluegill measurements waiting at a data workstation.</p>
+            <h3>Join the Fisheries Survey Team</h3>
+            <p>Test whether the community concern holds up against years of standardized, same-age bluegill measurements.</p>
             <span class="st-open">Enter the Data Lab &rarr;</span>
           </div>
         </button>
@@ -1275,14 +1268,12 @@ function cjPanel(key){
   if(key==="photos")return `
     <div class="two-col">${imageBlock("Images/fishing-derby-current.png")}${imageBlock("Images/fishing-derby-past.png")}</div>
     <p class="small muted">Left: this summer near North Cove. Right: an earlier North Cove summer, shown with a similar fish tray for reference.</p>
-    ${thought("The difference is worth noticing, but the photographs do not confirm exact age or measurements.")}
-    ${promptBox("What similarities or differences do you notice?")}
+    ${promptBox("What similarities and differences do you observe?")}
     ${textField("cj_photo","Your note","firstInvestigation.communityJournal.photoNote")}`;
   if(key==="anglers")return `
     <div class="report-box"><p style="margin:0">"I have fished North Cove for years. This summer, many of the young bluegill looked smaller and thinner than I remember."</p><p class="small muted" style="margin:6px 0 0">— Jordan Lee</p></div>
     <div class="report-box" style="margin-top:8px"><p style="margin:0">"Our catches near West Shore looked about the same as last summer."</p><p class="small muted" style="margin:6px 0 0">— Sam Patel</p></div>
-    ${thought("More than one person noticed something near the same part of the lake.")}
-    ${promptBox("What pattern appears across the community observations?")}
+    ${promptBox("Which details repeat? Which details conflict?")}
     ${textField("cj_angler","Your note","firstInvestigation.communityJournal.anglerNote")}`;
   if(key==="locations")return `
     ${imageBlock("Images/silver-lake-zone-map.png")}
@@ -1290,22 +1281,19 @@ function cjPanel(key){
       <li><strong>North Cove:</strong> two reports of smaller young bluegill.</li>
       <li><strong>West Shore:</strong> one report of typical-sized fish.</li>
     </ul>
-    ${thought("Location may matter — but community reports are not collected evenly across the lake.")}
-    ${promptBox("What do the locations add to the pattern?")}
+    ${promptBox("What location pattern do the reports suggest?")}
     ${textField("cj_loc","Your note","firstInvestigation.communityJournal.locationNote")}`;
   return `
     <div class="two-col">${imageBlock("Images/bluegill-north-cove-current.png")}${imageBlock("Images/bluegill-comparison-zone.png")}</div>
     <p class="small muted">Standardized side-view illustrations of same-age juvenile bluegill. No measurements are provided here.</p>
-    ${thought("The body shapes look different. Measurements would help determine whether the pattern is real.")}
-    ${promptBox("What do you notice about body length and overall body shape?")}
+    ${promptBox("What differences do you observe in body length and body shape?")}
     ${textField("cj_cond","Your note","firstInvestigation.communityJournal.conditionNote")}`;
 }
 registerScreen("5A",{title:"Community Case Journal",hint:"Open all four case pages to continue.",
   render(){
     return `<div class="screen">
       ${sceneHero({stamp:"Community Case Journal",title:"Inside the Case Journal",sub:"The derby team's photographs, notes, and observations, organized page by page."})}
-      ${dialogue(reed(["Community observations often reveal the first sign of a problem.","They can also be incomplete. Look for repeated details — but keep track of what the evidence cannot tell us."]))}
-      ${thought("I need to notice patterns without treating every observation as proof.")}
+      ${dialogue(reed("Look for repeated details across the four pages."))}
       <div class="card">
         <div class="tabs" role="tablist" aria-label="Community case journal pages">
           ${CJ_TABS.map((t,i)=>`<button class="tab-btn" role="tab" id="tab-${t.key}" aria-controls="panel-cj" data-tab="${t.key}" aria-selected="${i===0?"true":"false"}">${esc(t.label)}<span class="seen" data-seen="${t.key}"></span></button>`).join("")}
@@ -1313,12 +1301,10 @@ registerScreen("5A",{title:"Community Case Journal",hint:"Open all four case pag
         <div class="tab-panel" id="panel-cj" role="tabpanel" tabindex="0"></div>
       </div>
       <div id="cjReveal" class="card panel-journal reveal hidden">
-        ${sceneCaption("You reach the final page of the case journal. The complete journal — photographs, location reports, observations, and the condition comparison — is automatically added to the team's case file.")}
-        ${dialogue(reed(["The briefing team will have the entire journal. Before we meet, record what you think these reports suggest — and what they still cannot establish."]))}
         <h2>What do the reports suggest?</h2>
-        ${promptBox("What pattern do the community reports suggest?")}
+        ${promptBox("What overall pattern do these community records suggest?")}
         ${textField("cj_claim","Your provisional claim","firstInvestigation.communityJournal.claim")}
-        ${promptBox("What is one thing these reports still can't tell you for sure?")}
+        ${promptBox("What is one limitation of this evidence?")}
         ${textField("cj_limit","Limitation","firstInvestigation.communityJournal.limitation")}
       </div>
     </div>`;
@@ -1355,8 +1341,7 @@ registerScreen("5B",{title:"Fisheries Data Lab",hint:"Open all three measurement
     const fd=state.firstInvestigation.fisheriesData;
     return `<div class="screen">
       ${sceneHero({stamp:"Field Station · Data Workstation",title:"At the Data Workstation",sub:"A secure terminal loads years of standardized bluegill surveys."})}
-      ${dialogue(reed(["The survey team measures the same species, age group, season, and lake zones every year.","North Cove will stay on the graph. Choose another zone and look for where the patterns match — or begin to separate."]))}
-      ${thought("If age, species, season, and method stay the same, this comparison will be stronger than the derby photographs alone.")}
+      ${dialogue(reed("These surveys compare one-year-old bluegill collected during the same season with the same method."))}
       <div class="card panel-science">
         <div id="fdCaption" class="scene-caption" style="display:none"></div>
         <p class="small muted">Standardized summer surveys of <strong>one-year-old juvenile bluegill</strong>, same sampling method, 2022–2026. North Cove stays on the graph; choose one zone to compare and one measurement at a time.</p>
@@ -1377,10 +1362,8 @@ registerScreen("5B",{title:"Fisheries Data Lab",hint:"Open all three measurement
       </div>
       <div id="fdNotes"></div>
       <div id="fdReveal" class="card panel-science reveal hidden">
-        ${sceneCaption("The three completed graph records are added to the field station's shared briefing file.")}
-        ${dialogue(reed(["The team will see all three measurement patterns. Record what you think they show before we compare them with the community investigation."]))}
         <h2>What pattern do the data support?</h2>
-        ${promptBox("Based on the historical data, what has changed, and where is the pattern strongest?")}
+        ${promptBox("What claim is supported across all three measurements?")}
         ${textField("fd_claim","Your provisional claim","firstInvestigation.fisheriesData.claim")}
       </div>
     </div>`;
@@ -1389,11 +1372,9 @@ registerScreen("5B",{title:"Fisheries Data Lab",hint:"Open all three measurement
     const fd=state.firstInvestigation.fisheriesData;
     let curVar=null;
     function comparisonFor(vkey){return fd.selectedComparisonByVariable[vkey]||"West Shore";}
-    const VAR_CAP={length:"The first dataset loads: average body length of one-year-old bluegill.",mass:"A second file opens. Body mass may show whether the length pattern appears in another trait.",condition:"The final record shows the field station's body-condition ratings."};
     function draw(){
       if(!curVar)return;
       const V=VARIABLES[curVar];const comp=comparisonFor(curVar);
-      const capEl=$("#fdCaption",root);if(capEl){capEl.textContent=VAR_CAP[curVar]||"";capEl.style.display="block";}
       const series=[
         {name:"North Cove",color:ZONE_COLOR["North Cove"],values:V.data["North Cove"]},
         {name:comp,color:ZONE_COLOR[comp],values:V.data[comp]}
@@ -1461,24 +1442,7 @@ function firstBriefingEvidence(){
     {id:"condition-graph",label:"Saved condition graph",desc:"North Cove body condition trends downward."}
   ];
 }
-registerScreen(6,{title:"Briefing Call",hint:"Continue to the field station.",
-  render(){
-    const isCommunity=state.navigation.firstPath==="community";
-    const transferItems=isCommunity
-      ? ["Community Case Journal uploaded","Derby photographs included","Angler observations included","Catch-location records included","Fish-condition comparison included","Your observations and provisional claim included"]
-      : ["Historical length graph included","Historical mass graph included","Body-condition graph included","Comparison-zone settings included","Your field notes and provisional claim included"];
-    return `<div class="screen">
-      ${sceneHero({stamp:"Silver Lake Investigation Portal",time:"Field station briefing — beginning now",title:"Briefing Call"})}
-      ${sysMsg("Field Station Briefing — beginning now",[`Your completed case file transfers to the field station's shared display.`])}
-      <div class="transfer">
-        <h4>Transferring your case file&hellip;</h4>
-        <ul>${transferItems.map(t=>`<li><span class="tick">&#10003;</span>${esc(t)}</li>`).join("")}</ul>
-      </div>
-      ${dialogue(reed(["Your complete investigation record is on the briefing board.","Come inside — the other team has just arrived."]))}
-      ${thought("The other team examined the same concern in a different way. Together, the records may show more than either one could show alone.")}
-    </div>`;
-  }
-});
+/* Screen 6 (Briefing Call transfer) merged into the convergence below. */
 
 /* =====================================================================
    SCREEN 7 — Field Station Briefing 1
@@ -1489,49 +1453,31 @@ const COMBINED1_EVIDENCE=[
   {id:"c1-stable-zones",label:"Comparison zones stayed relatively stable"},
   {id:"c1-same-age",label:"Same-species, same-age fish were compared"}
 ];
-registerScreen(7,{title:"Briefing at the Field Station",hint:"Open the shared evidence board to continue.",
+registerScreen(6,{title:"Briefing at the Field Station",hint:"Open the shared evidence board to continue.",
   render(){
     const youCommunity=state.navigation.firstPath==="community";
-    const communityRecord=`<ul>
-        <li>Photographs suggest a difference from an earlier summer.</li>
-        <li>More than one community member noticed smaller or thinner young bluegill.</li>
-        <li>Smaller-fish reports cluster near North Cove.</li>
-        <li>A comparison-zone report describes typical catches.</li>
-        <li>The observations raise a concern, but can't give precise measurements.</li></ul>`;
-    const surveyRecord=`<ul>
-        <li>North Cove length declines across five summers.</li>
-        <li>North Cove mass declines over the same years.</li>
-        <li>North Cove body condition trends downward.</li>
-        <li>A comparison zone stays relatively stable.</li>
-        <li>Same species, age group, season, and method were used.</li></ul>`;
     return `<div class="screen">
-      ${sceneHero({stamp:"Silver Lake Fisheries Field Station & Hatchery",title:"Briefing at the Field Station",sub:"The doors slide open. Both teams' records are already loading onto the shared display.",img:"Images/silver-lake-field-station.png",alt:"Field station interior with juvenile-fish tanks, a briefing table, and a shared display."})}
-      ${dialogue(reed(["Let's bring both views together.","Your team investigated one part of the evidence. The other team looked at the same concern from a different angle — both records are already on the board."]))}
+      ${sceneHero({stamp:"Silver Lake Fisheries Field Station & Hatchery",title:"Briefing at the Field Station",sub:"Both teams gather around the shared display.",img:"Images/silver-lake-field-station.png",alt:"Field station interior with juvenile-fish tanks, a briefing table, and a shared display."})}
+      ${dialogue(reed("Let's bring both records together."))}
       ${dialogue(youCommunity
-        ? say("the Community Journal Team","CJ",["The full case journal is open on the left — photographs, angler reports, catch locations, and the fish-condition images, in the order you reviewed them."],"reports")
-        : say("the Fisheries Data Team","FD",["Your three measurement graphs are open on the left — length, mass, and body condition, with your comparison zones."],"reports"))}
-      <div class="record-board">
-        <div class="record-col ${youCommunity?"you":""}"><span class="yn">${youCommunity?"Your record":"Community record"}</span><h4>Community Case Journal</h4>${communityRecord}</div>
-        <div class="record-col ${youCommunity?"":"you"}"><span class="yn">${youCommunity?"Field station record":"Your record"}</span><h4>Field-Station Measurements</h4>${surveyRecord}</div>
-      </div>
-      ${dialogue(youCommunity
-        ? say("the Fisheries Data Team","FD",["We reviewed five years of standardized surveys of one-year-old bluegill. The decline is clearest in North Cove."],"reports")
-        : say("the Community Journal Team","CJ",["Several community members noticed smaller young bluegill near North Cove, across more than one report."],"reports"))}
+        ? say("the Fisheries Data Team","FD",["North Cove average length changed from 10.8 cm to 8.4 cm.","Mass and condition also changed over the same period.","The comparison zones remained relatively stable."],"reports")
+        : say("the Community Journal Team","CJ",["Multiple reports described smaller, thinner young bluegill near North Cove.","A West Shore report described typical fish.","The observations were not standardized measurements."],"reports"))}
       <div class="reveal-action"><button class="btn btn-teal" id="revealCombine1">Open the Shared Evidence Board</button></div>
       <div id="combine1" class="card panel-science reveal hidden">
         <h2>Both records, side by side</h2>
         <div style="overflow-x:auto"><table class="conv-table">
-          <thead><tr><th>Question</th><th>What the community saw</th><th>What the measurements show</th></tr></thead>
+          <thead><tr><th>Community record</th><th>Survey record</th></tr></thead>
           <tbody>
-            <tr><th>Did more than one source notice a difference?</th><td>Multiple observations and photographs</td><td>Repeated measurements across five summers</td></tr>
-            <tr><th>Where is the pattern strongest?</th><td>Reports cluster near North Cove</td><td>Decline is strongest in North Cove</td></tr>
-            <tr><th>What traits appear different?</th><td>Fish look smaller and less robust</td><td>Lower length, mass, and body condition</td></tr>
-            <tr><th>What can't it show?</th><td>People didn't measure the fish</td><td>Shows the pattern, but not the cause yet</td></tr>
+            <tr><td>Multiple reports near North Cove</td><td>North Cove measurements decline</td></tr>
+            <tr><td>Fish described as smaller and thinner</td><td>Length, mass, and condition decline</td></tr>
+            <tr><td>No standardized measurements</td><td>Same age, species, season, and method</td></tr>
+            <tr><td>West Shore report described typical fish</td><td>Comparison zones remain stable</td></tr>
           </tbody>
         </table></div>
-        ${promptBox("Look at both records side by side. What do they agree on? What do the measurements add that the community reports couldn't show?")}
+        ${promptBox("What conclusion is supported when both records are considered together?")}
         ${textField("c1_concl","Revised conclusion","firstInvestigation.convergenceOne.revisedConclusion")}
-        ${thought("You look from the community photographs to the historical measurements. The concern is no longer based on appearance alone — so why are young fish developing differently in one part of Silver Lake?")}
+        ${caseStatus("Developmental trait pattern confirmed in same-age juvenile bluegill near North Cove")}
+        ${dialogue(reed('Dr. Reed studies the two records. "We now have enough evidence to investigate why North Cove differs."'))}
       </div>
     </div>`;
   },
@@ -1541,7 +1487,7 @@ registerScreen(7,{title:"Briefing at the Field Station",hint:"Open the shared ev
     function reveal(){
       $("#combine1",root).classList.remove("hidden");
       $("#revealCombine1",root).style.display="none";
-      state.firstInvestigation.convergenceOne.remainingQuestion="Why are young fish developing differently in one part of Silver Lake?";
+      state.firstInvestigation.convergenceOne.remainingQuestion="Why are young fish developing differently in one part of the same lake?";
       save();autoBindAll($("#combine1",root));setContinue(true);
     }
     $("#revealCombine1",root).addEventListener("click",reveal);
@@ -1552,18 +1498,19 @@ registerScreen(7,{title:"Briefing at the Field Station",hint:"Open the shared ev
 /* =====================================================================
    SCREEN 8 — Decision Point 2
    ===================================================================== */
-registerScreen(8,{title:"Two Questions Remain",hideContinue:true,hint:"Open a station to continue.",
+registerScreen(7,{title:"What Is Different About North Cove?",hideContinue:true,hint:"Open a station to continue.",
   render(){
     return `<div class="screen">
-      ${sceneHero({stamp:"Field Station · Briefing Room",title:"Two Questions Remain",sub:"Dr. Reed activates two stations on the briefing-room display."})}
-      ${dialogue(reed(["We've confirmed the fish pattern. Now we need to explain it.","One team needs to find out what repeatedly happens in North Cove's water.","The other needs to trace what may be entering the cove — and where it comes from."]))}
+      ${sceneHero({stamp:"Field Station · Briefing Room",title:"What Is Different About North Cove?",sub:"Dr. Reed activates two stations on the briefing-room display."})}
+      ${dialogue(reed("The strongest fish pattern appears in one part of the lake."))}
+      ${subtlePrompt("What should the team investigate about North Cove next?")}
       <div class="station-grid">
         <button class="station-card" data-path="water">
           <div class="st-top"></div>
           <div class="st-body">
             <span class="st-kicker">Monitoring console</span>
             <h3>Water-Monitoring Console</h3>
-            <p>Examine dissolved-oxygen records across different times of day and weather conditions.</p>
+            <p>Investigate what repeatedly happens in North Cove's water.</p>
             <span class="st-open">Check the Sensor Logs &rarr;</span>
           </div>
         </button>
@@ -1572,7 +1519,7 @@ registerScreen(8,{title:"Two Questions Remain",hideContinue:true,hint:"Open a st
           <div class="st-body">
             <span class="st-kicker">Map table</span>
             <h3>Town Waterway Map</h3>
-            <p>Trace three possible water routes and compare what each carries toward Silver Lake.</p>
+            <p>Trace what enters North Cove after rainfall.</p>
             <span class="st-open">Trace the Water Routes &rarr;</span>
           </div>
         </button>
@@ -1581,7 +1528,7 @@ registerScreen(8,{title:"Two Questions Remain",hideContinue:true,hint:"Open a st
   },
   init(root){
     $$(".station-card",root).forEach(card=>card.addEventListener("click",()=>{
-      state.navigation.secondPath=card.dataset.path;save();goToScreen(9);
+      state.navigation.secondPath=card.dataset.path;save();goToScreen(8);
     }));
   }
 });
@@ -1593,12 +1540,11 @@ const OXY_BANDS=[
   {from:3,to:5,fill:"rgba(227,168,59,0.24)"},
   {from:2,to:3,fill:"rgba(200,93,75,0.24)"}
 ];
-registerScreen("9A",{title:"Sensor Logs",hint:"Open all three records to continue.",
+registerScreen("8A",{title:"Sensor Logs",hint:"Open all three records to continue.",
   render(){
     return `<div class="screen">
-      ${sceneHero({stamp:"North Cove · Water-Monitoring Console",title:"North Cove Sensor Logs",sub:"The console lights up. Three 24-hour records are waiting."})}
-      ${dialogue(reed(["A single measurement can miss a changing pattern.","Move through each day. Watch what happens at different times — and whether rainfall changes the pattern."]))}
-      ${thought("A condition that changes across the day might not show up in one daytime sample.")}
+      ${sceneHero({stamp:"North Cove · Water-Monitoring Console",title:"North Cove Sensor Logs",sub:"Several overnight readings differ from the daytime samples."})}
+      ${dialogue(reed("A single daytime reading may not show the whole pattern."))}
       <div class="card panel-science">
         <p class="small muted">Dissolved oxygen (mg/L) across one 24-hour period. North Cove stays on the graph; choose a zone to compare. <button class="btn btn-ghost small" id="oxyGloss" style="min-height:auto;padding:4px 10px">What is dissolved oxygen?</button></p>
         <div class="period-tabs" id="periodTabs" role="tablist" aria-label="Rain periods">
@@ -1623,9 +1569,8 @@ registerScreen("9A",{title:"Sensor Logs",hint:"Open all three records to continu
       </div>
       <div id="oxyNotes"></div>
       <div id="oxyReveal" class="card panel-science reveal hidden">
-        ${sceneCaption("The three sensor records sit side by side. Dr. Reed asks you to identify what repeats — and what becomes more severe after rain.")}
         <h2>What does the water keep doing?</h2>
-        ${promptBox("What keeps happening to the water in North Cove? Which part of the timeline shows it best?")}
+        ${promptBox("What recurring water condition is supported?")}
         ${textField("oxy_claim","Your claim","secondInvestigation.waterTimeline.claim")}
       </div>
     </div>`;
@@ -1699,12 +1644,11 @@ function mapSVG(){
     <path d="M300,360 Q300,340 300,322" stroke="#6F9148" stroke-width="4" fill="none" stroke-dasharray="6 4"/>
   </svg>`;
 }
-registerScreen("9B",{title:"Town Waterway Table",hint:"Open all three route files to continue.",
+registerScreen("8B",{title:"Town Waterway Table",hint:"Open all three route files to continue.",
   render(){
     return `<div class="screen">
-      ${sceneHero({stamp:"Field Station · Map Table",title:"The Town Waterway Table",sub:"Three water routes glow across the town map."})}
-      ${dialogue(reed(["Each route carries water toward Silver Lake — but not to the same place, and not through the same surroundings.","Open every location file. No single clue will be enough."]))}
-      ${thought("I need to connect three things: where the water travels, what land it passes, and what the readings show after rain.")}
+      ${sceneHero({stamp:"Field Station · Map Table",title:"The Town Waterway Table",sub:"Three water routes glow across the town map — all sampled after the same recent storm."})}
+      ${dialogue(reed("No single clue is enough. Compare destination, surrounding land, and measurements."))}
       <div class="card">
         <div class="map-wrap">${mapSVG()}</div>
         <p class="small muted" style="margin-top:8px">Open each route file to inspect three layers: how the water moves, its <strong>nutrient reading, mg/L</strong>, and a land-use clue. <button class="btn btn-ghost small" id="nutGloss" style="min-height:auto;padding:4px 10px">What is a nutrient reading?</button></p>
@@ -1716,9 +1660,8 @@ registerScreen("9B",{title:"Town Waterway Table",hint:"Open all three route file
         </div>
       </div>
       <div id="mapReveal" class="card panel-journal reveal hidden">
-        ${sceneCaption("All three route files are open. One route may form a stronger connection to North Cove — but only if the evidence pieces agree.")}
         <h2>Which route fits the evidence?</h2>
-        ${promptBox("Rank the three routes from most to least likely to be connected to the North Cove change.")}
+        ${promptBox("Which route is most strongly connected to North Cove? Support your ranking with evidence.")}
         <ul class="rank-list" id="rankList"></ul>
         <label class="field-label">Select the evidence that helped you decide</label>
         ${renderEvidence("secondInvestigation.waterwayMap.selectedEvidence",[
@@ -1726,17 +1669,17 @@ registerScreen("9B",{title:"Town Waterway Table",hint:"Open all three route file
           {id:"after-rain-nutrient",label:"After-rain nutrient reading",desc:"How much the nutrient reading rises after rain."},
           {id:"land-use",label:"Land-use clue",desc:"What kind of land each route drains."}
         ],3,"check")}
-        ${promptBox("Which route is best supported, and what evidence helped you decide?")}
         ${textField("map_claim","Your claim","secondInvestigation.waterwayMap.claim")}
       </div>
     </div>`;
   },
   init(root){
     const wm=state.secondInvestigation.waterwayMap;
+    const ROUTE_NOTE={"wooded-stream":"Field technician's note: water ran clear both times. No unusual smell.","wetland-outlet":"Field technician's note: outlet flow was steady. No unusual smell.","stormwater-channel":"Field technician's note: water carried visible sediment after the rain event."};
     function openRoute(r){
       const body=`
         ${imageBlock(r.animation)}
-        <p class="small muted">Layer 1: water movement (animation).</p>
+        <p class="small muted">Layer 1: water movement (animation). ${esc(ROUTE_NOTE[r.id]||"")}</p>
         <div class="callout"><strong>Layer 2 — Nutrient reading, mg/L:</strong><br>Dry conditions: ${r.dryNutrient} mg/L &nbsp;·&nbsp; After rain: ${r.afterRainNutrient} mg/L</div>
         <div class="callout"><strong>Layer 3 — Destination & land use:</strong><br>Empties into <strong>${esc(r.destination)}</strong>. ${esc(r.landUse)}.</div>
         <label class="field-label" for="rnote">Optional note about this route</label>
@@ -1793,23 +1736,7 @@ function secondBriefingEvidence(){
     {id:"others-differ",label:"Other routes don't share destination + nutrient rise"}
   ];
 }
-registerScreen(10,{title:"Return to the Briefing",hint:"Continue to the evidence wall.",
-  render(){
-    const isWater=state.navigation.secondPath==="water";
-    const transferItems=isWater
-      ? ["Dry-day oxygen record transferred","Light-rain oxygen record transferred","Heavy-rain oxygen record transferred","Comparison zone and algae-indicator state included","Your notes and water-condition claim included"]
-      : ["All three route files transferred","Destinations and land-use clues included","Dry and after-rain nutrient readings included","Your route ranking included","Your route notes and source claim included"];
-    return `<div class="screen">
-      ${sceneHero({stamp:"Field Station · Evidence Wall",time:"Second team briefing beginning",title:"Return to the Briefing Room"})}
-      <div class="transfer">
-        <h4>Sending your record to the evidence wall&hellip;</h4>
-        <ul>${transferItems.map(t=>`<li><span class="tick">&#10003;</span>${esc(t)}</li>`).join("")}</ul>
-      </div>
-      ${dialogue(reed(["Your team's complete record is now on the evidence wall.","The other team is bringing the part of the system you didn't investigate. We'll need both records to build the explanation."]))}
-      ${thought("My investigation explains one part of what happened, but not the entire cause-and-effect chain.")}
-    </div>`;
-  }
-});
+/* Screen 10 (Return to the Briefing transfer) merged into the evidence wall below. */
 
 /* =====================================================================
    SCREEN 11 — Field Station Briefing 2 + Cause-and-Effect Chain
@@ -1835,31 +1762,28 @@ const CHAIN_EVIDENCE=[
   {id:"e-popular",label:"Popular fishing location (limited relevance)"}
 ];
 const CONF_OPTS=[["strong","Strongly supported"],["uncertain","Supported but uncertain"],["needs","Needs more evidence"]];
-registerScreen(11,{title:"Evidence Chain",hint:"Arrange the chain, then continue when ready.",
+registerScreen(9,{title:"Evidence Chain",hint:"Arrange the chain, then continue when ready.",
   render(){
     const c2=state.secondInvestigation.convergenceTwo;
     const youWater=state.navigation.secondPath==="water";
-    const waterItem=promptBox("Representative reading: North Cove dissolved oxygen fell to 2.4 mg/L before dawn three days after heavy rain.");
-    const wayItem=imageBlock("Images/route-stormwater-channel.png");
     return `<div class="screen">
-      ${sceneHero({stamp:"Field Station · Evidence Wall",title:"The Silver Lake Evidence Wall",sub:"Sensor records cover one side of the wall; the town waterway map fills the other. Both teams' findings are already posted.",img:"Images/silver-lake-field-station.png",alt:"A field-station evidence wall showing water-sensor records and a town waterway map."})}
-      ${dialogue(say("the Water-Monitoring Team","WM",["North Cove's oxygen changed throughout every day we examined.","The lowest measurements occurred before dawn, and the decline became more severe after rain.","Higher algae indicators appeared during the periods with the strongest oxygen decline."],"reports"))}
-      <div class="card"><p class="small muted" style="margin:0 0 8px">Representative sensor record:</p>${waterItem}</div>
-      ${dialogue(say("the Town Waterway Team","TW",["Only one route combined all three clues: it enters North Cove, drains neighborhoods and park land, and shows a sharp nutrient increase after rain.","The other routes — the wooded feeder stream and the wetland outlet — don't share that combination."],"reports"))}
-      <div class="card"><p class="small muted" style="margin:0 0 8px">Representative route record — Maple Park Stormwater Channel:</p>${wayItem}</div>
-      ${dialogue(reed(["One record shows what repeatedly happens in the water.","The other shows a likely route by which the environmental change begins.","Now determine whether the evidence forms a reasonable cause-and-effect explanation."]))}
-      ${thought("Each link needs evidence. A chain can be plausible without every link being proven with the same certainty.")}
+      ${sceneHero({stamp:"Field Station · Evidence Wall",title:"The Silver Lake Evidence Wall",sub:"The final record reaches the field station.",img:"Images/silver-lake-field-station.png",alt:"A field-station evidence wall showing water-sensor records and a town waterway map."})}
+      ${dialogue(reed(["These teams investigated different parts of the system.","Determine whether the evidence can be connected into a cause-and-effect explanation."]))}
+      ${dialogue(say("the Water-Monitoring Team","WM",["Before dawn after heavy rain, North Cove measured 2.4 milligrams per liter.","The comparison zone remained above 5.","The algae indicator was also highest during that period."],"reports"))}
+      <div class="card"><p class="small muted" style="margin:0 0 8px">Representative sensor record:</p>${promptBox("North Cove dissolved oxygen: 2.4 mg/L before dawn, three days after heavy rain. Comparison zone: above 5 mg/L.")}</div>
+      ${dialogue(say("the Town Waterway Team","TW",["The wooded stream entered West Shore and changed from 0.4 to 0.6.","The wetland outlet entered South Wetland and changed from 0.5 to 0.7.","The Maple Park channel entered North Cove and changed from 0.8 to 3.6."],"reports"))}
+      <div class="card"><p class="small muted" style="margin:0 0 8px">Representative route record — Maple Park Stormwater Channel:</p>${imageBlock("Images/route-stormwater-channel.png")}</div>
       <div class="card panel-journal">
         <h2>Arrange the evidence chain</h2>
         <p class="small muted">Move the cards into the sequence you think best explains the change. Drag them, or use the ▲ ▼ buttons. For each connection, attach evidence and rate your confidence.</p>
         <ul class="chain-list" id="chainList"></ul>
-        ${dialogue(reed(["Scientists don't strengthen an explanation by pretending uncertainty is gone.","Mark the links that are strongly supported — and the links where more evidence could still help."]))}
       </div>
       <div class="card">
-        ${promptBox("In your own words, explain how the change in North Cove's water likely affected how the young bluegill grew.")}
+        ${promptBox("Explain how the environmental change may have affected the development of traits in the juvenile bluegill population.")}
         <p class="small muted">Cautious language helps: <em>likely contributed, evidence supports, recurring conditions, may have affected growth</em>.</p>
         ${textField("c2_explain","Your explanation","secondInvestigation.convergenceTwo.writtenExplanation")}
       </div>
+      <div id="chainWrap2"></div>
     </div>`;
   },
   init(root){
@@ -1882,6 +1806,11 @@ registerScreen(11,{title:"Evidence Chain",hint:"Arrange the chain, then continue
       if(j<0||j>=c2.chainOrder.length)return;
       [c2.chainOrder[i],c2.chainOrder[j]]=[c2.chainOrder[j],c2.chainOrder[i]];save();renderChain();
     }
+    function checkComplete(){
+      const done=c2.chainOrder.every(id=>c2.confidenceRatings[id]);
+      const wrap=$("#chainWrap2",root);
+      wrap.innerHTML=done?`<div class="card">${dialogue(reed(["This explanation fits multiple records.","It supports recurring low oxygen as a likely contributor — not necessarily the only cause."]))}${caseStatus("Evidence-supported explanation developed")}</div>`:"";
+    }
     function renderChain(){
       const ul=$("#chainList",root);
       ul.innerHTML=c2.chainOrder.map((id,idx)=>{
@@ -1898,7 +1827,7 @@ registerScreen(11,{title:"Evidence Chain",hint:"Arrange the chain, then continue
           <span class="chain-controls"><button data-move="up" data-card="${id}" aria-label="Move up">▲</button><button data-move="down" data-card="${id}" aria-label="Move down">▼</button></span>
         </li>`;
       }).join("");
-      $$("[data-conf]",ul).forEach(b=>b.addEventListener("click",()=>{c2.confidenceRatings[b.dataset.card]=b.dataset.conf;save();renderChain();}));
+      $$("[data-conf]",ul).forEach(b=>b.addEventListener("click",()=>{c2.confidenceRatings[b.dataset.card]=b.dataset.conf;save();renderChain();checkComplete();}));
       $$("[data-attach]",ul).forEach(b=>b.addEventListener("click",()=>attachEvidence(b.dataset.attach)));
       $$("[data-move]",ul).forEach(b=>b.addEventListener("click",()=>move(b.dataset.card,b.dataset.move==="up"?-1:1)));
       $$(".chain-card",ul).forEach(li=>{
@@ -1911,7 +1840,7 @@ registerScreen(11,{title:"Evidence Chain",hint:"Arrange the chain, then continue
           c2.chainOrder.splice(to,0,c2.chainOrder.splice(from,1)[0]);save();renderChain();});
       });
     }
-    autoBindAll(root);renderChain();setContinue(true);
+    autoBindAll(root);renderChain();checkComplete();setContinue(true);
   }
 });
 /* ---------------- Shared: model result renderer ---------------- */
@@ -1933,18 +1862,16 @@ function modelResultCard(res,label,vsBaseline){
 /* =====================================================================
    SCREEN 12 — A New Challenge: Proposed Sports Complex
    ===================================================================== */
-registerScreen(12,{title:"Parks Department Request",hint:"Run the current design to continue.",
+registerScreen(10,{title:"Parks Department Request",hint:"Run the current design to continue.",
   render(){
     return `<div class="screen">
-      ${sceneHero({stamp:"Field Station · Briefing Room",title:"A Request from the Parks Department",sub:"As the chain comes together, a new message reaches the briefing-room display."})}
+      ${sceneHero({stamp:"Field Station · Briefing Room",title:"A Request from the Parks Department",sub:"Dr. Reed opens the second item on the council's agenda."})}
       ${sysMsg("Incoming request · Pinecrest Parks Department",[
-        `Pinecrest is reviewing a proposal for a new community <span class="k">sports complex near East Creek</span>.`,
-        `Before construction begins, the department is asking the community-science team for an environmental review.`
+        `The proposed <span class="k">Pinecrest Community Sports Complex</span> near East Creek is still in the design stage.`,
+        `The planning team is asking whether runoff from the site could create conditions similar to those investigated at North Cove.`
       ])}
-      ${dialogue(reed(["Notice the difference this time. With North Cove, we came in after the fish had already changed.","Now the town is asking before anyone breaks ground. That's a chance to get ahead of a problem instead of chasing it.","You know how this kind of thing plays out at Silver Lake now. Let's see what your evidence predicts for East Creek."]))}
-      ${thought("I can use the Silver Lake cause-and-effect chain to predict what could happen in a new location.")}
+      ${dialogue(reed("Use what you learned from Silver Lake to test the current design."))}
       <div class="card">
-        <div class="callout"><strong>The question:</strong> Could runoff from the proposed sports complex create conditions similar to those in North Cove?</div>
         ${imageBlock("Images/sports-complex-site-map.png")}
         <p class="small muted">The site includes sports fields, a parking area, drains, a slope, and a route into East Creek.</p>
       </div>
@@ -1979,11 +1906,11 @@ const MODEL_FEATURES=[
   {id:"rain-garden",group:"Runoff route",name:"Rain garden",desc:"Build a planted basin near the sports-field and parking-area drains."},
   {id:"vegetated-buffer",group:"Creek protection",name:"Vegetated creek buffer",desc:"Plant a wide strip of grasses and native plants between the developed area and East Creek."}
 ];
-registerScreen(13,{title:"Modeling Lab",hint:"Run all three feature tests to continue.",
+registerScreen(11,{title:"Modeling Lab",hint:"Run all three feature tests to continue.",
   render(){
     return `<div class="screen">
       ${sceneHero({stamp:"Field Station · Runoff Modeling Lab",title:"Runoff Modeling Lab",sub:"The simulation table is ready. Rain will move across the proposed site."})}
-      ${dialogue(reed(["The modeling system won't choose a plan for us.","It shows how one change at a time affects the system.","Test each feature separately first. Then decide which features belong together."]))}
+      ${dialogue(reed("Test each feature separately first. Then decide which features belong together."))}
       <div class="card panel-science">
         <h3>Test one feature at a time</h3>
         <p class="small muted">Each test changes only one feature from the current design (${baselineModel.runoffPercent}% runoff · index ${baselineModel.nutrientIndex} · algae ${baselineModel.algaeResponse}). Run all three to open the combined design.</p>
@@ -1999,9 +1926,8 @@ registerScreen(13,{title:"Modeling Lab",hint:"Run all three feature tests to con
         <div id="featureOut" style="margin-top:12px"></div>
       </div>
       <div id="combinedSection" class="card panel-journal hidden">
-        ${sceneCaption("Three separate test records are now available. The combined-design controls open.")}
-        ${thought("Different features changed different parts of the system. The final design may need more than one kind of protection.")}
         <h3>Design the combined solution</h3>
+        ${promptBox("Compare the three runs. What did each feature change?")}
         <p class="small muted">Choose at least two features, then run the final combined analysis.</p>
         <div class="role-select" id="comboPick">
           ${MODEL_FEATURES.map(f=>`<button data-combo="${f.id}">${esc(f.name)}</button>`).join("")}
@@ -2039,7 +1965,7 @@ registerScreen(13,{title:"Modeling Lab",hint:"Run all three feature tests to con
       const f=FEATURE_BY_ID[sel.value];
       const res={id:f.id,runoffPercent:f.runoffPercent,nutrientIndex:f.nutrientIndex,algaeResponse:f.algaeResponse,at:nowISO()};
       app.individualRuns.push(res);save();
-      $("#featureOut",root).innerHTML=sceneCaption("The rainfall simulation begins. Water moves across the field and parking area toward East Creek.")+modelResultCard(f,f.name+" vs. current design",true)+
+      $("#featureOut",root).innerHTML=modelResultCard(f,f.name+" vs. current design",true)+
         promptBox("What changed compared with the current design?")+
         `<textarea id="fnote_${f.id}" data-path="application.runNotes.${f.id}"></textarea>`;
       autoBindAll($("#featureOut",root));
@@ -2089,16 +2015,16 @@ const RESPONSE_IDEAS=[
   {id:"do-monitor",name:"Algae and dissolved-oxygen monitoring",desc:"Continue tracking algae indicators and dissolved oxygen across the day."}
 ];
 const IDEA_MAP=Object.fromEntries(RESPONSE_IDEAS.map(i=>[i.id,i]));
-registerScreen(14,{title:"Town Response",hint:"Continue any time — sections are optional.",
+registerScreen(12,{title:"Prepare the Town Response",hint:"Continue any time — sections are optional.",
   render(){
     const ab=state.actionBrief;
     return `<div class="screen">
-      ${sceneHero({stamp:"Town Hall · Communication Workspace",time:"The next evening",title:"Prepare the Town Response",sub:"Dr. Reed opens a communication workspace and transfers the team's evidence into a new case file."})}
-      ${dialogue(reed(["The council doesn't need every screen we opened or every number we viewed.","It needs a clear explanation of what changed, the evidence that matters most, and a response that follows from that evidence."]))}
-      ${thought("My recommendation should interrupt the cause-and-effect chain — not just describe the problem again.")}
+      ${sceneHero({stamp:"Town Hall · Communication Workspace",time:"The next evening",title:"Prepare the Town Response"})}
 
-      <div class="card"><h3>State the Finding</h3>
-        ${promptBox("What changed in the juvenile bluegill population, and where was the pattern strongest?")}
+      <div class="card">
+        <p class="small muted" style="margin:0 0 8px"><strong>Jordan asks:</strong> Was the derby concern supported?</p>
+        <h3>State the Finding</h3>
+        ${promptBox("What changed, and where was the pattern strongest?")}
         ${textField("ab_discovery","Your response","actionBrief.discovery")}</div>
 
       <div class="card"><h3>Choose the Evidence</h3>
@@ -2110,11 +2036,15 @@ registerScreen(14,{title:"Town Response",hint:"Continue any time — sections ar
         <div id="eviJust"></div>
       </div>
 
-      <div class="card"><h3>Explain the Chain</h3>
-        ${promptBox("Explain how nutrient-rich runoff and recurring low dissolved oxygen likely contributed to the fish-development pattern.")}
+      <div class="card">
+        <p class="small muted" style="margin:0 0 8px"><strong>Town Council asks:</strong> What environmental change may have contributed?</p>
+        <h3>Explain the Chain</h3>
+        ${promptBox("What environmental change most likely contributed to the developmental pattern, and how confident can we be?")}
         ${textField("ab_cause","Your explanation","actionBrief.causeEffectExplanation")}</div>
 
-      <div class="card"><h3>Recommend a North Cove Response</h3>
+      <div class="card">
+        <p class="small muted" style="margin:0 0 8px"><strong>Lake managers ask:</strong> What actions should be considered?</p>
+        <h3>Recommend a North Cove Response</h3>
         <div class="idea-grid">
           ${RESPONSE_IDEAS.map(i=>`<div class="idea-card"><h4>${esc(i.name)}</h4><p class="small muted" style="margin:0">${esc(i.desc)}</p></div>`).join("")}
         </div>
@@ -2126,13 +2056,17 @@ registerScreen(14,{title:"Town Response",hint:"Continue any time — sections ar
         ${textField("ab_mj","Justification","actionBrief.monitoringJustification")}
       </div>
 
-      <div class="card"><h3>Protect the Proposed Sports Complex</h3>
-        ${promptBox("Which features should be included in the sports-complex design?")}
+      <div class="card">
+        <p class="small muted" style="margin:0 0 8px"><strong>Parks Department asks:</strong> What should change in the sports-complex plan?</p>
+        <h3>Protect the Proposed Sports Complex</h3>
+        ${promptBox("What changes should be included in the sports-complex design?")}
         ${textField("ab_scplan","Your design","actionBrief.sportsComplexPlan")}
         ${promptBox("What model results support your design?")}
         ${textField("ab_scevi","Model evidence","actionBrief.sportsComplexEvidence")}</div>
 
-      <div class="card"><h3>Identify What to Keep Monitoring</h3>
+      <div class="card">
+        <p class="small muted" style="margin:0 0 8px"><strong>Field station asks:</strong> What should continue to be monitored?</p>
+        <h3>Identify What to Keep Monitoring</h3>
         ${promptBox("What should the town continue investigating or measuring?")}
         ${textField("ab_further","Your response","actionBrief.furtherInvestigation")}</div>
     </div>`;
@@ -2235,7 +2169,7 @@ function buildBriefHtml(){
 /* =====================================================================
    SCREEN 15 — Generate the Action Brief
    ===================================================================== */
-registerScreen(15,{title:"Communication Desk",hint:"Generate the brief to continue.",
+registerScreen(13,{title:"Communication Desk",hint:"Generate and deliver the brief to continue.",
   render(){
     const ab=state.actionBrief;
     const review=[
@@ -2250,7 +2184,7 @@ registerScreen(15,{title:"Communication Desk",hint:"Generate the brief to contin
     ];
     return `<div class="screen">
       ${sceneHero({stamp:"Communication Desk",title:"The Communication Desk",sub:"A professional workspace for turning the investigation into something the town can use."})}
-      ${dialogue(reed(["Scientific work isn't finished until the evidence can be communicated clearly.","Review your words carefully. The system can organize your work, but it can't create your reasoning for you."]))}
+      ${dialogue(reed("Review your work. The system will organize your ideas without changing them."))}
       <div class="card">
         <h3>Review your inputs</h3>
         <p class="small muted">Use <strong>Back</strong> to return and edit any section. The brief only organizes what you wrote — it does not add or change your reasoning.</p>
@@ -2259,11 +2193,12 @@ registerScreen(15,{title:"Communication Desk",hint:"Generate the brief to contin
       </div>
       <div id="briefHost" class="hidden">
         <div id="briefRender" style="margin-bottom:12px"></div>
-        ${dialogue(reed(["This is your investigation in a form the town can use.","Check that it still says what you intended."]))}
-        <div class="no-print" style="display:flex;gap:10px;flex-wrap:wrap">
+        <div class="no-print" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
           <button class="btn btn-outline" id="regenBrief">Regenerate Brief</button>
           <button class="btn btn-ghost" id="editBrief">Return to Edit</button>
         </div>
+        <div class="reveal-action"><button class="btn btn-gold" id="deliverBrief">Deliver Brief to Pinecrest Town Council</button></div>
+        <div id="deliverConfirm" class="hidden"></div>
       </div>
     </div>`;
   },
@@ -2274,15 +2209,31 @@ registerScreen(15,{title:"Communication Desk",hint:"Generate the brief to contin
       state.actionBrief.generatedHtml=html;save();
       $("#briefRender",root).innerHTML=html;
       $("#briefHost",root).classList.remove("hidden");
-      setContinue(true);
       $("#briefHost",root).scrollIntoView({behavior:(matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth")});
+      refreshDeliverState();
+    }
+    function deliver(){
+      state.actionBrief.deliveredAt=nowISO();save();
+      $("#deliverConfirm",root).classList.remove("hidden");
+      $("#deliverConfirm",root).innerHTML=sysMsg("Brief received",[`<span class="ok">✓</span> Council agenda file updated.`]);
+      $("#deliverBrief",root).disabled=true;$("#deliverBrief",root).textContent="Brief Delivered ✓";
+      setContinue(true);
+    }
+    function refreshDeliverState(){
+      if(state.actionBrief.deliveredAt){
+        $("#deliverConfirm",root).classList.remove("hidden");
+        $("#deliverConfirm",root).innerHTML=sysMsg("Brief received",[`<span class="ok">✓</span> Council agenda file updated.`]);
+        $("#deliverBrief",root).disabled=true;$("#deliverBrief",root).textContent="Brief Delivered ✓";
+        setContinue(true);
+      }else setContinue(false);
     }
     $("#genBrief",root).addEventListener("click",generate);
     $("#regenBrief",root).addEventListener("click",generate);
-    $("#editBrief",root).addEventListener("click",()=>goToScreen(14));
+    $("#editBrief",root).addEventListener("click",()=>goToScreen(12));
+    $("#deliverBrief",root).addEventListener("click",deliver);
     if(state.actionBrief.generatedHtml){
       $("#briefRender",root).innerHTML=buildBriefHtml();
-      $("#briefHost",root).classList.remove("hidden");setContinue(true);
+      $("#briefHost",root).classList.remove("hidden");refreshDeliverState();
     }else setContinue(false);
   }
 });
@@ -2343,18 +2294,13 @@ function quizChoiceFeedback(item,key){const c=item.choices.find(c=>c.key===key);
 /* =====================================================================
    SCREEN 16 — Congratulations, Reflection, Quiz, Export
    ===================================================================== */
-registerScreen(16,{title:"Case Complete",hideContinue:true,
+registerScreen(14,{title:"Investigation Complete",hideContinue:true,
   render(){
     return `<div class="screen">
-      ${sceneHero({stamp:"Silver Lake",title:"Case Complete",sub:"The water is calm again. The team's work is on its way to the people who asked for it.",img:"Images/silver-lake-hero.png",alt:"A calm view of Silver Lake at the close of the investigation."})}
-      ${sysMsg("Delivery confirmed",[`<span class="ok">✓</span> Environmental Action Brief delivered to the Silver Lake Town Council and Parks Department.`])}
-      ${dialogue(
-        reed("Nice work. Take a second to appreciate what just happened."),
-        reed("When folks at the derby first said the young fish looked smaller, we didn't know if it was real, or what might be behind it. A feeling isn't evidence."),
-        reed("You followed that feeling all the way to a real explanation — and you stayed honest about what the evidence could and couldn't prove."),
-        reed("That's what protecting a place like Silver Lake actually looks like. Thank you — Pinecrest's lucky to have you on the water.")
-      )}
-      ${thought("It started with fish that just seemed smaller. It ended with an explanation I could actually stand behind — and a few honest questions still worth chasing.")}
+      ${sceneHero({stamp:"Silver Lake",title:"Investigation Complete",sub:"Evening settles over Silver Lake. A monitoring buoy continues to blink in North Cove.",img:"Images/silver-lake-hero.png",alt:"A calm view of Silver Lake at the close of the investigation."})}
+      ${sysMsg("Town confirmation",[`<span class="ok">✓</span> Brief delivered. North Cove monitoring will continue.`])}
+      ${dialogue(reed("Thank you for your work. Pinecrest now has stronger evidence to guide its next steps."))}
+      ${caseStatus("Investigation complete — monitoring continues")}
       <div class="card panel-journal">
         <h2>Final reflection</h2>
         ${promptBox("How did your thinking about the Silver Lake fish change during the investigation?")}
@@ -2378,7 +2324,6 @@ registerScreen(16,{title:"Case Complete",hideContinue:true,
         <button class="btn btn-gold" id="exportBtn">Export Investigation Journal</button>
         <span id="exportNote" class="small muted" style="margin-left:10px"></span>
       </div>
-      <div style="text-align:center;margin:8px 0 4px"><span class="location-stamp" style="background:var(--marsh-green);border-color:var(--marsh-green)">Silver Lake Case File: Complete</span></div>
     </div>`;
   },
   init(root){
@@ -2449,7 +2394,7 @@ registerScreen(16,{title:"Case Complete",hideContinue:true,
 /* =====================================================================
    INVESTIGATION JOURNAL EXPORT
    ===================================================================== */
-const TIMING_LABELS={"1":"Assignment Waiting","2":"Summer in Pinecrest","3":"Meet Dr. Reed","4":"Two Evidence Stations","5A":"Community Case Journal","5B":"Fisheries Data Lab","6":"Briefing Call","7":"Field Station Briefing","8":"Two Questions Remain","9A":"Sensor Logs","9B":"Town Waterway Table","10":"Return to the Briefing","11":"Evidence Chain","12":"Parks Department Request","13":"Modeling Lab","14":"Town Response","15":"Communication Desk","16":"Case Complete"};
+const TIMING_LABELS={"1":"Assignment Waiting","2":"Summer in Pinecrest","3":"Meet Dr. Reed","4":"Two Evidence Stations","5A":"Community Case Journal","5B":"Fisheries Data Lab","6":"Briefing at the Field Station","7":"What Is Different About North Cove?","8A":"Sensor Logs","8B":"Town Waterway Table","9":"Evidence Chain","10":"Parks Department Request","11":"Modeling Lab","12":"Prepare the Town Response","13":"Communication Desk","14":"Investigation Complete"};
 function xv(v){return (v&&String(v).trim())?esc(v):`<span class="blank">(no response provided)</span>`;}
 function xlist(arr,mapFn){return (arr&&arr.length)?`<ul>${arr.map(mapFn||(x=>`<li>${esc(x)}</li>`)).join("")}</ul>`:`<p class="blank">(none selected)</p>`;}
 function exportImg(src){const alt=IMG_ALT[src]||"Lesson image.";return `<div class="imgref"><strong>Image:</strong> ${esc(src)}<br><span class="cap">${esc(alt)}</span></div>`;}
@@ -2544,8 +2489,8 @@ function exportJournal(){
   }
   // Timing
   const st=s.timing.screenSeconds||{};
-  const pathTime=(s.navigation.firstPath==="community"?(st["5A"]||0):(st["5B"]||0))+(s.navigation.secondPath==="water"?(st["9A"]||0):(st["9B"]||0));
-  const modelTime=(st["12"]||0)+(st["13"]||0);
+  const pathTime=(s.navigation.firstPath==="community"?(st["5A"]||0):(st["5B"]||0))+(s.navigation.secondPath==="water"?(st["8A"]||0):(st["8B"]||0));
+  const modelTime=(st["10"]||0)+(st["11"]||0);
   let timingRows=Object.keys(TIMING_LABELS).filter(k=>st[k]).map(k=>`<tr><td>${esc(TIMING_LABELS[k])}</td><td>${fmtDuration(st[k])}</td></tr>`).join("");
 
   const doc=`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -2585,7 +2530,7 @@ th,td{border:1px solid #cdd9d8;padding:6px 8px;text-align:center;}th{background:
 <div class="cover">
   <p style="text-transform:uppercase;letter-spacing:2px;font-size:.8rem;margin-bottom:8px">Stories in Science · Grade 5</p>
   <h1>Trouble at Silver Lake</h1>
-  <p><strong>An Aquatic Investigation</strong> · Pinecrest, Arizona · ${esc(s.meta.standard)}</p>
+  <p><strong>An Aquatic Investigation</strong> · Pinecrest · ${esc(s.meta.standard)}</p>
   <p>Investigator: ${esc(label)}</p>
   <p>Started: ${fmtDate(s.meta.startedAt)} · Exported: ${fmtDate(nowISO())}</p>
   <p>First path: ${esc(s.navigation.firstPath||"—")} · Second path: ${esc(s.navigation.secondPath||"—")}</p>
@@ -2668,7 +2613,7 @@ const _origRenderCurrent=renderCurrent;
 renderCurrent=function(){
   const n=state.navigation.currentScreen;
   if(n===5&&!state.navigation.firstPath){state.navigation.currentScreen=4;}
-  if(n===9&&!state.navigation.secondPath){state.navigation.currentScreen=8;}
+  if(n===8&&!state.navigation.secondPath){state.navigation.currentScreen=7;}
   _origRenderCurrent();
 };
 loadState();
